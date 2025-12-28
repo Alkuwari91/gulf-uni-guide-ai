@@ -1,7 +1,0 @@
-streamlit
-pandas
-python-dotenv
-openai
-pydantic
-rank-bm25
-
