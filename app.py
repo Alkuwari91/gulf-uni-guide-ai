@@ -1,7 +1,4 @@
 import streamlit as st
 
-st.set_page_config(page_title="Gulf Uni Guide AI")
-
-st.title("🎓 Gulf University Guide AI")
-st.write("Welcome! Start by entering your preferences.")
-
+st.title("✅ App is running")
+st.write("If you see this, Streamlit works perfectly.")
