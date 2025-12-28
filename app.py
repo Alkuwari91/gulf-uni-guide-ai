@@ -9,7 +9,7 @@ st.set_page_config(
 )
 
 # ---------- Load data ----------
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents
 DATA_PATH = ROOT / "data" / "sample_programs.csv"
 
 df = pd.read_csv(DATA_PATH)
