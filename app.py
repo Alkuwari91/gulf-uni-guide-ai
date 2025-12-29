@@ -1,12 +1,22 @@
-import os
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_PATH = os.path.join(BASE_DIR, "data", "universities.csv")
-
-df = pd.read_csv(DATA_PATH)
 import streamlit as st
 import pandas as pd
 from pathlib import Path
+# مسار المشروع
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# مسار ملف الجامعات
+UNIVERSITIES_PATH = os.path.join(BASE_DIR, "data", "universities.csv")
+
+# تحقق أن الملف موجود
+if not os.path.exists(UNIVERSITIES_PATH):
+    st.error(f"universities.csv not found at {UNIVERSITIES_PATH}")
+    st.stop()
+
+# قراءة الملف
+df_universities = pd.read_csv(UNIVERSITIES_PATH)
+
+st.success("universities.csv loaded successfully")
+
 
 # ----------------------------
 # Config (NO ICONS)
