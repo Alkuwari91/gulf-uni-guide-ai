@@ -1,21 +1,46 @@
-import streamlit as st
+import os
 import pandas as pd
-from pathlib import Path
-# مسار المشروع
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+import streamlit as st
 
-# مسار ملف الجامعات
+# ===============================
+# تحميل ملف الجامعات بشكل آمن
+# ===============================
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UNIVERSITIES_PATH = os.path.join(BASE_DIR, "data", "universities.csv")
 
-# تحقق أن الملف موجود
 if not os.path.exists(UNIVERSITIES_PATH):
-    st.error(f"universities.csv not found at {UNIVERSITIES_PATH}")
+    st.error(f"❌ universities.csv not found at: {UNIVERSITIES_PATH}")
     st.stop()
 
-# قراءة الملف
-df_universities = pd.read_csv(UNIVERSITIES_PATH)
+try:
+    df_universities = pd.read_csv(
+        UNIVERSITIES_PATH,
+        encoding="utf-8",
+        engine="python",   # مهم لتجاوز مشاكل عدد الأعمدة
+        on_bad_lines="skip"  # يتجاوز السطور المخالفة (row 38)
+    )
+    st.success("✅ universities.csv loaded successfully")
+except Exception as e:
+    st.error(f"Error loading universities.csv: {e}")
+    st.stop()
+df_universities.columns = [
+    "uni_id",
+    "name_ar",
+    "name_en",
+    "country",
+    "city",
+    "type",
+    "website",
+    "admissions_url",
+    "programs_url",
+    "ranking_source",
+    "extra_1",
+    "extra_2",
+][:len(df_universities.columns)]
+st.write(df_universities.head())
+st.write("Columns:", df_universities.columns.tolist())
 
-st.success("universities.csv loaded successfully")
 
 
 # ----------------------------
