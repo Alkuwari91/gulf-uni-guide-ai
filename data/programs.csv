@@ -2,3 +2,6 @@ program_id,uni_id,level,degree_type,major_field,program_name_en,program_name_ar,
 qu_bsc_cs,qa_qu,Bachelor,BSc,Computer Science,Computer Science,علوم الحاسوب,Doha,English,4,Varies,High school + Math,https://www.qu.edu.qa
 qu_bsc_ai,qa_qu,Bachelor,BSc,Artificial Intelligence,Artificial Intelligence,الذكاء الاصطناعي,Doha,English,4,Varies,High school + Math,https://www.qu.edu.qa
 ksu_md,sa_ksu,Bachelor,MD,Medicine,Medicine,الطب,Riyadh,Arabic/English,6,Varies,High school + aptitude,https://ksu.edu.sa
+qu_dip_it,qa_qu,Diploma,Diploma,Information Technology,IT Diploma,دبلوم تقنية معلومات,Doha,English,2,Varies,High school,https://www.qu.edu.qa
+qu_msc_ai,qa_qu,Master,MSc,Artificial Intelligence,MSc Artificial Intelligence,ماجستير الذكاء الاصطناعي,Doha,English,2,Varies,Bachelor + IELTS,https://www.qu.edu.qa
+qu_phd_cs,qa_qu,PhD,PhD,Computer Science,PhD Computer Science,دكتوراه علوم الحاسوب,Doha,English,4,Varies,Master + Research proposal,https://www.qu.edu.qa
