@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import streamlit as st
+from pathlib import Path
 
 # ===============================
 # تحميل ملف الجامعات بشكل آمن
@@ -48,7 +49,8 @@ st.write("Columns:", df_universities.columns.tolist())
 # ----------------------------
 st.set_page_config(page_title="Gulf Uni Guide AI", layout="wide")
 
-ROOT = Path(__file__).resolve().parent
+import os
+ROOT = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = ROOT / "data"
 UNIS_PATH = DATA_DIR / "universities.csv"
 PROGS_PATH = DATA_DIR / "programs.csv"
