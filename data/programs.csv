@@ -34,3 +34,41 @@ sa_kfupm_phd_eng,sa_kfupm,PhD,PhD,Engineering,Engineering PhD,دكتوراه ا�
 
 sa_psu_bsc_cs,sa_psu,Bachelor,BSc,Computer Science,Computer Science,علوم الحاسب,Riyadh,English,4,Varies,High school + Math,https://www.psu.edu.sa
 sa_psu_msc_cyber,sa_psu,Master,MSc,Cybersecurity,Cybersecurity,الأمن السيبراني,Riyadh,English,2,Varies,Bachelor degree,https://www.psu.edu.sa
+program_id,uni_id,level,degree_type,major_field,program_name_en,program_name_ar,city,language,duration_years,tuition_notes,admissions_requirements,url
+
+# -------- UAEU --------
+ae_uaeu_bsc_ai,ae_uaeu,Bachelor,BSc,Artificial Intelligence,Artificial Intelligence,الذكاء الاصطناعي,Al Ain,English,4,Varies,High school + Math,https://www.uaeu.ac.ae
+ae_uaeu_bsc_cyber,ae_uaeu,Bachelor,BSc,Cybersecurity,Cybersecurity,الأمن السيبراني,Al Ain,English,4,Varies,High school + Math,https://www.uaeu.ac.ae
+ae_uaeu_beng,ae_uaeu,Bachelor,BEng,Engineering,Engineering,الهندسة,Al Ain,English,4,Varies,High school + Math/Physics,https://www.uaeu.ac.ae
+ae_uaeu_md,ae_uaeu,Bachelor,MD,Medicine,Medicine,الطب,Al Ain,English,6,Varies,High school + aptitude,https://www.uaeu.ac.ae
+ae_uaeu_msc_ai,ae_uaeu,Master,MSc,Artificial Intelligence,MSc Artificial Intelligence,ماجستير ذكاء اصطناعي,Al Ain,English,2,Varies,Bachelor degree,https://www.uaeu.ac.ae
+ae_uaeu_phd_eng,ae_uaeu,PhD,PhD,Engineering,PhD Engineering,دكتوراه الهندسة,Al Ain,English,4,Varies,Master degree,https://www.uaeu.ac.ae
+
+# -------- Khalifa University --------
+ae_ku_beng,ae_ku,Bachelor,BEng,Engineering,Engineering,الهندسة,Abu Dhabi,English,4,Varies,High school + Math/Physics,https://www.ku.ac.ae
+ae_ku_bsc_cs,ae_ku,Bachelor,BSc,Computer Science,Computer Science,علوم الحاسب,Abu Dhabi,English,4,Varies,High school + Math,https://www.ku.ac.ae
+ae_ku_msc_ai,ae_ku,Master,MSc,Artificial Intelligence,Artificial Intelligence,الذكاء الاصطناعي,Abu Dhabi,English,2,Varies,Bachelor degree,https://www.ku.ac.ae
+ae_ku_msc_cyber,ae_ku,Master,MSc,Cybersecurity,Cybersecurity,الأمن السيبراني,Abu Dhabi,English,2,Varies,Bachelor degree,https://www.ku.ac.ae
+ae_ku_phd_cs,ae_ku,PhD,PhD,Computer Science,PhD Computer Science,دكتوراه علوم الحاسب,Abu Dhabi,English,4,Varies,Master degree,https://www.ku.ac.ae
+
+# -------- Zayed University --------
+ae_zu_bed,ae_zu,Bachelor,BEd,Education,Bachelor of Education,بكالوريوس التربية,Abu Dhabi/Dubai,Arabic,4,Varies,High school,https://www.zu.ac.ae
+ae_zu_bba,ae_zu,Bachelor,BBA,Business Administration,Business Administration,إدارة الأعمال,Abu Dhabi/Dubai,English,4,Varies,High school,https://www.zu.ac.ae
+ae_zu_mba,ae_zu,Master,MBA,Business Administration,MBA,MBA إدارة الأعمال,Abu Dhabi/Dubai,English,2,Varies,Bachelor degree,https://www.zu.ac.ae
+ae_zu_msc_it,ae_zu,Master,MSc,Information Technology,Information Technology,تقنية المعلومات,Abu Dhabi/Dubai,English,2,Varies,Bachelor degree,https://www.zu.ac.ae
+
+# -------- Higher Colleges of Technology --------
+ae_hct_dip_it,ae_hct,Diploma,Diploma,Information Technology,IT Diploma,دبلوم تقنية المعلومات,Multiple (UAE),English,2,Varies,High school,https://hct.ac.ae
+ae_hct_dip_bus,ae_hct,Diploma,Diploma,Business,Business Diploma,دبلوم إدارة الأعمال,Multiple (UAE),English,2,Varies,High school,https://hct.ac.ae
+ae_hct_bsc_eng,ae_hct,Bachelor,BSc,Engineering,Applied Engineering,الهندسة التطبيقية,Multiple (UAE),English,4,Varies,High school + Math,https://hct.ac.ae
+
+# -------- American University of Sharjah --------
+ae_aus_bsc_cs,ae_aus,Bachelor,BSc,Computer Science,Computer Science,علوم الحاسب,Sharjah,English,4,Varies,High school + Math,https://www.aus.edu
+ae_aus_beng,ae_aus,Bachelor,BEng,Engineering,Engineering,الهندسة,Sharjah,English,4,Varies,High school + Math/Physics,https://www.aus.edu
+ae_aus_bba,ae_aus,Bachelor,BBA,Business Administration,Business Administration,إدارة الأعمال,Sharjah,English,4,Varies,High school,https://www.aus.edu
+ae_aus_msc_cs,ae_aus,Master,MSc,Computer Science,Computer Science,علوم الحاسب,Sharjah,English,2,Varies,Bachelor degree,https://www.aus.edu
+
+# -------- University of Dubai --------
+ae_ud_bsc_it,ae_ud,Bachelor,BSc,Information Technology,Information Technology,تقنية المعلومات,Dubai,English,4,Varies,High school + Math,https://ud.ac.ae
+ae_ud_bba,ae_ud,Bachelor,BBA,Business Administration,Business Administration,إدارة الأعمال,Dubai,English,4,Varies,High school,https://ud.ac.ae
+ae_ud_mba,ae_ud,Master,MBA,Business Administration,MBA,MBA إدارة الأعمال,Dubai,English,2,Varies,Bachelor degree,https://ud.ac.ae
