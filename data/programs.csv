@@ -5,3 +5,5 @@ ksu_md,sa_ksu,Bachelor,MD,Medicine,Medicine,الطب,Riyadh,Arabic/English,6,Var
 qu_dip_it,qa_qu,Diploma,Diploma,Information Technology,IT Diploma,دبلوم تقنية معلومات,Doha,English,2,Varies,High school,https://www.qu.edu.qa
 qu_msc_ai,qa_qu,Master,MSc,Artificial Intelligence,MSc Artificial Intelligence,ماجستير الذكاء الاصطناعي,Doha,English,2,Varies,Bachelor + IELTS,https://www.qu.edu.qa
 qu_phd_cs,qa_qu,PhD,PhD,Computer Science,PhD Computer Science,دكتوراه علوم الحاسوب,Doha,English,4,Varies,Master + Research proposal,https://www.qu.edu.qa
+qu_diploma_edu,qa_qu,Diploma,Diploma,Education,Education Diploma,دبلوم التربية,Doha,Arabic,1,Varies,High school,https://www.qu.edu.qa
+qu_msc_ai,qa_qu,Master,MSc,Artificial Intelligence,MSc Artificial Intelligence,ماجستير ذكاء اصطناعي,Doha,English,2,Varies,Bachelor degree,https://www.qu.edu.qa
