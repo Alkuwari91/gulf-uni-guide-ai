@@ -11,16 +11,52 @@ ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
 UNIS_PATH = DATA_DIR / "universities.csv"
 PROGS_PATH = DATA_DIR / "programs.csv"
+# Expected schemas
+UNIS_COLS = [
+    "uni_id","name_ar","name_en","country","city","type","website",
+    "admissions_url","programs_url","ranking_source","ranking_value","accreditation_notes"
+]
+
+PROGS_COLS = [
+    "program_id","uni_id","level","degree_type","major_field","program_name_en","program_name_ar",
+    "city","language","duration_years","tuition_notes","admissions_requirements","url"
+]
 
 # ----------------------------
 # Loaders
 # ----------------------------
 @st.cache_data(show_spinner=False)
-def load_csv(path: Path) -> pd.DataFrame:
+def load_csv(path: Path, expected_cols: list[str] | None = None) -> pd.DataFrame:
     if not path.exists():
         return pd.DataFrame()
-    # keep_default_na=False helps avoid NaN in text fields (optional)
-    return pd.read_csv(path, dtype=str, keep_default_na=False)
+
+    # First attempt: normal read
+    try:
+        df = pd.read_csv(path)
+    except Exception:
+        return pd.DataFrame()
+
+    # Clean column names (BOM/whitespace)
+    df.columns = [str(c).replace("\ufeff", "").strip() for c in df.columns]
+
+    # If schema is provided and not matched, retry with header=None
+    if expected_cols:
+        needed = set(expected_cols)
+        if not needed.issubset(set(df.columns)):
+            try:
+                df2 = pd.read_csv(path, header=None)
+                # keep only expected number of columns
+                if df2.shape[1] >= len(expected_cols):
+                    df2 = df2.iloc[:, :len(expected_cols)]
+                    df2.columns = expected_cols
+                    return df2
+                else:
+                    return pd.DataFrame()
+            except Exception:
+                return pd.DataFrame()
+
+    return df
+
 
 def clean_columns(df: pd.DataFrame) -> pd.DataFrame:
     """Strip spaces + remove BOM from column names."""
@@ -30,8 +66,9 @@ def clean_columns(df: pd.DataFrame) -> pd.DataFrame:
     df.columns = [str(c).replace("\ufeff", "").strip() for c in df.columns]
     return df
 
-unis = clean_columns(load_csv(UNIS_PATH))
-progs = clean_columns(load_csv(PROGS_PATH))
+unis = load_csv(UNIS_PATH, UNIS_COLS)
+progs = load_csv(PROGS_PATH, PROGS_COLS)
+
 
 st.title("Gulf Uni Guide AI")
 st.caption("Data source: universities.csv + programs.csv")
