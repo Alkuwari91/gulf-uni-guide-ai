@@ -38,6 +38,7 @@ kw_gust,جامعة الخليج للعلوم والتكنولوجيا,Gulf Unive
 kw_ack,الكلية الأسترالية في الكويت,Australian College of Kuwait,Kuwait,Mishref,Private,https://www.ack.edu.kw,https://www.ack.edu.kw/admissions,https://www.ack.edu.kw/programs,,,
 kw_kuniv,جامعة الكويت الدولية,Kuwait International University,Kuwait,Kuwait City,Private,https://www.kiu.edu.kw,,,,
 kw_acm,كلية الكويت للعلوم والتكنولوجيا,Kuwait College of Science and Technology,Kuwait,Doha,Public,https://www.kcst.edu.kw,https://www.kcst.edu.kw/admission,https://www.kcst.edu.kw/academics,,,
+
 bh_uob,جامعة البحرين,University of Bahrain,Bahrain,Sakhir,Public,https://www.uob.edu.bh,https://www.uob.edu.bh/admission,https://www.uob.edu.bh/colleges,,,
 bh_poly,بوليتكنك البحرين,Bahrain Polytechnic,Bahrain,Isa Town,Public,https://www.polytechnic.bh,https://www.polytechnic.bh/admissions,https://www.polytechnic.bh/programmes,,,
 bh_auk,الجامعة العربية المفتوحة – البحرين,Arab Open University Bahrain,Bahrain,Manama,Private,https://www.aou.org.bh,https://www.aou.org.bh/admissions,https://www.aou.org.bh/programs,,,
@@ -45,25 +46,7 @@ bh_ama,جامعة AMA الدولية,AMA International University Bahrain,Bahrai
 bh_rcsi,كلية الطب الملكية للجراحين في البحرين,RCSI Medical University of Bahrain,Bahrain,Busaiteen,Private,https://www.rcsi.com/bahrain,https://www.rcsi.com/bahrain/admissions,https://www.rcsi.com/bahrain/programmes,,,
 bh_apu,جامعة آسيا باسيفيك البحرين,Applied Science University Bahrain,Bahrain,Isa Town,Private,https://www.asu.edu.bh,https://www.asu.edu.bh/admission,https://www.asu.edu.bh/academics,,,
 bh_gibs,كلية الخليج لإدارة الأعمال,Gulf International Business School,Bahrain,Manama,Private,https://www.gibs.edu.bh,,,,
-bh_uob_bsc_cs,bh_uob,Bachelor,BSc,Computer Science,Computer Science,علوم الحاسب,Sakhir,English,4,Varies,High school + Math,https://www.uob.edu.bh
-bh_uob_bsc_ai,bh_uob,Bachelor,BSc,Artificial Intelligence,Artificial Intelligence,الذكاء الاصطناعي,Sakhir,English,4,Varies,High school + Math,https://www.uob.edu.bh
-bh_uob_bsc_cyber,bh_uob,Bachelor,BSc,Cybersecurity,Cybersecurity,الأمن السيبراني,Sakhir,English,4,Varies,High school + Math,https://www.uob.edu.bh
-bh_uob_beng,bh_uob,Bachelor,BEng,Engineering,Engineering,الهندسة,Sakhir,English,4,Varies,High school + Math/Physics,https://www.uob.edu.bh
-bh_uob_md,bh_uob,Bachelor,MD,Medicine,Medicine,الطب,Sakhir,English,6,Varies,High school + aptitude,https://www.uob.edu.bh
-bh_uob_msc_it,bh_uob,Master,MSc,Information Technology,Information Technology,تقنية المعلومات,Sakhir,English,2,Varies,Bachelor degree,https://www.uob.edu.bh
-bh_uob_mba,bh_uob,Master,MBA,Business Administration,MBA,MBA إدارة الأعمال,Sakhir,English,2,Varies,Bachelor degree,https://www.uob.edu.bh
-bh_uob_phd_eng,bh_uob,PhD,PhD,Engineering,PhD Engineering,دكتوراه الهندسة,Sakhir,English,4,Varies,Master degree,https://www.uob.edu.bh
-bh_poly_dip_it,bh_poly,Diploma,Diploma,Information Technology,IT Diploma,دبلوم تقنية المعلومات,Isa Town,English,2,Varies,High school,https://www.polytechnic.bh
-bh_poly_dip_bus,bh_poly,Diploma,Diploma,Business,Business Diploma,دبلوم إدارة الأعمال,Isa Town,English,2,Varies,High school,https://www.polytechnic.bh
-bh_poly_bsc_eng,bh_poly,Bachelor,BSc,Engineering,Applied Engineering,الهندسة التطبيقية,Isa Town,English,4,Varies,High school + Math,https://www.polytechnic.bh
-bh_auk_bsc_it,bh_auk,Bachelor,BSc,Information Technology,Information Technology,تقنية المعلومات,Manama,English,4,Varies,High school,https://www.aou.org.bh
-bh_auk_bba,bh_auk,Bachelor,BBA,Business Administration,Business Administration,إدارة الأعمال,Manama,English,4,Varies,High school,https://www.aou.org.bh
-bh_auk_mba,bh_auk,Master,MBA,Business Administration,MBA,MBA إدارة الأعمال,Manama,English,2,Varies,Bachelor degree,https://www.aou.org.bh
-bh_ama_bsc_cs,bh_ama,Bachelor,BSc,Computer Science,Computer Science,علوم الحاسب,Salmaniya,English,4,Varies,High school + Math,https://www.amaiu.edu.bh
-bh_ama_bba,bh_ama,Bachelor,BBA,Business Administration,Business Administration,إدارة الأعمال,Salmaniya,English,4,Varies,High school,https://www.amaiu.edu.bh
-bh_ama_mba,bh_ama,Master,MBA,Business Administration,MBA,MBA إدارة الأعمال,Salmaniya,English,2,Varies,Bachelor degree,https://www.amaiu.edu.bh
-bh_rcsi_md,bh_rcsi,Bachelor,MD,Medicine,Medicine,الطب,Busaiteen,English,6,Varies,High school + aptitude,https://www.rcsi.com/bahrain
-bh_rcsi_msc_health,bh_rcsi,Master,MSc,Health Sciences,Health Sciences,العلوم الصحية,Busaiteen,English,2,Varies,Bachelor degree,https://www.rcsi.com/bahrain
+
 om_squ,جامعة السلطان قابوس,Sultan Qaboos University,Oman,Muscat,Public,https://www.squ.edu.om,https://www.squ.edu.om/admissions,https://www.squ.edu.om/academics,,,
 om_gutech,الجامعة الألمانية للتكنولوجيا في عُمان,German University of Technology Oman,Oman,Muscat,Private,https://www.gutech.edu.om,https://www.gutech.edu.om/admissions,https://www.gutech.edu.om/programs,,,
 om_ut,جامعة التقنية والعلوم التطبيقية,University of Technology and Applied Sciences,Oman,Multiple (Oman),Public,https://www.ut.edu.om,https://www.ut.edu.om/admission,https://www.ut.edu.om/academics,,,
