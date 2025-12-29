@@ -1,132 +1,207 @@
+import os
+import json
 import streamlit as st
 import pandas as pd
 from pathlib import Path
 
-# ----------------------------
-# Page config (no icons/emojis)
-# ----------------------------
+# ---------------- Page config ----------------
 st.set_page_config(page_title="Gulf Uni Guide AI", layout="wide")
 
-ROOT = Path(__file__).resolve().parent
-DATA_DIR = ROOT / "data"
-
-UNIS_PATH = DATA_DIR / "universities.csv"
-PROGRAMS_PATH = DATA_DIR / "programs.csv"          # optional later
-SAMPLE_PATH = DATA_DIR / "sample_programs.csv"     # fallback
-
-GCC_COUNTRIES_ORDER = [
-    "Qatar",
-    "Saudi Arabia",
-    "UAE",
-    "Kuwait",
-    "Bahrain",
-    "Oman",
-]
-
-# ----------------------------
-# Load data safely
-# ----------------------------
-def load_universities():
-    if UNIS_PATH.exists():
-        df = pd.read_csv(UNIS_PATH)
-        source = str(UNIS_PATH)
-        return df, source
-
-    # fallback to sample_programs.csv if universities.csv not ready
-    if SAMPLE_PATH.exists():
-        df = pd.read_csv(SAMPLE_PATH)
-        source = str(SAMPLE_PATH)
-        return df, source
-
-    return None, None
-
-df, source_path = load_universities()
+# ---------------- Load data ----------------
+BASE = Path(__file__).resolve().parent
+DATA_PATH = BASE / "data" / "universities.csv"
 
 st.title("Gulf Uni Guide AI")
+st.caption(f"Data source: {DATA_PATH}")
 
-if df is None:
-    st.error("No data file found in /data. Add universities.csv (recommended) or sample_programs.csv.")
+if not DATA_PATH.exists():
+    st.error(f"universities.csv not found: {DATA_PATH}")
     st.stop()
 
-st.caption(f"Data source: {source_path}")
+df = pd.read_csv(DATA_PATH)
 
-# ----------------------------
-# Normalize expected columns
-# ----------------------------
-# We expect universities.csv to have at least these columns:
-# uni_id, name_ar, name_en, country, city, type, website
-expected_cols = ["uni_id", "name_ar", "name_en", "country", "city", "type", "website"]
-for col in expected_cols:
-    if col not in df.columns:
-        df[col] = ""
+# Normalize a bit
+for col in ["country", "city", "type", "name_en", "name_ar"]:
+    if col in df.columns:
+        df[col] = df[col].fillna("").astype(str).str.strip()
 
-# Clean strings
-for c in ["name_ar", "name_en", "country", "city", "type", "website"]:
-    df[c] = df[c].astype(str).fillna("").str.strip()
+# ---------------- UI layout ----------------
+left, right = st.columns([1, 1.4], gap="large")
 
-# ----------------------------
-# Filters UI
-# ----------------------------
-col1, col2 = st.columns([2, 3], gap="large")
-
-with col1:
+with left:
     st.subheader("Student profile")
-    target_country = st.selectbox(
-        "Where do you want to study?",
-        options=["All"] + GCC_COUNTRIES_ORDER,
-        index=0,
-    )
-    intended_major = st.text_input("Intended major (example: Engineering, Medicine)", value="")
-    study_city = st.text_input("Preferred city (optional)", value="")
-    uni_type = st.selectbox("University type", options=["All", "Public", "Private"], index=0)
 
-with col2:
+    gcc = ["Qatar", "Saudi Arabia", "UAE", "Kuwait", "Bahrain", "Oman"]
+    # Study country options from data (plus All)
+    countries = sorted([c for c in df["country"].unique().tolist() if c])
+    study_country = st.selectbox("Where do you want to study?", options=countries or gcc, index=0)
+
+    intended_major = st.text_input("Intended major (example: Engineering, Medicine)", value="Medicine")
+    preferred_city = st.text_input("Preferred city (optional)", value="")
+
+    uni_type = st.selectbox("University type", options=["All", "Public", "Private"], index=1)
+
+with right:
     st.subheader("Browse universities")
-    search = st.text_input("Search (university / city)", value="")
+    q = st.text_input("Search (university / city)", value="").strip().lower()
 
-# ----------------------------
-# Apply filters
-# ----------------------------
+# ---------------- Filtering ----------------
 filtered = df.copy()
 
-# ensure GCC list even if data missing
-# (filter uses data, dropdown shows all anyway)
+if study_country:
+    filtered = filtered[filtered["country"].str.lower() == study_country.lower()]
 
-if target_country != "All":
-    filtered = filtered[filtered["country"].str.lower() == target_country.lower()]
+if preferred_city.strip():
+    filtered = filtered[filtered["city"].str.lower().str.contains(preferred_city.strip().lower(), na=False)]
 
 if uni_type != "All":
     filtered = filtered[filtered["type"].str.lower() == uni_type.lower()]
 
-if study_city.strip():
-    filtered = filtered[filtered["city"].str.lower().str.contains(study_city.lower(), na=False)]
-
-if search.strip():
-    s = search.lower()
-    filtered = filtered[
-        filtered["name_en"].str.lower().str.contains(s, na=False)
-        | filtered["name_ar"].str.lower().str.contains(s, na=False)
-        | filtered["city"].str.lower().str.contains(s, na=False)
-    ]
+if q:
+    hay = (
+        filtered["name_en"].str.lower().fillna("")
+        + " "
+        + filtered["name_ar"].str.lower().fillna("")
+        + " "
+        + filtered["city"].str.lower().fillna("")
+    )
+    filtered = filtered[hay.str.contains(q, na=False)]
 
 st.divider()
-
 st.subheader("Universities")
 st.dataframe(
-    filtered[["uni_id", "name_ar", "name_en", "country", "city", "type", "website"]],
+    filtered[["uni_id", "name_ar", "name_en", "country", "city", "type", "website", "admissions_url"]]
+    if "admissions_url" in filtered.columns
+    else filtered[["uni_id", "name_ar", "name_en", "country", "city", "type", "website"]],
     use_container_width=True,
     hide_index=True
 )
 
+# ---------------- Matching + AI ranking ----------------
 st.divider()
+st.subheader("Matching")
 
-# ----------------------------
-# Simple AI-style matching placeholder (no icons)
-# ----------------------------
-st.subheader("Matching (basic)")
-if st.button("Get University Matches"):
-    # For now: basic sorting by country match + keyword match in program name is future
-    # We'll upgrade this to full AI next step.
-    st.write("Selected country:", target_country)
-    st.write("Intended major:", intended_major if intended_major else "Not provided")
-    st.write("Results shown above based on filters. Next step: AI ranking + requirements per university.")
+btn = st.button("Get University Matches")
+
+# Read OpenAI key from Streamlit secrets OR env
+OPENAI_API_KEY = None
+if "OPENAI_API_KEY" in st.secrets:
+    OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+else:
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+def ai_rank_unis(student_country: str, major: str, city: str, uni_type_choice: str, candidates: pd.DataFrame) -> dict:
+    """
+    Uses OpenAI to rank universities and summarize admissions hints.
+    Expects columns: name_en, country, city, type, website, admissions_url (optional)
+    """
+    # Lazy import (so app still runs if package missing)
+    from openai import OpenAI
+
+    client = OpenAI(api_key=OPENAI_API_KEY)
+
+    # Keep prompt small: send top N candidates only
+    top = candidates.head(30).copy()
+
+    # Prepare a compact list
+    items = []
+    for _, r in top.iterrows():
+        items.append({
+            "uni_id": r.get("uni_id", ""),
+            "name_en": r.get("name_en", ""),
+            "country": r.get("country", ""),
+            "city": r.get("city", ""),
+            "type": r.get("type", ""),
+            "website": r.get("website", ""),
+            "admissions_url": r.get("admissions_url", ""),
+        })
+
+    system = "You are an expert GCC university admissions counselor. Be accurate, concise, and structured."
+    user = {
+        "student_profile": {
+            "target_country": student_country,
+            "intended_major": major,
+            "preferred_city": city,
+            "university_type": uni_type_choice,
+        },
+        "universities": items,
+        "task": (
+            "Rank the best 10 universities for this student within the given country and filters. "
+            "For each university: provide a short reason (1-2 lines) and list likely admissions requirements. "
+            "If admissions_url exists, prioritize it as the reference to infer requirements. "
+            "Return STRICT JSON with keys: ranked (list), notes (string)."
+        ),
+        "json_schema": {
+            "ranked": [
+                {
+                    "uni_id": "string",
+                    "name_en": "string",
+                    "city": "string",
+                    "type": "string",
+                    "why_good_fit": "string",
+                    "likely_requirements": ["string", "string"],
+                    "links": {"website": "string", "admissions_url": "string"}
+                }
+            ],
+            "notes": "string"
+        }
+    }
+
+    resp = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": system},
+            {"role": "user", "content": json.dumps(user, ensure_ascii=False)}
+        ],
+        temperature=0.3,
+    )
+
+    text = resp.choices[0].message.content.strip()
+    # Try parse JSON
+    try:
+        return json.loads(text)
+    except Exception:
+        # Fallback
+        return {"ranked": [], "notes": "AI output was not valid JSON.", "raw": text}
+
+if btn:
+    st.write(f"Selected country: {study_country}")
+    st.write(f"Intended major: {intended_major}")
+
+    if filtered.empty:
+        st.warning("No universities match your filters yet. Add more rows in data/universities.csv.")
+        st.stop()
+
+    if not OPENAI_API_KEY:
+        st.warning("OPENAI_API_KEY is missing. Add it in Streamlit Cloud → App settings → Secrets.")
+        st.info("For now, showing filtered universities only (no AI ranking).")
+        st.stop()
+
+    with st.spinner("Generating AI ranking + requirements..."):
+        out = ai_rank_unis(study_country, intended_major, preferred_city, uni_type, filtered)
+
+    ranked = out.get("ranked", [])
+    notes = out.get("notes", "")
+
+    st.subheader("AI Ranking (Top 10)")
+    if not ranked:
+        st.error("AI ranking did not return results.")
+        st.code(out.get("raw", ""), language="json")
+    else:
+        for i, r in enumerate(ranked, 1):
+            st.markdown(f"### {i}. {r.get('name_en','')}")
+            st.write(r.get("why_good_fit", ""))
+            reqs = r.get("likely_requirements", [])
+            if reqs:
+                st.write("Likely requirements:")
+                st.write("\n".join([f"- {x}" for x in reqs]))
+            links = r.get("links", {})
+            w = links.get("website", "")
+            a = links.get("admissions_url", "")
+            if w or a:
+                st.write("Links:")
+                if w: st.write(f"- Website: {w}")
+                if a: st.write(f"- Admissions: {a}")
+
+    if notes:
+        st.info(notes)
