@@ -6,159 +6,56 @@ from pathlib import Path
 # Config (NO ICONS)
 # ----------------------------
 st.set_page_config(page_title="Gulf Uni Guide AI", layout="wide")
-# ===== UI THEME (HEADER + STYLE) — UI ONLY =====
+# ===== LIGHT UI THEME (NO LOGIC TOUCH) =====
 st.markdown("""
 <style>
-/* Page background */
-.stApp{
-  background: linear-gradient(180deg, #0B1220 0%, #0F1B33 45%, #0B1220 100%);
-  color: #E5E7EB;
+
+/* ===== Page background ===== */
+.stApp {
+    background-color: #F5F7FA;
+    color: #475569;
 }
 
 /* Reduce top padding */
-.block-container{ padding-top: 1.2rem; }
-
-/* Header */
-.bawsala-header{
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.10);
-  border-radius: 18px;
-  padding: 18px 18px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap: 12px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+.block-container {
+    padding-top: 1.2rem;
 }
 
-.brand-wrap{
-  display:flex;
-  align-items:center;
-  gap: 12px;
-  min-width: 260px;
-}
-.brand-icon{
-  width: 44px; height: 44px;
-  border-radius: 14px;
-  background: radial-gradient(circle at 30% 30%, rgba(56,189,248,0.9), rgba(56,189,248,0.25) 55%, rgba(255,255,255,0.08) 70%);
-  border: 1px solid rgba(255,255,255,0.12);
-  display:flex; align-items:center; justify-content:center;
-  font-size: 20px;
-}
-.brand-title{
-  margin:0;
-  font-size: 1.4rem;
-  font-weight: 800;
-  letter-spacing: .3px;
-  color: #F9FAFB;
-}
-.brand-tag{
-  margin:0;
-  font-size: 0.95rem;
-  color: rgba(229,231,235,0.85);
-}
-.brand-tag b{ color: #38BDF8; font-weight: 700; }
-
-/* Header actions (buttons) */
-.header-actions{
-  display:flex;
-  align-items:center;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content:flex-end;
+/* ===== HEADER ===== */
+.bawsala-header {
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 18px;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    margin-bottom: 1.5rem;
 }
 
-.hbtn{
-  border-radius: 12px;
-  padding: 10px 14px;
-  font-weight: 700;
-  border: 1px solid rgba(255,255,255,0.14);
-  background: rgba(255,255,255,0.07);
-  color: #F9FAFB;
-}
-.hbtn-primary{
-  border: 1px solid rgba(56,189,248,0.35);
-  background: rgba(56,189,248,0.16);
-  color: #EAF7FF;
-}
-.hbtn:hover{
-  filter: brightness(1.07);
-  transform: translateY(-1px);
-  transition: 0.15s ease;
+/* Brand */
+.brand-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
 }
 
-/* Make Streamlit buttons in header look like our buttons */
-div[data-testid="stHorizontalBlock"] button{
-  border-radius: 12px !important;
-  padding: 10px 14px !important;
-  font-weight: 700 !important;
-  border: 1px solid rgba(255,255,255,0.14) !important;
-  background: rgba(255,255,255,0.07) !important;
-  color: #F9FAFB !important;
-}
-div[data-testid="stHorizontalBlock"] button[kind="primary"]{
-  border: 1px solid rgba(56,189,248,0.35) !important;
-  background: rgba(56,189,248,0.16) !important;
-  color: #EAF7FF !important;
+.brand-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #38BDF8, #60A5FA);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: white;
 }
 
-/* Section titles */
-h1,h2,h3{ color:#F9FAFB; }
-h2,h3{ color:#EAF7FF; }
-
-/* Inputs */
-div[data-baseweb="select"] > div,
-input[type="text"]{
-  background: rgba(255,255,255,0.06) !important;
-  border: 1px solid rgba(255,255,255,0.14) !important;
-  color:#F9FAFB !important;
-  border-radius: 14px !important;
-}
-
-/* Dataframes */
-[data-testid="stDataFrame"]{
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.10);
-  border-radius: 16px;
-  padding: 10px;
-}
-
-/* Divider */
-hr{
-  border:none;
-  height:1px;
-  background: linear-gradient(90deg, transparent, rgba(56,189,248,0.8), transparent);
-  margin: 1.6rem 0;
-}
-</style>
-""", unsafe_allow_html=True)
-
-# ===== HEADER (UI ONLY) =====
-left, right = st.columns([3.2, 1.2])
-with left:
-    st.markdown("""
-    <div class="bawsala-header">
-      <div class="brand-wrap">
-        <div class="brand-icon">🧭</div>
-        <div>
-          <p class="brand-title">بوصلة</p>
-          <p class="brand-tag">دليلك الذكي لاختيار <b>الجامعة</b> والبرنامج في دول الخليج</p>
-        </div>
-      </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with right:
-    # أزرار UI فقط (لاحقًا نربطها بتسجيل دخول حقيقي إذا تبين)
-    a1, a2 = st.columns(2)
-    with a1:
-        st.button("تسجيل الدخول", key="login_btn")
-    with a2:
-        st.button("حساب جديد", key="signup_btn")
-
-st.write("")  # مسافة بسيطة تحت الهيدر
-
+.brand-title {
+    margin: 0;
+    font-size
 
 ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
