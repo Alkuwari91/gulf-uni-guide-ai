@@ -133,3 +133,34 @@ bh_ama_mba,bh_ama,Master,MBA,Business Administration,MBA,MBA إدارة الأع
 bh_rcsi_md,bh_rcsi,Bachelor,MD,Medicine,Medicine,الطب,Busaiteen,English,6,Varies,High school + aptitude,https://www.rcsi.com/bahrain
 bh_rcsi_msc_health,bh_rcsi,Master,MSc,Health Sciences,Health Sciences,العلوم الصحية,Busaiteen,English,2,Varies,Bachelor degree,https://www.rcsi.com/bahrain
 
+program_id,uni_id,level,degree_type,major_field,program_name_en,program_name_ar,city,language,duration_years,tuition_notes,admissions_requirements,url
+
+# -------- Sultan Qaboos University --------
+om_squ_bsc_cs,om_squ,Bachelor,BSc,Computer Science,Computer Science,علوم الحاسب,Muscat,English,4,Varies,High school + Math,https://www.squ.edu.om
+om_squ_bsc_ai,om_squ,Bachelor,BSc,Artificial Intelligence,Artificial Intelligence,الذكاء الاصطناعي,Muscat,English,4,Varies,High school + Math,https://www.squ.edu.om
+om_squ_bsc_cyber,om_squ,Bachelor,BSc,Cybersecurity,Cybersecurity,الأمن السيبراني,Muscat,English,4,Varies,High school + Math,https://www.squ.edu.om
+om_squ_beng,om_squ,Bachelor,BEng,Engineering,Engineering,الهندسة,Muscat,English,4,Varies,High school + Math/Physics,https://www.squ.edu.om
+om_squ_md,om_squ,Bachelor,MD,Medicine,Medicine,الطب,Muscat,English,6,Varies,High school + aptitude,https://www.squ.edu.om
+om_squ_msc_it,om_squ,Master,MSc,Information Technology,Information Technology,تقنية المعلومات,Muscat,English,2,Varies,Bachelor degree,https://www.squ.edu.om
+om_squ_mba,om_squ,Master,MBA,Business Administration,MBA,MBA إدارة الأعمال,Muscat,English,2,Varies,Bachelor degree,https://www.squ.edu.om
+om_squ_phd_eng,om_squ,PhD,PhD,Engineering,PhD Engineering,دكتوراه الهندسة,Muscat,English,4,Varies,Master degree,https://www.squ.edu.om
+
+# -------- German University of Technology Oman --------
+om_gutech_beng,om_gutech,Bachelor,BEng,Engineering,Engineering,الهندسة,Muscat,English,4,Varies,High school + Math/Physics,https://www.gutech.edu.om
+om_gutech_bsc_it,om_gutech,Bachelor,BSc,Information Technology,Information Technology,تقنية المعلومات,Muscat,English,4,Varies,High school + Math,https://www.gutech.edu.om
+om_gutech_msc_eng,om_gutech,Master,MSc,Engineering,Engineering,الهندسة,Muscat,English,2,Varies,Bachelor degree,https://www.gutech.edu.om
+
+# -------- University of Technology and Applied Sciences --------
+om_ut_dip_it,om_ut,Diploma,Diploma,Information Technology,IT Diploma,دبلوم تقنية المعلومات,Multiple (Oman),English,2,Varies,High school,https://www.ut.edu.om
+om_ut_dip_bus,om_ut,Diploma,Diploma,Business,Business Diploma,دبلوم إدارة الأعمال,Multiple (Oman),English,2,Varies,High school,https://www.ut.edu.om
+om_ut_bsc_eng,om_ut,Bachelor,BSc,Engineering,Applied Engineering,الهندسة التطبيقية,Multiple (Oman),English,4,Varies,High school + Math,https://www.ut.edu.om
+
+# -------- Middle East College --------
+om_smc_bsc_cs,om_smc,Bachelor,BSc,Computer Science,Computer Science,علوم الحاسب,Muscat,English,4,Varies,High school + Math,https://www.mec.edu.om
+om_smc_bba,om_smc,Bachelor,BBA,Business Administration,Business Administration,إدارة الأعمال,Muscat,English,4,Varies,High school,https://www.mec.edu.om
+om_smc_mba,om_smc,Master,MBA,Business Administration,MBA,MBA إدارة الأعمال,Muscat,English,2,Varies,Bachelor degree,https://www.mec.edu.om
+
+# -------- Arab Open University Oman --------
+om_aou_bsc_it,om_aou,Bachelor,BSc,Information Technology,Information Technology,تقنية المعلومات,Muscat,English,4,Varies,High school,https://www.aou.edu.om
+om_aou_bba,om_aou,Bachelor,BBA,Business Administration,Business Administration,إدارة الأعمال,Muscat,English,4,Varies,High school,https://www.aou.edu.om
+om_aou_mba,om_aou,Master,MBA,Business Administration,MBA,MBA إدارة الأعمال,Muscat,English,2,Varies,Bachelor degree,https://www.aou.edu.om
