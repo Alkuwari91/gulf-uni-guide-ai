@@ -26,6 +26,25 @@ if DATA_PATH is None:
     st.stop()
 
 df = pd.read_csv(DATA_PATH)
+st.title("🎓 Gulf Uni Guide AI")
+
+country_options = ["All"] + sorted(df["country"].dropna().unique().tolist())
+selected_country = st.selectbox("Choose study country", country_options)
+
+filtered = df.copy()
+if selected_country != "All":
+    filtered = filtered[filtered["country"] == selected_country]
+
+keyword = st.text_input("Search (university / program / city)")
+if keyword:
+    k = keyword.lower()
+    filtered = filtered[
+        filtered["university"].str.lower().str.contains(k, na=False)
+        | filtered["program"].str.lower().str.contains(k, na=False)
+        | filtered["city"].str.lower().str.contains(k, na=False)
+    ]
+
+st.dataframe(filtered, use_container_width=True)
 
 st.title(" Gulf Uni Guide AI")
 st.success(f"Loaded data from: {DATA_PATH}")
