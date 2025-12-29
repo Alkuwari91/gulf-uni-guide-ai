@@ -7,6 +7,106 @@ from pathlib import Path
 # ----------------------------
 st.set_page_config(page_title="Gulf Uni Guide AI", layout="wide")
 
+st.markdown("""
+<style>
+/* ===== Global ===== */
+html, body, [class*="css"] {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background-color: #0F172A;
+    color: #E5E7EB;
+}
+
+/* ===== Main container ===== */
+.main {
+    background-color: #0F172A;
+}
+
+/* ===== Titles ===== */
+h1, h2, h3 {
+    color: #F9FAFB;
+    letter-spacing: 0.3px;
+}
+
+h1 {
+    font-size: 2.2rem;
+}
+
+/* ===== Subheaders ===== */
+h2, h3 {
+    color: #38BDF8;
+}
+
+/* ===== Filters / Inputs ===== */
+div[data-baseweb="select"],
+input[type="text"] {
+    background-color: #1E293B !important;
+    color: #F9FAFB !important;
+    border-radius: 10px;
+    border: 1px solid #334155;
+}
+
+/* Placeholder text */
+input::placeholder {
+    color: #94A3B8;
+}
+
+/* ===== DataFrames ===== */
+[data-testid="stDataFrame"] {
+    background-color: #020617;
+    border-radius: 14px;
+    padding: 6px;
+}
+
+/* Table headers */
+thead tr th {
+    background-color: #1E293B !important;
+    color: #38BDF8 !important;
+    font-weight: 600;
+}
+
+/* Table rows */
+tbody tr td {
+    background-color: #020617 !important;
+    color: #E5E7EB !important;
+}
+
+/* Hover effect */
+tbody tr:hover td {
+    background-color: #1E293B !important;
+}
+
+/* ===== Divider ===== */
+hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #38BDF8, transparent);
+    margin: 2rem 0;
+}
+
+/* ===== Info / Warning ===== */
+.stAlert {
+    border-radius: 12px;
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #020617;
+}
+::-webkit-scrollbar-thumb {
+    background: #38BDF8;
+    border-radius: 10px;
+}
+
+/* ===== Footer (optional later) ===== */
+footer {
+    visibility: hidden;
+}
+</style>
+""", unsafe_allow_html=True)
+
 ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
 UNIS_PATH = DATA_DIR / "universities.csv"
