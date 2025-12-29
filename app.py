@@ -6,6 +6,18 @@ from pathlib import Path
 # Config (MUST BE FIRST)
 # ----------------------------
 st.set_page_config(page_title="Gulf Uni Guide AI", layout="wide")
+from pathlib import Path
+import pandas as pd
+import streamlit as st
+
+ROOT = Path(__file__).resolve().parent
+UNIS_PATH = ROOT / "data" / "universities.csv"
+
+if not UNIS_PATH.exists() or UNIS_PATH.stat().st_size == 0:
+    st.error(f"❌ universities.csv not found or empty at: {UNIS_PATH}")
+    st.stop()
+
+df_universities = pd.read_csv(UNIS_PATH, encoding="utf-8", engine="python", on_bad_lines="skip")
 
 # ----------------------------
 # Paths (Pathlib)
