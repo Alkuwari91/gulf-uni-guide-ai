@@ -1,20 +1,12 @@
 uni_id,name_ar,name_en,country,city,type,website,admissions_url,programs_url,ranking_source,ranking_value,accreditation_notes
 qa_qu,جامعة قطر,Qatar University,Qatar,Doha,Public,https://www.qu.edu.qa,https://www.qu.edu.qa/admissions,https://www.qu.edu.qa/programs,QS,,—
 qa_udst,جامعة الدوحة للعلوم والتكنولوجيا,University of Doha for Science and Technology,Qatar,Doha,Public,https://www.udst.edu.qa,https://www.udst.edu.qa/admissions,https://www.udst.edu.qa/academics,,,
+qa_hbku,جامعة حمد بن خليفة,Hamad Bin Khalifa University,Qatar,Doha,Public,https://www.hbku.edu.qa,https://www.hbku.edu.qa/en/admissions,https://www.hbku.edu.qa/en/academics,,,
+qa_digs,معهد الدوحة للدراسات العليا,Doha Institute for Graduate Studies,Qatar,Doha,Public,https://www.dohainstitute.edu.qa,https://www.dohainstitute.edu.qa/en/Admissions,https://www.dohainstitute.edu.qa/en/Academics,,,
+qa_lusail,جامعة لوسيل,Lusail University,Qatar,Lusail,Private,https://www.lu.edu.qa,https://www.lu.edu.qa/en/admission,https://www.lu.edu.qa/en/colleges-programs,,,
 qa_cmu,جامعة كارنيجي ميلون في قطر,Carnegie Mellon University Qatar,Qatar,Doha,Private,https://www.qatar.cmu.edu,https://www.qatar.cmu.edu/admissions,https://www.qatar.cmu.edu/academics,,,
 qa_georgetown,جامعة جورجتاون في قطر,Georgetown University Qatar,Qatar,Doha,Private,https://www.qatar.georgetown.edu,https://www.qatar.georgetown.edu/admissions,https://www.qatar.georgetown.edu/academics,,,
-sa_ksu,جامعة الملك سعود,King Saud University,Saudi Arabia,Riyadh,Public,https://www.ksu.edu.sa,https://admissions.ksu.edu.sa,https://www.ksu.edu.sa/programs,QS,,—
-sa_kau,جامعة الملك عبدالعزيز,King Abdulaziz University,Saudi Arabia,Jeddah,Public,https://www.kau.edu.sa,https://admissions.kau.edu.sa,https://www.kau.edu.sa/programs,QS,,—
-sa_imamu,جامعة الإمام محمد بن سعود,Imam Mohammad Ibn Saud University,Saudi Arabia,Riyadh,Public,https://www.imamu.edu.sa,https://admission.imamu.edu.sa,https://www.imamu.edu.sa/programs,,,
-sa_psu,جامعة الأمير سلطان,Prince Sultan University,Saudi Arabia,Riyadh,Private,https://www.psu.edu.sa,https://www.psu.edu.sa/admissions,https://www.psu.edu.sa/programs,,,
-ae_uaeu,جامعة الإمارات العربية المتحدة,United Arab Emirates University,UAE,Al Ain,Public,https://www.uaeu.ac.ae,https://www.uaeu.ac.ae/en/admission,https://www.uaeu.ac.ae/en/programs,QS,,—
-ae_khalifa,جامعة خليفة,Khalifa University,UAE,Abu Dhabi,Public,https://www.ku.ac.ae,https://www.ku.ac.ae/admissions,https://www.ku.ac.ae/academics,QS,,—
-ae_zu,جامعة زايد,Zayed University,UAE,Abu Dhabi,Public,https://www.zu.ac.ae,https://www.zu.ac.ae/main/en/admissions,https://www.zu.ac.ae/main/en/programs,,,
-ae_aus,الجامعة الأمريكية في الشارقة,American University of Sharjah,UAE,Sharjah,Private,https://www.aus.edu,https://www.aus.edu/admissions,https://www.aus.edu/academics,,,
-bh_uob,جامعة البحرين,University of Bahrain,Bahrain,Sakhir,Public,https://www.uob.edu.bh,https://www.uob.edu.bh/admission,https://www.uob.edu.bh/programs,,,
-bh_auk,الجامعة العربية المفتوحة,Arab Open University Bahrain,Bahrain,Manama,Private,https://www.aou.org.bh,https://www.aou.org.bh/admissions,https://www.aou.org.bh/programs,,,
-kw_ku,جامعة الكويت,Kuwait University,Kuwait,Kuwait City,Public,https://www.ku.edu.kw,https://www.ku.edu.kw/admission,https://www.ku.edu.kw/programs,,,
-kw_aum,الجامعة الأمريكية في الشرق الأوسط,American University of the Middle East,Kuwait,Egaila,Private,https://www.aum.edu.kw,https://www.aum.edu.kw/admissions,https://www.aum.edu.kw/programs,,,
-om_squ,جامعة السلطان قابوس,Sultan Qaboos University,Oman,Muscat,Public,https://www.squ.edu.om,https://www.squ.edu.om/admissions,https://www.squ.edu.om/programs,,,
-om_gutech,الجامعة الألمانية للتكنولوجيا,German University of Technology Oman,Oman,Muscat,Private,https://www.gutech.edu.om,https://www.gutech.edu.om/admissions,https://www.gutech.edu.om/programs,,,
-
+qa_tamuq,جامعة تكساس إي أند أم في قطر,Texas A&M University at Qatar,Qatar,Doha,Private,https://www.qatar.tamu.edu,https://www.qatar.tamu.edu/admissions,https://www.qatar.tamu.edu/academics,,,
+qa_nu,جامعة نورثويسترن في قطر,Northwestern University in Qatar,Qatar,Doha,Private,https://www.qatar.northwestern.edu,https://www.qatar.northwestern.edu/admissions,https://www.qatar.northwestern.edu/academics,,,
+qa_wcm,وايل كورنيل للطب - قطر,Weill Cornell Medicine-Qatar,Qatar,Doha,Private,https://qatar-weill.cornell.edu,https://qatar-weill.cornell.edu/admissions,https://qatar-weill.cornell.edu/education,,,
+qa_vcu,فرجينيا كومنولث للفنون - قطر,VCUarts Qatar,Qatar,Doha,Private,https://qatar.vcu.edu,https://qatar.vcu.edu/admissions,https://qatar.vcu.edu/academics,,,
