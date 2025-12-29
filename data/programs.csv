@@ -72,3 +72,33 @@ ae_aus_msc_cs,ae_aus,Master,MSc,Computer Science,Computer Science,علوم ال�
 ae_ud_bsc_it,ae_ud,Bachelor,BSc,Information Technology,Information Technology,تقنية المعلومات,Dubai,English,4,Varies,High school + Math,https://ud.ac.ae
 ae_ud_bba,ae_ud,Bachelor,BBA,Business Administration,Business Administration,إدارة الأعمال,Dubai,English,4,Varies,High school,https://ud.ac.ae
 ae_ud_mba,ae_ud,Master,MBA,Business Administration,MBA,MBA إدارة الأعمال,Dubai,English,2,Varies,Bachelor degree,https://ud.ac.ae
+
+program_id,uni_id,level,degree_type,major_field,program_name_en,program_name_ar,city,language,duration_years,tuition_notes,admissions_requirements,url
+
+# -------- Kuwait University (Public) --------
+kw_ku_dip_edu,kw_ku,Diploma,Diploma,Education,Education Diploma,دبلوم التربية,Kuwait City,Arabic,1,Varies,High school,https://www.ku.edu.kw
+kw_ku_bed,kw_ku,Bachelor,BEd,Education,Bachelor of Education,بكالوريوس التربية,Kuwait City,Arabic,4,Varies,High school,https://www.ku.edu.kw
+kw_ku_bsc_cs,kw_ku,Bachelor,BSc,Computer Science,Computer Science,علوم الحاسب,Kuwait City,English,4,Varies,High school + Math,https://www.ku.edu.kw
+kw_ku_bsc_ai,kw_ku,Bachelor,BSc,Artificial Intelligence,Artificial Intelligence,الذكاء الاصطناعي,Kuwait City,English,4,Varies,High school + Math,https://www.ku.edu.kw
+kw_ku_bsc_cyber,kw_ku,Bachelor,BSc,Cybersecurity,Cybersecurity,الأمن السيبراني,Kuwait City,English,4,Varies,High school + Math,https://www.ku.edu.kw
+kw_ku_md,kw_ku,Bachelor,MD,Medicine,Medicine,الطب,Kuwait City,Arabic/English,6,Varies,High school + aptitude,https://www.ku.edu.kw
+kw_ku_bpharm,kw_ku,Bachelor,BPharm,Pharmacy,Pharmacy,الصيدلة,Kuwait City,English,5,Varies,High school + Science,https://www.ku.edu.kw
+kw_ku_beng,kw_ku,Bachelor,BEng,Engineering,Engineering,الهندسة,Kuwait City,English,4,Varies,High school + Math/Physics,https://www.ku.edu.kw
+kw_ku_bsc_econ,kw_ku,Bachelor,BSc,Economics,Economics,الاقتصاد,Kuwait City,Arabic/English,4,Varies,High school,https://www.ku.edu.kw
+kw_ku_msc_ai,kw_ku,Master,MSc,Artificial Intelligence,MSc Artificial Intelligence,ماجستير ذكاء اصطناعي,Kuwait City,English,2,Varies,Bachelor degree,https://www.ku.edu.kw
+kw_ku_msc_cyber,kw_ku,Master,MSc,Cybersecurity,MSc Cybersecurity,ماجستير الأمن السيبراني,Kuwait City,English,2,Varies,Bachelor degree,https://www.ku.edu.kw
+kw_ku_mba,kw_ku,Master,MBA,Business Administration,MBA,MBA إدارة الأعمال,Kuwait City,English,2,Varies,Bachelor degree,https://www.ku.edu.kw
+kw_ku_phd_cs,kw_ku,PhD,PhD,Computer Science,PhD Computer Science,دكتوراه علوم الحاسب,Kuwait City,English,4,Varies,Master degree,https://www.ku.edu.kw
+kw_ku_phd_eng,kw_ku,PhD,PhD,Engineering,PhD Engineering,دكتوراه الهندسة,Kuwait City,English,4,Varies,Master degree,https://www.ku.edu.kw
+
+# -------- American University of the Middle East (Private) --------
+kw_aum_dip_it,kw_aum,Diploma,Diploma,Information Technology,IT Diploma,دبلوم تقنية المعلومات,Egaila,English,2,Varies,High school,https://www.aum.edu.kw
+kw_aum_bsc_cs,kw_aum,Bachelor,BSc,Computer Science,Computer Science,علوم الحاسب,Egaila,English,4,Varies,High school + Math,https://www.aum.edu.kw
+kw_aum_bsc_ai,kw_aum,Bachelor,BSc,Artificial Intelligence,Artificial Intelligence,الذكاء الاصطناعي,Egaila,English,4,Varies,High school + Math,https://www.aum.edu.kw
+kw_aum_bsc_cyber,kw_aum,Bachelor,BSc,Cybersecurity,Cybersecurity,الأمن السيبراني,Egaila,English,4,Varies,High school + Math,https://www.aum.edu.kw
+kw_aum_beng,kw_aum,Bachelor,BEng,Engineering,Engineering,الهندسة,Egaila,English,4,Varies,High school + Math/Physics,https://www.aum.edu.kw
+kw_aum_bba,kw_aum,Bachelor,BBA,Business Administration,Business Administration,إدارة الأعمال,Egaila,English,4,Varies,High school,https://www.aum.edu.kw
+kw_aum_msc_it,kw_aum,Master,MSc,Information Technology,Information Technology,تقنية المعلومات,Egaila,English,2,Varies,Bachelor degree,https://www.aum.edu.kw
+kw_aum_msc_cyber,kw_aum,Master,MSc,Cybersecurity,Cybersecurity,الأمن السيبراني,Egaila,English,2,Varies,Bachelor degree,https://www.aum.edu.kw
+kw_aum_mba,kw_aum,Master,MBA,Business Administration,MBA,MBA إدارة الأعمال,Egaila,English,2,Varies,Bachelor degree,https://www.aum.edu.kw
+
