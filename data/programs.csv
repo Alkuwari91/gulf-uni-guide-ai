@@ -13,3 +13,24 @@ qa_udst_dip_it,qa_udst,Diploma,Diploma,Information Technology,IT Diploma,دبل�
 qa_udst_bsc_cyber,qa_udst,Bachelor,BSc,Cybersecurity,Cybersecurity,الأمن السيبراني,Doha,English,4,Varies,High school + Math,https://www.udst.edu.qa
 qa_hbku_msc_ai,qa_hbku,Master,MSc,Artificial Intelligence,MSc Artificial Intelligence,ماجستير الذكاء الاصطناعي,Doha,English,2,Varies,Bachelor + IELTS,https://www.hbku.edu.qa
 qa_hbku_phd_cs,qa_hbku,PhD,PhD,Computer Science,PhD Computer Science,دكتوراه علوم الحاسوب,Doha,English,4,Varies,Master + proposal,https://www.hbku.edu.qa
+sa_ksu_dip_edu,sa_ksu,Diploma,Diploma,Education,Education Diploma,دبلوم التربية,Riyadh,Arabic,1,Varies,High school,https://www.ksu.edu.sa
+sa_ksu_bsc_ai,sa_ksu,Bachelor,BSc,Artificial Intelligence,Artificial Intelligence,الذكاء الاصطناعي,Riyadh,English,4,Varies,High school + Math,https://www.ksu.edu.sa
+sa_ksu_bsc_cyber,sa_ksu,Bachelor,BSc,Cybersecurity,Cybersecurity,الأمن السيبراني,Riyadh,English,4,Varies,High school + Math,https://www.ksu.edu.sa
+sa_ksu_md,sa_ksu,Bachelor,MD,Medicine,Medicine,الطب,Riyadh,Arabic/English,6,Varies,High school + aptitude,https://www.ksu.edu.sa
+sa_ksu_bpharm,sa_ksu,Bachelor,BPharm,Pharmacy,Pharmacy,الصيدلة,Riyadh,English,5,Varies,High school + Science,https://www.ksu.edu.sa
+sa_ksu_beng,sa_ksu,Bachelor,BEng,Engineering,Engineering,الهندسة,Riyadh,English,4,Varies,High school + Math/Physics,https://www.ksu.edu.sa
+sa_ksu_msc_ai,sa_ksu,Master,MSc,Artificial Intelligence,MSc Artificial Intelligence,ماجستير ذكاء اصطناعي,Riyadh,English,2,Varies,Bachelor degree,https://www.ksu.edu.sa
+sa_ksu_msc_cyber,sa_ksu,Master,MSc,Cybersecurity,MSc Cybersecurity,ماجستير الأمن السيبراني,Riyadh,English,2,Varies,Bachelor degree,https://www.ksu.edu.sa
+sa_ksu_phd_cs,sa_ksu,PhD,PhD,Computer Science,PhD Computer Science,دكتوراه علوم الحاسب,Riyadh,English,4,Varies,Master degree,https://www.ksu.edu.sa
+
+sa_kau_bsc_ai,sa_kau,Bachelor,BSc,Artificial Intelligence,Artificial Intelligence,الذكاء الاصطناعي,Jeddah,English,4,Varies,High school + Math,https://www.kau.edu.sa
+sa_kau_md,sa_kau,Bachelor,MD,Medicine,Medicine,الطب,Jeddah,Arabic/English,6,Varies,High school + aptitude,https://www.kau.edu.sa
+sa_kau_msc_data,sa_kau,Master,MSc,Data Science,Data Science,علوم البيانات,Jeddah,English,2,Varies,Bachelor degree,https://www.kau.edu.sa
+sa_kau_phd_eng,sa_kau,PhD,PhD,Engineering,Engineering PhD,دكتوراه الهندسة,Jeddah,English,4,Varies,Master degree,https://www.kau.edu.sa
+
+sa_kfupm_beng,sa_kfupm,Bachelor,BEng,Engineering,Engineering,الهندسة,Dhahran,English,4,Varies,High school + Math/Physics,https://www.kfupm.edu.sa
+sa_kfupm_msc_ai,sa_kfupm,Master,MSc,Artificial Intelligence,Artificial Intelligence,الذكاء الاصطناعي,Dhahran,English,2,Varies,Bachelor degree,https://www.kfupm.edu.sa
+sa_kfupm_phd_eng,sa_kfupm,PhD,PhD,Engineering,Engineering PhD,دكتوراه الهندسة,Dhahran,English,4,Varies,Master degree,https://www.kfupm.edu.sa
+
+sa_psu_bsc_cs,sa_psu,Bachelor,BSc,Computer Science,Computer Science,علوم الحاسب,Riyadh,English,4,Varies,High school + Math,https://www.psu.edu.sa
+sa_psu_msc_cyber,sa_psu,Master,MSc,Cybersecurity,Cybersecurity,الأمن السيبراني,Riyadh,English,2,Varies,Bachelor degree,https://www.psu.edu.sa
