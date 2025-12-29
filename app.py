@@ -6,106 +6,159 @@ from pathlib import Path
 # Config (NO ICONS)
 # ----------------------------
 st.set_page_config(page_title="Gulf Uni Guide AI", layout="wide")
-
+# ===== UI THEME (HEADER + STYLE) — UI ONLY =====
 st.markdown("""
 <style>
-/* ===== Global ===== */
-html, body, [class*="css"] {
-    font-family: 'Inter', 'Segoe UI', sans-serif;
-    background-color: #0F172A;
-    color: #E5E7EB;
+/* Page background */
+.stApp{
+  background: linear-gradient(180deg, #0B1220 0%, #0F1B33 45%, #0B1220 100%);
+  color: #E5E7EB;
 }
 
-/* ===== Main container ===== */
-.main {
-    background-color: #0F172A;
+/* Reduce top padding */
+.block-container{ padding-top: 1.2rem; }
+
+/* Header */
+.bawsala-header{
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 18px;
+  padding: 18px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
 }
 
-/* ===== Titles ===== */
-h1, h2, h3 {
-    color: #F9FAFB;
-    letter-spacing: 0.3px;
+.brand-wrap{
+  display:flex;
+  align-items:center;
+  gap: 12px;
+  min-width: 260px;
+}
+.brand-icon{
+  width: 44px; height: 44px;
+  border-radius: 14px;
+  background: radial-gradient(circle at 30% 30%, rgba(56,189,248,0.9), rgba(56,189,248,0.25) 55%, rgba(255,255,255,0.08) 70%);
+  border: 1px solid rgba(255,255,255,0.12);
+  display:flex; align-items:center; justify-content:center;
+  font-size: 20px;
+}
+.brand-title{
+  margin:0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: .3px;
+  color: #F9FAFB;
+}
+.brand-tag{
+  margin:0;
+  font-size: 0.95rem;
+  color: rgba(229,231,235,0.85);
+}
+.brand-tag b{ color: #38BDF8; font-weight: 700; }
+
+/* Header actions (buttons) */
+.header-actions{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content:flex-end;
 }
 
-h1 {
-    font-size: 2.2rem;
+.hbtn{
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 700;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.07);
+  color: #F9FAFB;
+}
+.hbtn-primary{
+  border: 1px solid rgba(56,189,248,0.35);
+  background: rgba(56,189,248,0.16);
+  color: #EAF7FF;
+}
+.hbtn:hover{
+  filter: brightness(1.07);
+  transform: translateY(-1px);
+  transition: 0.15s ease;
 }
 
-/* ===== Subheaders ===== */
-h2, h3 {
-    color: #38BDF8;
+/* Make Streamlit buttons in header look like our buttons */
+div[data-testid="stHorizontalBlock"] button{
+  border-radius: 12px !important;
+  padding: 10px 14px !important;
+  font-weight: 700 !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  background: rgba(255,255,255,0.07) !important;
+  color: #F9FAFB !important;
+}
+div[data-testid="stHorizontalBlock"] button[kind="primary"]{
+  border: 1px solid rgba(56,189,248,0.35) !important;
+  background: rgba(56,189,248,0.16) !important;
+  color: #EAF7FF !important;
 }
 
-/* ===== Filters / Inputs ===== */
-div[data-baseweb="select"],
-input[type="text"] {
-    background-color: #1E293B !important;
-    color: #F9FAFB !important;
-    border-radius: 10px;
-    border: 1px solid #334155;
+/* Section titles */
+h1,h2,h3{ color:#F9FAFB; }
+h2,h3{ color:#EAF7FF; }
+
+/* Inputs */
+div[data-baseweb="select"] > div,
+input[type="text"]{
+  background: rgba(255,255,255,0.06) !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  color:#F9FAFB !important;
+  border-radius: 14px !important;
 }
 
-/* Placeholder text */
-input::placeholder {
-    color: #94A3B8;
+/* Dataframes */
+[data-testid="stDataFrame"]{
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 16px;
+  padding: 10px;
 }
 
-/* ===== DataFrames ===== */
-[data-testid="stDataFrame"] {
-    background-color: #020617;
-    border-radius: 14px;
-    padding: 6px;
-}
-
-/* Table headers */
-thead tr th {
-    background-color: #1E293B !important;
-    color: #38BDF8 !important;
-    font-weight: 600;
-}
-
-/* Table rows */
-tbody tr td {
-    background-color: #020617 !important;
-    color: #E5E7EB !important;
-}
-
-/* Hover effect */
-tbody tr:hover td {
-    background-color: #1E293B !important;
-}
-
-/* ===== Divider ===== */
-hr {
-    border: none;
-    height: 1px;
-    background: linear-gradient(to right, transparent, #38BDF8, transparent);
-    margin: 2rem 0;
-}
-
-/* ===== Info / Warning ===== */
-.stAlert {
-    border-radius: 12px;
-}
-
-/* ===== Scrollbar ===== */
-::-webkit-scrollbar {
-    width: 8px;
-}
-::-webkit-scrollbar-track {
-    background: #020617;
-}
-::-webkit-scrollbar-thumb {
-    background: #38BDF8;
-    border-radius: 10px;
-}
-
-/* ===== Footer (optional later) ===== */
-footer {
-    visibility: hidden;
+/* Divider */
+hr{
+  border:none;
+  height:1px;
+  background: linear-gradient(90deg, transparent, rgba(56,189,248,0.8), transparent);
+  margin: 1.6rem 0;
 }
 </style>
 """, unsafe_allow_html=True)
+
+# ===== HEADER (UI ONLY) =====
+left, right = st.columns([3.2, 1.2])
+with left:
+    st.markdown("""
+    <div class="bawsala-header">
+      <div class="brand-wrap">
+        <div class="brand-icon">🧭</div>
+        <div>
+          <p class="brand-title">بوصلة</p>
+          <p class="brand-tag">دليلك الذكي لاختيار <b>الجامعة</b> والبرنامج في دول الخليج</p>
+        </div>
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with right:
+    # أزرار UI فقط (لاحقًا نربطها بتسجيل دخول حقيقي إذا تبين)
+    a1, a2 = st.columns(2)
+    with a1:
+        st.button("تسجيل الدخول", key="login_btn")
+    with a2:
+        st.button("حساب جديد", key="signup_btn")
+
+st.write("")  # مسافة بسيطة تحت الهيدر
+
 
 ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
