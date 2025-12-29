@@ -1,9 +1,15 @@
 program_id,uni_id,level,degree_type,major_field,program_name_en,program_name_ar,city,language,duration_years,tuition_notes,admissions_requirements,url
-qu_bsc_cs,qa_qu,Bachelor,BSc,Computer Science,Computer Science,علوم الحاسوب,Doha,English,4,Varies,High school + Math,https://www.qu.edu.qa
-qu_bsc_ai,qa_qu,Bachelor,BSc,Artificial Intelligence,Artificial Intelligence,الذكاء الاصطناعي,Doha,English,4,Varies,High school + Math,https://www.qu.edu.qa
-ksu_md,sa_ksu,Bachelor,MD,Medicine,Medicine,الطب,Riyadh,Arabic/English,6,Varies,High school + aptitude,https://ksu.edu.sa
-qu_dip_it,qa_qu,Diploma,Diploma,Information Technology,IT Diploma,دبلوم تقنية معلومات,Doha,English,2,Varies,High school,https://www.qu.edu.qa
-qu_msc_ai,qa_qu,Master,MSc,Artificial Intelligence,MSc Artificial Intelligence,ماجستير الذكاء الاصطناعي,Doha,English,2,Varies,Bachelor + IELTS,https://www.qu.edu.qa
-qu_phd_cs,qa_qu,PhD,PhD,Computer Science,PhD Computer Science,دكتوراه علوم الحاسوب,Doha,English,4,Varies,Master + Research proposal,https://www.qu.edu.qa
-qu_diploma_edu,qa_qu,Diploma,Diploma,Education,Education Diploma,دبلوم التربية,Doha,Arabic,1,Varies,High school,https://www.qu.edu.qa
-qu_msc_ai,qa_qu,Master,MSc,Artificial Intelligence,MSc Artificial Intelligence,ماجستير ذكاء اصطناعي,Doha,English,2,Varies,Bachelor degree,https://www.qu.edu.qa
+qa_qu_dip_edu,qa_qu,Diploma,Diploma,Education,Education Diploma,دبلوم التربية,Doha,Arabic,1,Varies,High school,https://www.qu.edu.qa
+qa_qu_bsc_ai,qa_qu,Bachelor,BSc,Artificial Intelligence,Artificial Intelligence,الذكاء الاصطناعي,Doha,English,4,Varies,High school + Math,https://www.qu.edu.qa
+qa_qu_bsc_cyber,qa_qu,Bachelor,BSc,Cybersecurity,Cybersecurity,الأمن السيبراني,Doha,English,4,Varies,High school + Math,https://www.qu.edu.qa
+qa_qu_beng_eng,qa_qu,Bachelor,BEng,Engineering,Engineering,الهندسة,Doha,English,4,Varies,High school + Math/Physics,https://www.qu.edu.qa
+qa_qu_ba_econ,qa_qu,Bachelor,BA,Economics,Economics,الاقتصاد,Doha,English/Arabic,4,Varies,High school,https://www.qu.edu.qa
+qa_qu_md_med,qa_qu,Bachelor,MD,Medicine,Medicine,الطب,Doha,English,6,Varies,High school + aptitude,https://www.qu.edu.qa
+qa_qu_bpharm,qa_qu,Bachelor,BPharm,Pharmacy,Pharmacy,الصيدلة,Doha,English,5,Varies,High school + Science,https://www.qu.edu.qa
+qa_qu_msc_ai,qa_qu,Master,MSc,Artificial Intelligence,MSc Artificial Intelligence,ماجستير الذكاء الاصطناعي,Doha,English,2,Varies,Bachelor + IELTS,https://www.qu.edu.qa
+qa_qu_msc_cyber,qa_qu,Master,MSc,Cybersecurity,MSc Cybersecurity,ماجستير الأمن السيبراني,Doha,English,2,Varies,Bachelor + IELTS,https://www.qu.edu.qa
+qa_qu_phd_cs,qa_qu,PhD,PhD,Computer Science,PhD Computer Science,دكتوراه علوم الحاسوب,Doha,English,4,Varies,Master + proposal,https://www.qu.edu.qa
+qa_udst_dip_it,qa_udst,Diploma,Diploma,Information Technology,IT Diploma,دبلوم تقنية المعلومات,Doha,English,2,Varies,High school,https://www.udst.edu.qa
+qa_udst_bsc_cyber,qa_udst,Bachelor,BSc,Cybersecurity,Cybersecurity,الأمن السيبراني,Doha,English,4,Varies,High school + Math,https://www.udst.edu.qa
+qa_hbku_msc_ai,qa_hbku,Master,MSc,Artificial Intelligence,MSc Artificial Intelligence,ماجستير الذكاء الاصطناعي,Doha,English,2,Varies,Bachelor + IELTS,https://www.hbku.edu.qa
+qa_hbku_phd_cs,qa_hbku,PhD,PhD,Computer Science,PhD Computer Science,دكتوراه علوم الحاسوب,Doha,English,4,Varies,Master + proposal,https://www.hbku.edu.qa
