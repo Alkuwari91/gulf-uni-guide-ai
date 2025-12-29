@@ -72,10 +72,24 @@ country = col1.selectbox("Country", options=["All"] + countries, index=0)
 uni_types = sorted([t for t in unis["type"].unique() if t.strip()])
 uni_type = col2.selectbox("University type", options=["All"] + uni_types, index=0)
 
+PREFERRED_LEVEL_ORDER = [
+    "Diploma",
+    "Bachelor",
+    "Master",
+    "PhD",
+]
+
 levels = []
 if not progs.empty and "level" in progs.columns:
-    levels = sorted([x for x in progs["level"].unique() if x.strip()])
+    raw_levels = [x.strip() for x in progs["level"].dropna().astype(str).unique() if x.strip()]
+
+    ordered = [x for x in PREFERRED_LEVEL_ORDER if x in raw_levels]
+    extras = sorted([x for x in raw_levels if x not in PREFERRED_LEVEL_ORDER])
+
+    levels = ordered + extras
+
 level = col3.selectbox("Level", options=["All"] + levels, index=0)
+
 
 majors = []
 if not progs.empty and "major_field" in progs.columns:
