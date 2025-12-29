@@ -55,7 +55,109 @@ st.markdown("""
 
 .brand-title {
     margin: 0;
-    font-size
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #1E3A8A;
+}
+
+.brand-tag {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #475569;
+}
+
+/* Header buttons */
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.hbtn {
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-weight: 700;
+    border: 1px solid #CBD5E1;
+    background: #FFFFFF;
+    color: #1E3A8A;
+}
+
+.hbtn-primary {
+    background: #38BDF8;
+    color: white;
+    border: none;
+}
+
+.hbtn:hover {
+    filter: brightness(0.97);
+    transition: 0.15s ease;
+}
+
+/* Streamlit buttons (match header style) */
+button {
+    border-radius: 12px !important;
+    font-weight: 700 !important;
+}
+
+/* ===== Inputs ===== */
+div[data-baseweb="select"] > div,
+input[type="text"] {
+    background: #FFFFFF !important;
+    border: 1px solid #CBD5E1 !important;
+    border-radius: 14px !important;
+    color: #1E293B !important;
+}
+
+/* ===== DataFrames ===== */
+[data-testid="stDataFrame"] {
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 16px;
+    padding: 10px;
+}
+
+/* Table headers */
+thead tr th {
+    background-color: #EFF6FF !important;
+    color: #1E3A8A !important;
+    font-weight: 700;
+}
+
+/* Divider */
+hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #38BDF8, transparent);
+    margin: 1.5rem 0;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# ===== HEADER (UI ONLY) =====
+left, right = st.columns([3.5, 1.3])
+
+with left:
+    st.markdown("""
+    <div class="bawsala-header">
+        <div class="brand-wrap">
+            <div class="brand-icon">🧭</div>
+            <div>
+                <p class="brand-title">بوصلة</p>
+                <p class="brand-tag">دليلك الذكي لاختيار الجامعة والبرنامج في دول الخليج</p>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with right:
+    c1, c2 = st.columns(2)
+    with c1:
+        st.button("تسجيل الدخول")
+    with c2:
+        st.button("حساب جديد")
+
+st.write("")  # spacing
+
 
 ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
