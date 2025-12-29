@@ -8,110 +8,69 @@ from pathlib import Path
 st.set_page_config(page_title="Gulf Uni Guide AI", layout="wide")
 st.markdown("""
 <style>
-/* ===== Background light ===== */
-.stApp { background: #F5F7FA; color: #475569; }
-.block-container { padding-top: 0.8rem; }
+.stApp { background:#F5F7FA; color:#475569; }
+.block-container { padding-top: 0.6rem; }
 
-/* ===== Hide Streamlit default title & caption (UI only) ===== */
-h1, .stCaption { display: none !important; }
+/* hide default title & caption */
+h1, .stCaption { display:none !important; }
 
-/* ===== Header card ===== */
-.bawsala-header {
-  background: #FFFFFF;
-  border: 1px solid #E5E7EB;
-  border-radius: 18px;
-  padding: 18px 22px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-  margin: 0 0 18px 0;
-  width: 100%;
+/* ===== Header ===== */
+.bawsala-header{
+  background:#FFFFFF;
+  border:1px solid #E5E7EB;
+  border-radius:18px;
+  padding:16px 22px;
+  box-shadow:0 6px 20px rgba(0,0,0,.06);
+  margin-bottom:22px;
 }
-
 .bawsala-inner{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap: 12px;
 }
 
-/* Brand RTL */
-.brand-wrap{
+/* brand */
+.brand{
   display:flex;
   align-items:center;
-  gap: 12px;
-  direction: rtl;
-  text-align: right;
+  gap:14px;
+  direction:rtl;
 }
-
 .brand-icon{
-  width: 52px; height: 52px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #38BDF8, #60A5FA);
-  display:flex; align-items:center; justify-content:center;
-  font-size: 22px; color: #fff;
+  width:52px;height:52px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#38BDF8,#60A5FA);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;color:#fff;
 }
-
 .brand-title{
-  margin: 0;
-  font-size: 1.6rem;
-  font-weight: 900;
-  color: #1E3A8A;
-  line-height: 1.1;
+  margin:0;
+  font-size:1.6rem;
+  font-weight:900;
+  color:#1E3A8A;
 }
 .brand-tag{
-  margin: 3px 0 0 0;
-  font-size: 0.95rem;
-  color: #475569;
+  margin:4px 0 0;
+  font-size:.95rem;
+  color:#475569;
 }
 
-/* Buttons */
-.header-actions{ display:flex; gap:10px; }
-.header-actions button{
-  border-radius: 12px !important;
-  padding: 10px 14px !important;
-  font-weight: 800 !important;
-  border: 1px solid #CBD5E1 !important;
-  background: #FFFFFF !important;
-  color: #1E3A8A !important;
+/* actions */
+.actions{
+  display:flex;
+  gap:10px;
 }
-.header-actions button[data-testid="baseButton-primary"]{
-  background: #38BDF8 !important;
-  color: #fff !important;
-  border: none !important;
+.actions button{
+  border-radius:12px!important;
+  font-weight:800!important;
 }
-
-/* Inputs */
-div[data-baseweb="select"] > div,
-input[type="text"]{
-  background:#FFFFFF !important;
-  border:1px solid #CBD5E1 !important;
-  border-radius: 14px !important;
-}
-
-/* Dataframes */
-[data-testid="stDataFrame"]{
-  background:#FFFFFF;
-  border:1px solid #E5E7EB;
-  border-radius: 16px;
-  padding: 8px;
-}
-
-/* Table header */
-thead tr th{
-  background:#EFF6FF !important;
-  color:#1E3A8A !important;
-  font-weight: 800 !important;
-}
-
-/* Divider */
-hr{
-  border:none;
-  height:1px;
-  background: linear-gradient(to right, transparent, #38BDF8, transparent);
-  margin: 1.2rem 0;
+.actions button[kind="primary"]{
+  background:#38BDF8!important;
+  color:#fff!important;
+  border:none!important;
 }
 </style>
 """, unsafe_allow_html=True)
-
 
 
 ROOT = Path(__file__).resolve().parent
