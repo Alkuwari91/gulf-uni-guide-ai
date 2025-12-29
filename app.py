@@ -81,14 +81,11 @@ PREFERRED_LEVEL_ORDER = [
 
 levels = []
 if not progs.empty and "level" in progs.columns:
-    raw_levels = [x.strip() for x in progs["level"].dropna().astype(str).unique() if x.strip()]
-
-    ordered = [x for x in PREFERRED_LEVEL_ORDER if x in raw_levels]
-    extras = sorted([x for x in raw_levels if x not in PREFERRED_LEVEL_ORDER])
-
-    levels = ordered + extras
-
+    levels = sorted([x for x in progs["level"].unique() if str(x).strip()])
+if not levels:
+    levels = ["Diploma", "Bachelor", "Master", "PhD"]
 level = col3.selectbox("Level", options=["All"] + levels, index=0)
+
 
 
 majors = []
