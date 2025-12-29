@@ -47,8 +47,6 @@ bh_rcsi,كلية الطب الملكية للجراحين في البحرين,RC
 bh_apu,جامعة آسيا باسيفيك البحرين,Applied Science University Bahrain,Bahrain,Isa Town,Private,https://www.asu.edu.bh,https://www.asu.edu.bh/admission,https://www.asu.edu.bh/academics,,,
 bh_gibs,كلية الخليج لإدارة الأعمال,Gulf International Business School,Bahrain,Manama,Private,https://www.gibs.edu.bh,,,,
 
-program_id,uni_id,level,degree_type,major_field,program_name_en,program_name_ar,city,language,duration_years,tuition_notes,admissions_requirements,url
-
 # -------- University of Bahrain --------
 bh_uob_bsc_cs,bh_uob,Bachelor,BSc,Computer Science,Computer Science,علوم الحاسب,Sakhir,English,4,Varies,High school + Math,https://www.uob.edu.bh
 bh_uob_bsc_ai,bh_uob,Bachelor,BSc,Artificial Intelligence,Artificial Intelligence,الذكاء الاصطناعي,Sakhir,English,4,Varies,High school + Math,https://www.uob.edu.bh
@@ -77,3 +75,10 @@ bh_ama_mba,bh_ama,Master,MBA,Business Administration,MBA,MBA إدارة الأع
 # -------- RCSI Bahrain (Medicine) --------
 bh_rcsi_md,bh_rcsi,Bachelor,MD,Medicine,Medicine,الطب,Busaiteen,English,6,Varies,High school + aptitude,https://www.rcsi.com/bahrain
 bh_rcsi_msc_health,bh_rcsi,Master,MSc,Health Sciences,Health Sciences,العلوم الصحية,Busaiteen,English,2,Varies,Bachelor degree,https://www.rcsi.com/bahrain
+
+om_squ,جامعة السلطان قابوس,Sultan Qaboos University,Oman,Muscat,Public,https://www.squ.edu.om,https://www.squ.edu.om/admissions,https://www.squ.edu.om/academics,,,
+om_gutech,الجامعة الألمانية للتكنولوجيا في عُمان,German University of Technology Oman,Oman,Muscat,Private,https://www.gutech.edu.om,https://www.gutech.edu.om/admissions,https://www.gutech.edu.om/programs,,,
+om_ut,جامعة التقنية والعلوم التطبيقية,University of Technology and Applied Sciences,Oman,Multiple (Oman),Public,https://www.ut.edu.om,https://www.ut.edu.om/admission,https://www.ut.edu.om/academics,,,
+om_nust,الجامعة الوطنية للعلوم والتكنولوجيا,National University of Science and Technology,Oman,Muscat,Public,https://www.nust.edu.om,https://www.nust.edu.om/admission,https://www.nust.edu.om/academics,,,
+om_smc,كلية الشرق الأوسط,Middle East College,Oman,Muscat,Private,https://www.mec.edu.om,https://www.mec.edu.om/admissions,https://www.mec.edu.om/programmes,,,
+om_aou,الجامعة العربية المفتوحة – عُمان,Arab Open University Oman,Oman,Muscat,Private,https://www.aou.edu.om,https://www.aou.edu.om/admissions,https://www.aou.edu.om/programs,,,
