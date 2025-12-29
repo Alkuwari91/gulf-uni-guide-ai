@@ -6,157 +6,112 @@ from pathlib import Path
 # Config (NO ICONS)
 # ----------------------------
 st.set_page_config(page_title="Gulf Uni Guide AI", layout="wide")
-# ===== LIGHT UI THEME (NO LOGIC TOUCH) =====
 st.markdown("""
 <style>
+/* ===== Background light ===== */
+.stApp { background: #F5F7FA; color: #475569; }
+.block-container { padding-top: 0.8rem; }
 
-/* ===== Page background ===== */
-.stApp {
-    background-color: #F5F7FA;
-    color: #475569;
-}
+/* ===== Hide Streamlit default title & caption (UI only) ===== */
+h1, .stCaption { display: none !important; }
 
-/* Reduce top padding */
-.block-container {
-    padding-top: 1.2rem;
-}
-
-/* ===== HEADER ===== */
+/* ===== Header card ===== */
 .bawsala-header {
-    background: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    border-radius: 18px;
-    padding: 18px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-    margin-bottom: 1.5rem;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 18px;
+  padding: 18px 22px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  margin: 0 0 18px 0;
+  width: 100%;
 }
 
-/* Brand */
-.brand-wrap {
-    display: flex;
-    align-items: center;
-    gap: 14px;
+.bawsala-inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
 }
 
-.brand-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, #38BDF8, #60A5FA);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    color: white;
+/* Brand RTL */
+.brand-wrap{
+  display:flex;
+  align-items:center;
+  gap: 12px;
+  direction: rtl;
+  text-align: right;
 }
 
-.brand-title {
-    margin: 0;
-    font-size: 1.6rem;
-    font-weight: 800;
-    color: #1E3A8A;
+.brand-icon{
+  width: 52px; height: 52px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #38BDF8, #60A5FA);
+  display:flex; align-items:center; justify-content:center;
+  font-size: 22px; color: #fff;
 }
 
-.brand-tag {
-    margin: 0;
-    font-size: 0.95rem;
-    color: #475569;
+.brand-title{
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #1E3A8A;
+  line-height: 1.1;
+}
+.brand-tag{
+  margin: 3px 0 0 0;
+  font-size: 0.95rem;
+  color: #475569;
 }
 
-/* Header buttons */
-.header-actions {
-    display: flex;
-    gap: 10px;
+/* Buttons */
+.header-actions{ display:flex; gap:10px; }
+.header-actions button{
+  border-radius: 12px !important;
+  padding: 10px 14px !important;
+  font-weight: 800 !important;
+  border: 1px solid #CBD5E1 !important;
+  background: #FFFFFF !important;
+  color: #1E3A8A !important;
+}
+.header-actions button[data-testid="baseButton-primary"]{
+  background: #38BDF8 !important;
+  color: #fff !important;
+  border: none !important;
 }
 
-.hbtn {
-    border-radius: 12px;
-    padding: 10px 16px;
-    font-weight: 700;
-    border: 1px solid #CBD5E1;
-    background: #FFFFFF;
-    color: #1E3A8A;
-}
-
-.hbtn-primary {
-    background: #38BDF8;
-    color: white;
-    border: none;
-}
-
-.hbtn:hover {
-    filter: brightness(0.97);
-    transition: 0.15s ease;
-}
-
-/* Streamlit buttons (match header style) */
-button {
-    border-radius: 12px !important;
-    font-weight: 700 !important;
-}
-
-/* ===== Inputs ===== */
+/* Inputs */
 div[data-baseweb="select"] > div,
-input[type="text"] {
-    background: #FFFFFF !important;
-    border: 1px solid #CBD5E1 !important;
-    border-radius: 14px !important;
-    color: #1E293B !important;
+input[type="text"]{
+  background:#FFFFFF !important;
+  border:1px solid #CBD5E1 !important;
+  border-radius: 14px !important;
 }
 
-/* ===== DataFrames ===== */
-[data-testid="stDataFrame"] {
-    background: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    border-radius: 16px;
-    padding: 10px;
+/* Dataframes */
+[data-testid="stDataFrame"]{
+  background:#FFFFFF;
+  border:1px solid #E5E7EB;
+  border-radius: 16px;
+  padding: 8px;
 }
 
-/* Table headers */
-thead tr th {
-    background-color: #EFF6FF !important;
-    color: #1E3A8A !important;
-    font-weight: 700;
+/* Table header */
+thead tr th{
+  background:#EFF6FF !important;
+  color:#1E3A8A !important;
+  font-weight: 800 !important;
 }
 
 /* Divider */
-hr {
-    border: none;
-    height: 1px;
-    background: linear-gradient(to right, transparent, #38BDF8, transparent);
-    margin: 1.5rem 0;
+hr{
+  border:none;
+  height:1px;
+  background: linear-gradient(to right, transparent, #38BDF8, transparent);
+  margin: 1.2rem 0;
 }
-
 </style>
 """, unsafe_allow_html=True)
 
-# ===== HEADER (UI ONLY) =====
-left, right = st.columns([3.5, 1.3])
-
-with left:
-    st.markdown("""
-    <div class="bawsala-header">
-        <div class="brand-wrap">
-            <div class="brand-icon">🧭</div>
-            <div>
-                <p class="brand-title">بوصلة</p>
-                <p class="brand-tag">دليلك الذكي لاختيار الجامعة والبرنامج في دول الخليج</p>
-            </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with right:
-    c1, c2 = st.columns(2)
-    with c1:
-        st.button("تسجيل الدخول")
-    with c2:
-        st.button("حساب جديد")
-
-st.write("")  # spacing
 
 
 ROOT = Path(__file__).resolve().parent
@@ -227,6 +182,29 @@ def normalize_progs(df: pd.DataFrame) -> pd.DataFrame:
 
 unis = normalize_unis(load_csv(UNIS_PATH))
 progs = normalize_progs(load_csv(PROGS_PATH))
+
+st.markdown("""
+<div class="bawsala-header">
+  <div class="bawsala-inner">
+    <div class="brand-wrap">
+      <div>
+        <p class="brand-title">بوصلة</p>
+        <p class="brand-tag">دليلك الذكي لاختيار الجامعة والبرنامج في دول الخليج</p>
+      </div>
+      <div class="brand-icon">🧭</div>
+    </div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
+# أزرار (واجهة فقط) تحت الهيدر بشكل مرتب
+a, b, c = st.columns([6, 1, 1])
+with b:
+    st.button("تسجيل الدخول", key="login_btn")
+with c:
+    st.button("حساب جديد", key="signup_btn")
+
+st.write("")
 
 st.title("Gulf Uni Guide AI")
 st.caption("Data source: universities.csv + programs.csv")
