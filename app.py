@@ -11,12 +11,6 @@ ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
 UNIS_PATH = DATA_DIR / "universities.csv"
 PROGS_PATH = DATA_DIR / "programs.csv"
-st.write("ROOT:", ROOT)
-st.write("DATA_DIR exists?", DATA_DIR.exists(), str(DATA_DIR))
-st.write("Files in root:", [p.name for p in ROOT.glob("*")])
-st.write("Files in data:", [p.name for p in DATA_DIR.glob("*")])
-st.write("UNIS_PATH exists?", UNIS_PATH.exists(), str(UNIS_PATH))
-st.write("PROGS_PATH exists?", PROGS_PATH.exists(), str(PROGS_PATH))
 
 # Expected schemas
 UNIS_COLS = [
