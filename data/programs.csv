@@ -73,7 +73,6 @@ ae_ud_bsc_it,ae_ud,Bachelor,BSc,Information Technology,Information Technology,ت
 ae_ud_bba,ae_ud,Bachelor,BBA,Business Administration,Business Administration,إدارة الأعمال,Dubai,English,4,Varies,High school,https://ud.ac.ae
 ae_ud_mba,ae_ud,Master,MBA,Business Administration,MBA,MBA إدارة الأعمال,Dubai,English,2,Varies,Bachelor degree,https://ud.ac.ae
 
-program_id,uni_id,level,degree_type,major_field,program_name_en,program_name_ar,city,language,duration_years,tuition_notes,admissions_requirements,url
 
 # -------- Kuwait University (Public) --------
 kw_ku_dip_edu,kw_ku,Diploma,Diploma,Education,Education Diploma,دبلوم التربية,Kuwait City,Arabic,1,Varies,High school,https://www.ku.edu.kw
@@ -101,8 +100,6 @@ kw_aum_bba,kw_aum,Bachelor,BBA,Business Administration,Business Administration,�
 kw_aum_msc_it,kw_aum,Master,MSc,Information Technology,Information Technology,تقنية المعلومات,Egaila,English,2,Varies,Bachelor degree,https://www.aum.edu.kw
 kw_aum_msc_cyber,kw_aum,Master,MSc,Cybersecurity,Cybersecurity,الأمن السيبراني,Egaila,English,2,Varies,Bachelor degree,https://www.aum.edu.kw
 kw_aum_mba,kw_aum,Master,MBA,Business Administration,MBA,MBA إدارة الأعمال,Egaila,English,2,Varies,Bachelor degree,https://www.aum.edu.kw
-
-program_id,uni_id,level,degree_type,major_field,program_name_en,program_name_ar,city,language,duration_years,tuition_notes,admissions_requirements,url
 
 # -------- University of Bahrain --------
 bh_uob_bsc_cs,bh_uob,Bachelor,BSc,Computer Science,Computer Science,علوم الحاسب,Sakhir,English,4,Varies,High school + Math,https://www.uob.edu.bh
@@ -132,8 +129,6 @@ bh_ama_mba,bh_ama,Master,MBA,Business Administration,MBA,MBA إدارة الأع
 # -------- RCSI Bahrain (Medicine) --------
 bh_rcsi_md,bh_rcsi,Bachelor,MD,Medicine,Medicine,الطب,Busaiteen,English,6,Varies,High school + aptitude,https://www.rcsi.com/bahrain
 bh_rcsi_msc_health,bh_rcsi,Master,MSc,Health Sciences,Health Sciences,العلوم الصحية,Busaiteen,English,2,Varies,Bachelor degree,https://www.rcsi.com/bahrain
-
-program_id,uni_id,level,degree_type,major_field,program_name_en,program_name_ar,city,language,duration_years,tuition_notes,admissions_requirements,url
 
 # -------- Sultan Qaboos University --------
 om_squ_bsc_cs,om_squ,Bachelor,BSc,Computer Science,Computer Science,علوم الحاسب,Muscat,English,4,Varies,High school + Math,https://www.squ.edu.om
