@@ -5,78 +5,24 @@ from pathlib import Path
 st.set_page_config(page_title="Gulf Uni Guide AI", layout="wide")
 
 BASE = Path(__file__).resolve().parent
+UNI_PATH = BASE / "data" / "universities.csv"
+PROG_PATH = BASE / "data" / "programs.csv"
 
-# Try both possible data locations
-possible_paths = [
-    BASE / "data" / "sample_programs.csv",
-    BASE / "gulf-uni-guide-ai" / "data" / "sample_programs.csv",
-]
+st.title("Gulf Uni Guide AI")
 
-DATA_PATH = None
-for p in possible_paths:
-    if p.exists():
-        DATA_PATH = p
-        break
-
-if DATA_PATH is None:
-    st.error("❌ sample_programs.csv not found in any expected location")
-    st.write("Checked paths:")
-    for p in possible_paths:
-        st.write(p)
+if not UNI_PATH.exists():
+    st.error(f"universities.csv not found: {UNI_PATH}")
     st.stop()
 
-df = pd.read_csv(DATA_PATH)
-st.title("🎓 Gulf Uni Guide AI")
+unis = pd.read_csv(UNI_PATH)
 
-country_options = ["All"] + sorted(df["country"].dropna().unique().tolist())
-selected_country = st.selectbox("Choose study country", country_options)
+st.write("Data loaded successfully.")
+st.dataframe(unis, use_container_width=True)
 
-filtered = df.copy()
-if selected_country != "All":
-    filtered = filtered[filtered["country"] == selected_country]
+# فلترة بسيطة كبداية
+countries = ["All"] + sorted(unis["country"].dropna().unique().tolist())
+selected_country = st.selectbox("Study country", countries)
 
-keyword = st.text_input("Search (university / program / city)")
-if keyword:
-    k = keyword.lower()
-    filtered = filtered[
-        filtered["university"].str.lower().str.contains(k, na=False)
-        | filtered["program"].str.lower().str.contains(k, na=False)
-        | filtered["city"].str.lower().str.contains(k, na=False)
-    ]
-
+filtered = unis if selected_country == "All" else unis[unis["country"] == selected_country]
+st.subheader("Universities")
 st.dataframe(filtered, use_container_width=True)
-
-st.title(" Gulf Uni Guide AI")
-st.success(f"Loaded data from: {DATA_PATH}")
-# ---------- UI ----------
-st.subheader("Student Profile")
-
-with st.sidebar:
-    country = st.selectbox(
-        "Where do you want to study?",
-        sorted(df["country"].unique())
-    )
-    major = st.text_input("Intended major (e.g. Engineering, CS)")
-    submit = st.button("Get University Matches")
-
-if submit:
-    st.subheader("Recommended Universities")
-
-    results = df[df["country"] == country]
-
-    if major:
-        results = results[
-            results["program"].str.contains(major, case=False, na=False)
-        ]
-
-    if results.empty:
-        st.warning("No matching universities found.")
-    else:
-        for _, row in results.iterrows():
-            st.markdown(f"""
-            ### 🏫 {row['university']}
-            **Program:** {row['program']}  
-            **Language:** {row['language']}  
-            **Requirements:** {row['requirements']}  
-            🔗 [Official website]({row['link']})
-            """)
