@@ -1,30 +1,40 @@
-import os
-import pandas as pd
 import streamlit as st
+import pandas as pd
 from pathlib import Path
 
-# ===============================
-# تحميل ملف الجامعات بشكل آمن
-# ===============================
+# ----------------------------
+# Config (MUST BE FIRST)
+# ----------------------------
+st.set_page_config(page_title="Gulf Uni Guide AI", layout="wide")
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-UNIVERSITIES_PATH = os.path.join(BASE_DIR, "data", "universities.csv")
+# ----------------------------
+# Paths (Pathlib)
+# ----------------------------
+ROOT = Path(__file__).resolve().parent
+DATA_DIR = ROOT / "data"
 
-if not os.path.exists(UNIVERSITIES_PATH):
-    st.error(f"❌ universities.csv not found at: {UNIVERSITIES_PATH}")
+UNIS_PATH = DATA_DIR / "universities.csv"
+PROGS_PATH = DATA_DIR / "programs.csv"
+
+# ----------------------------
+# Load universities.csv safely
+# ----------------------------
+if not UNIS_PATH.exists():
+    st.error(f"❌ universities.csv not found at: {UNIS_PATH}")
     st.stop()
 
 try:
     df_universities = pd.read_csv(
-        UNIVERSITIES_PATH,
+        UNIS_PATH,
         encoding="utf-8",
-        engine="python",   # مهم لتجاوز مشاكل عدد الأعمدة
-        on_bad_lines="skip"  # يتجاوز السطور المخالفة (row 38)
+        engine="python",
+        on_bad_lines="skip",
     )
-    st.success("✅ universities.csv loaded successfully")
 except Exception as e:
-    st.error(f"Error loading universities.csv: {e}")
+    st.error(f"❌ Error loading universities.csv: {e}")
     st.stop()
+
+# Normalize columns (your current file has 12 cols)
 df_universities.columns = [
     "uni_id",
     "name_ar",
@@ -39,10 +49,11 @@ df_universities.columns = [
     "extra_1",
     "extra_2",
 ][:len(df_universities.columns)]
+
+# (اختياري) أوقفي هذي بعد ما تتأكدين
+st.success("✅ universities.csv loaded successfully")
 st.write(df_universities.head())
 st.write("Columns:", df_universities.columns.tolist())
-
-
 
 # ----------------------------
 # Config (NO ICONS)
