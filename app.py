@@ -60,11 +60,13 @@ st.write("Columns:", df_universities.columns.tolist())
 # ----------------------------
 st.set_page_config(page_title="Gulf Uni Guide AI", layout="wide")
 
-import os
-ROOT = os.path.dirname(os.path.abspath(__file__))
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
 UNIS_PATH = DATA_DIR / "universities.csv"
 PROGS_PATH = DATA_DIR / "programs.csv"
+
 
 # Expected schemas
 UNIS_COLS = [
