@@ -1,10 +1,5 @@
-country,city,university,rank_note,program,language,requirements,tuition_note,link
-Qatar,Doha,Qatar University,Top national,Engineering,English,"Math+Physics, IELTS/EmSAT (varies)",Varies,https://www.qu.edu.qa
-Qatar,Doha,Hamad Bin Khalifa University,Research-focused,Computer Science,English,"Bachelor track/HS pathway varies",Scholarships possible,https://www.hbku.edu.qa
-UAE,Abu Dhabi,Khalifa University,STEM strong,AI/CS,English,"High math, IELTS/TOEFL",Varies,https://www.ku.ac.ae
-Saudi,Riyadh,King Saud University,Major public,Medicine/Eng,Arabic/English,"Depends on college",Varies,https://ksu.edu.sa
-Kuwait,Kuwait City,Kuwait University,Public national,Computer Science,Arabic/English,HS certificate + tests (varies),Varies,https://www.ku.edu.kw
-Bahrain,Sakhir,University of Bahrain,Public national,Engineering,Arabic/English,HS certificate + requirements (varies),Varies,https://www.uob.edu.bh
-Oman,Muscat,Sultan Qaboos University,Top national,Medicine/Engineering,Arabic/English,HS certificate + requirements (varies),Varies,https://www.squ.edu.om
-UAE,Dubai,University of Dubai,Private,Business/IT,English,HS certificate + IELTS/TOEFL (varies),Varies,https://www.ud.ac.ae
-Saudi,Jeddah,King Abdulaziz University,Major public,Engineering/CS,Arabic/English,HS certificate + requirements (varies),Varies,https://www.kau.edu.sa
+uni_id,name_ar,name_en,country,city,type,website,accreditation_notes
+qa_qu,جامعة قطر,Qatar University,Qatar,Doha,Public,https://www.qu.edu.qa,
+qa_udst,جامعة الدوحة للعلوم والتكنولوجيا,University of Doha for Science and Technology,Qatar,Doha,Public,https://www.udst.edu.qa,
+sa_ksu,جامعة الملك سعود,King Saud University,Saudi Arabia,Riyadh,Public,https://ksu.edu.sa,
+ae_uaeu,جامعة الإمارات العربية المتحدة,United Arab Emirates University,UAE,Al Ain,Public,https://www.uaeu.ac.ae,
