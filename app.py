@@ -27,7 +27,7 @@ if DATA_PATH is None:
 
 df = pd.read_csv(DATA_PATH)
 
-st.title("🎓 Gulf Uni Guide AI")
+st.title(" Gulf Uni Guide AI")
 st.success(f"Loaded data from: {DATA_PATH}")
 # ---------- UI ----------
 st.subheader("Student Profile")
