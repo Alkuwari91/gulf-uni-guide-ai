@@ -45,5 +45,4 @@ with c2:
 with c3:
     st.button("تحدث مع رُشد", use_container_width=True)
 
-st.write("")
-st.caption("اختر صفحة من القائمة الجانبية للانتقال إلى البحث أو المقارنة أو رُشد.")
+
