@@ -1,128 +1,80 @@
 import streamlit as st
 
-# =========================
-# Global CSS
-# =========================
 CUSTOM_CSS = """
 <style>
-:root{
-  --bg:#F5F7FA;
-  --card:#FFFFFF;
-  --text:#334155;
-  --navy:#0F1B33;
-  --navy2:#12264A;
-  --sky:#38BDF8;
-  --sky2:#60A5FA;
-  --border:#E5E7EB;
-  --muted:#64748B;
+/* اخفاء السايدبار بالكامل */
+[data-testid="stSidebar"], section[data-testid="stSidebar"], [data-testid="stSidebarNav"] {
+  display: none !important;
 }
+button[kind="header"] { display: none !important; } /* زر الهامبرغر */
 
-html, body, [class*="css"] {
-  font-family: 'Cairo', sans-serif;
-  background-color: var(--bg);
-  color: var(--text);
-}
-
-/* ===== HEADER ===== */
-.custom-header{
-  background: linear-gradient(135deg, var(--navy2), var(--navy));
-  padding: 60px 20px 50px;
-  text-align: center;
-  position: relative;
-  border-radius: 0 0 28px 28px;
-}
-
-.custom-header h1{
-  font-size: 3rem;
-  font-weight: 800;
-  margin: 0;
-  color: white;
-}
-
-.custom-header p{
-  margin-top: 10px;
-  font-size: 1.15rem;
-  color: rgba(255,255,255,.85);
-}
-
-/* Header buttons */
-.header-actions{
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  display: flex;
-  gap: 10px;
-}
-
-.header-actions a{
-  padding: 8px 16px;
-  border-radius: 10px;
-  font-weight: 700;
-  text-decoration: none;
-  font-size: 0.9rem;
-}
-
-.btn-login{
-  background: white;
-  color: var(--navy);
-}
-
-.btn-signup{
-  background: linear-gradient(135deg, var(--sky), var(--sky2));
-  color: white;
-}
-
-/* ===== Cards ===== */
-.cards-wrap{
+/* منيو أزرار مثل الصورة */
+.nav-row {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
-  margin-top: 30px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 18px;
 }
-
-.card{
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 22px 24px;
-  box-shadow: 0 10px 30px rgba(15,27,51,0.06);
-}
-
-.card-title{
-  font-size: 1.35rem;
+.nav-btn {
+  width: 100%;
+  padding: 14px 10px;
+  border-radius: 14px;
+  border: 1px solid #E5E7EB;
+  background: #ffffff;
   font-weight: 800;
-  margin-bottom: 12px;
-}
-
-.card-text{
-  color: var(--muted);
-  line-height: 1.9;
   font-size: 1.05rem;
+  cursor: pointer;
 }
-
-@media (max-width: 900px){
-  .cards-wrap{
-    grid-template-columns: 1fr;
-  }
+.nav-btn:hover {
+  background: rgba(56,189,248,0.08);
 }
-/* Hide sidebar + hamburger immediately */
-[data-testid="stSidebar"] { display: none !important; }
-[data-testid="stSidebarNav"] { display: none !important; }
-button[kind="header"] { display: none !important; } /* hamburger button */
-section[data-testid="stSidebar"] { display: none !important; }
-
+@media (max-width: 1000px){
+  .nav-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 </style>
 """
 
-# =========================
-# Layout shell (Header)
-# =========================
-def render_shell(
-    title: str = "بوصلة",
-    subtitle: str = "دليلك الذكي لاختيار الجامعة والبرنامج في دول الخليج"
-):
-    st.set_page_config(page_title=title, layout="wide")
+def render_shell(title="بوصلة", subtitle="دليلك الذكي لاختيار الجامعة والبرنامج في دول الخليج"):
+    st.set_page_config(page_title=title, layout="wide", initial_sidebar_state="collapsed")
     st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
+
+    # الهيدر (خليه مثل كودك الحالي)
+    st.markdown(f"""
+    <div class="custom-header">
+      <div class="header-actions">
+        <a href="#" class="btn-login">تسجيل الدخول</a>
+        <a href="#" class="btn-signup">إنشاء حساب</a>
+      </div>
+      <h1>{title}</h1>
+      <p>{subtitle}</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+def render_top_nav(active: str = ""):
+    # منيو مثل الصورة لكن بأزرار Streamlit (نحافظ على الشكل بالـCSS)
+    st.markdown('<div class="nav-row">', unsafe_allow_html=True)
+
+    c1, c2, c3, c4, c5 = st.columns(5)
+
+    with c1:
+        if st.button("الرئيسية", use_container_width=True):
+            st.switch_page("pages/1_الرئيسية.py")
+    with c2:
+        if st.button("بحث الجامعات", use_container_width=True):
+            st.switch_page("pages/2_بحث_الجامعات.py")
+    with c3:
+        if st.button("المقارنة", use_container_width=True):
+            st.switch_page("pages/3_المقارنة.py")
+    with c4:
+        if st.button("رُشد", use_container_width=True):
+            st.switch_page("pages/4_رشد.py")
+    with c5:
+        if st.button("من نحن", use_container_width=True):
+            st.switch_page("pages/5_من_نحن.py")
+
+    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("---")
+
 
     st.markdown(f"""
     <div class="custom-header">
