@@ -87,8 +87,6 @@ st.markdown("""
   <p>دليلك الذكي لاختيار الجامعة والبرنامج في دول الخليج</p>
 </div>
 """, unsafe_allow_html=True)
-</div>
-""", unsafe_allow_html=True)
 
 
 ROOT = Path(__file__).resolve().parent
