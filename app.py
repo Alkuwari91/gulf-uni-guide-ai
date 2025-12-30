@@ -87,15 +87,6 @@ st.markdown("""
   <p>دليلك الذكي لاختيار الجامعة والبرنامج في دول الخليج</p>
 </div>
 """, unsafe_allow_html=True)
-st.markdown("""
-<style>
-/* hide duplicated title under header */
-.stApp > header + div h1,
-.stApp > header + div p {
-    display: none;
-}
-</style>
-""", unsafe_allow_html=True)
 
 
 ROOT = Path(__file__).resolve().parent
@@ -167,18 +158,7 @@ def normalize_progs(df: pd.DataFrame) -> pd.DataFrame:
 unis = normalize_unis(load_csv(UNIS_PATH))
 progs = normalize_progs(load_csv(PROGS_PATH))
 
-st.markdown("""
-<div class="bawsala-header">
-  <div class="bawsala-inner">
-    <div class="brand-wrap">
-      <div>
-        <p class="brand-title">بوصلة</p>
-        <p class="brand-tag">دليلك الذكي لاختيار الجامعة والبرنامج في دول الخليج</p>
-      </div>
-    </div>
-  </div>
-</div>
-""", unsafe_allow_html=True)
+
 
 # أزرار (واجهة فقط) تحت الهيدر بشكل مرتب
 a, b, c = st.columns([6, 1, 1])
