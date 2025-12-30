@@ -133,21 +133,21 @@ def render_shell(
 # Cards (2 columns)
 # =========================
 def cards_2col(items):
-    """
-    items = [
-      {"title": "عنوان", "text": "نص"},
-      ...
-    ]
-    """
-    html = '<div class="cards-wrap">'
-    for it in items:
-        html += f"""
-        <div class="card">
-          <div class="card-title">{it["title"]}</div>
-          <div class="card-text">{it["text"]}</div>
-        </div>
-        """
-    html += "</div>"
-
-    # السطر الحاسم — بدون هذا تظهر الأكواد كنص
-    st.markdown(html, unsafe_allow_html=True)
+    # نعرض بطاقتين بكل صف باستخدام Streamlit columns
+    for i in range(0, len(items), 2):
+        cols = st.columns(2)
+        for j in range(2):
+            idx = i + j
+            if idx >= len(items):
+                break
+            it = items[idx]
+            with cols[j]:
+                st.markdown(
+                    f"""
+                    <div class="card">
+                      <div class="card-title">{it["title"]}</div>
+                      <div class="card-text">{it["text"]}</div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
