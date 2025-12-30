@@ -8,69 +8,22 @@ from pathlib import Path
 st.set_page_config(page_title="Gulf Uni Guide AI", layout="wide")
 st.markdown("""
 <style>
-.stApp { background:#F5F7FA; color:#475569; }
-.block-container { padding-top: 0.6rem; }
-
-/* hide default title & caption */
-h1, .stCaption { display:none !important; }
-
-/* ===== Header ===== */
-.bawsala-header{
-  background:#FFFFFF;
-  border:1px solid #E5E7EB;
-  border-radius:18px;
-  padding:16px 22px;
-  box-shadow:0 6px 20px rgba(0,0,0,.06);
-  margin-bottom:22px;
-}
-.bawsala-inner{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+/* Fix Streamlit top spacing + prevent header clipping */
+.block-container{
+  padding-top: 2.2rem !important;   /* أهم سطر */
+  padding-bottom: 2rem;
 }
 
-/* brand */
-.brand{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  direction:rtl;
-}
-.brand-icon{
-  width:52px;height:52px;
-  border-radius:16px;
-  background:linear-gradient(135deg,#38BDF8,#60A5FA);
-  display:flex;align-items:center;justify-content:center;
-  font-size:22px;color:#fff;
-}
-.brand-title{
-  margin:0;
-  font-size:1.6rem;
-  font-weight:900;
-  color:#1E3A8A;
-}
-.brand-tag{
-  margin:4px 0 0;
-  font-size:.95rem;
-  color:#475569;
+/* Ensure nothing clips at top */
+.stApp, section.main, .main, header{
+  overflow: visible !important;
 }
 
-/* actions */
-.actions{
-  display:flex;
-  gap:10px;
-}
-.actions button{
-  border-radius:12px!important;
-  font-weight:800!important;
-}
-.actions button[kind="primary"]{
-  background:#38BDF8!important;
-  color:#fff!important;
-  border:none!important;
-}
+/* Hide default title/caption */
+h1, .stCaption{ display:none !important; }
 </style>
 """, unsafe_allow_html=True)
+
 
 
 ROOT = Path(__file__).resolve().parent
