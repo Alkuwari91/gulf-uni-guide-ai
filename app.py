@@ -161,11 +161,7 @@ progs = normalize_progs(load_csv(PROGS_PATH))
 
 
 # أزرار (واجهة فقط) تحت الهيدر بشكل مرتب
-a, b, c = st.columns([6, 1, 1])
-with b:
-    st.button("تسجيل الدخول", key="login_btn")
-with c:
-    st.button("حساب جديد", key="signup_btn")
+
 
 st.write("")
 
