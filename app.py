@@ -21,7 +21,7 @@ h1, .stCaption { display:none !important; }
   padding:22px 24px;
   box-shadow:0 6px 18px rgba(0,0,0,.06);
   position:relative;
-  margin: 40px auto 24px auto;  /* ← هذا اللي ينزّله ويخليه بالنص */
+  margin: 60px auto 24px auto;  /* ← هذا اللي ينزّله ويخليه بالنص */
   max-width: 1100px;            /* ← وسط الصفحة */
 }
 
