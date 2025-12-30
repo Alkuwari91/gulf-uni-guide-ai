@@ -6,89 +6,238 @@ from pathlib import Path
 # Config (NO ICONS)
 # ----------------------------
 st.set_page_config(page_title="Gulf Uni Guide AI", layout="wide")
-st.markdown("""
 <style>
-/* Base */
-.stApp { background:#F5F7FA; }
-.block-container { padding-top: 1rem !important; }
-h1, .stCaption { display:none !important; }
+  :root{
+    /* ✅ ألوانك */
+    --bg: #F5F7FA;          /* رمادي فاتح للخلفية */
+    --card: #FFFFFF;        /* أبيض للكروت */
+    --text: #334155;        /* رمادي غامق للنص */
+    --navy: #0F1B33;        /* كحلي */
+    --navy2:#12264A;        /* كحلي أفتح للـ gradient */
+    --sky: #38BDF8;         /* سماوي */
+    --sky2:#60A5FA;         /* أزرق فاتح */
+    --border:#E5E7EB;       /* حدود */
+    --muted:#64748B;        /* نص ثانوي */
+  }
 
-/* HERO */
-.bawsala-hero{
-  background:#FFFFFF;
-  border:1px solid #E5E7EB;
-  border-radius:20px;
-  padding:22px 24px;
-  box-shadow:0 6px 18px rgba(0,0,0,.06);
-  position:relative;
-  margin: 60px auto 24px auto;  /* ← هذا اللي ينزّله ويخليه بالنص */
-  max-width: 1100px;            /* ← وسط الصفحة */
-}
+  body{
+    font-family:'Cairo', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    margin:0;
+    direction: rtl;
+  }
 
+  /* ===== الهيدر (نفس ستايل الصورة) ===== */
+  header{
+    background: linear-gradient(135deg, var(--navy2), var(--navy));
+    color: white;
+    padding: 2.2em 1em;
+    position: relative;
+    text-align: center;
+  }
 
-/* Top right actions */
-.bawsala-actions{
-  position:absolute;
-  top:16px;
-  right:18px;
-  display:flex;
-  gap:10px;
-}
+  .brand-title{
+    font-size: 2.7em;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin: 0;
+    color:#fff;
+  }
 
-/* Actions look */
-.bawsala-actions a{
-  text-decoration:none;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  height:42px;
-  padding:0 14px;
-  border-radius:12px;
-  font-weight:800;
-  border:1px solid #CBD5E1;
-  background:#FFFFFF;
-  color:#1E3A8A;
-}
-.bawsala-actions a.primary{
-  background:#38BDF8;
-  color:#fff;
-  border:none;
-}
+  .brand-slogan{
+    font-size: 1.1em;
+    margin-top: 0.4em;
+    color: rgba(255,255,255,0.85);
+  }
 
-/* Center content */
-.bawsala-center{
-  text-align:center;
-  direction:rtl;
-  padding: 18px 0 6px;
-}
-.bawsala-title{
-  margin:0;
-  font-size:52px;
-  font-weight:900;
-  color:#1E3A8A;
-  line-height:1.05;
-}
-.bawsala-tagline{
-  margin:10px 0 0;
-  font-size:18px;
-  font-weight:700;
-  color:#475569;
-}
+  /* أزرار الهيدر فوق يمين */
+  .header-buttons{
+    position:absolute;
+    right: 20px;
+    top: 20px;
+    display:flex;
+    gap: .6em;
+  }
 
-/* Small icon optional */
-.bawsala-badge{
-  margin-top:14px;
-  display:inline-flex;
-  width:54px;height:54px;
-  border-radius:18px;
-  align-items:center;justify-content:center;
-  background:linear-gradient(135deg,#38BDF8,#60A5FA);
-  color:#fff;
-  font-size:22px;
-}
+  .small-btn{
+    padding: .45em 1em;
+    font-size: .85em;
+    border-radius: 10px;
+    font-weight: 800;
+    text-decoration:none;
+    border: 1px solid rgba(255,255,255,0.18);
+    backdrop-filter: blur(6px);
+  }
+
+  /* زر أبيض */
+  .white-btn{
+    background:#ffffff;
+    color: var(--navy) !important;
+    border: 1px solid #ffffff;
+  }
+
+  /* زر سماوي */
+  .maroon-btn{
+    background: linear-gradient(135deg, var(--sky), var(--sky2));
+    color:#ffffff !important;
+    border: none;
+  }
+  .maroon-btn:hover{ filter: brightness(0.95); }
+
+  /* ===== شريط التنقل ===== */
+  nav ul{
+    display:flex;
+    justify-content:center;
+    list-style:none;
+    background: var(--navy);
+    padding: 1em;
+    margin:0;
+    flex-wrap:wrap;
+    gap: .3em;
+  }
+
+  nav ul li{ margin: .4em .9em; }
+
+  nav ul li a{
+    color: rgba(255,255,255,0.92);
+    text-decoration:none;
+    font-weight: 800;
+    padding: .35em .6em;
+    border-radius: 10px;
+  }
+
+  nav ul li a:hover{
+    background: rgba(56,189,248,0.16);
+    color:#ffffff;
+  }
+
+  /* ===== المحتوى ===== */
+  main{
+    max-width: 1100px;
+    margin:auto;
+    padding: 2em 1em 3em;
+  }
+
+  h1{
+    color: var(--navy);
+    text-align:center;
+    margin-top:0;
+  }
+
+  .intro{
+    text-align:center;
+    margin-bottom:2em;
+    line-height:1.8;
+    color: var(--muted);
+  }
+
+  .card, .toggle-box, .tab-card, .owner{
+    background: var(--card);
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(15,27,51,0.08);
+    border: 1px solid var(--border);
+  }
+
+  .card{ padding:1.5em; box-sizing:border-box; }
+  .card h2{ margin-top:0; color: var(--navy); font-size: 1.3em; }
+
+  input[type="text"], textarea, select{
+    width:100%;
+    padding:.6em .8em;
+    border-radius:10px;
+    border:1px solid #CBD5E1;
+    font-family:'Cairo', sans-serif;
+    font-size:.95em;
+    box-sizing:border-box;
+    margin-bottom:.9em;
+    background:#FFFFFF;
+  }
+
+  button{
+    background: linear-gradient(135deg, var(--sky), var(--sky2));
+    color:#fff;
+    border:none;
+    padding:.65em 1.6em;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:.95em;
+    font-weight: 800;
+  }
+  button:hover{ filter: brightness(0.95); }
+
+  .btn-secondary{
+    background:#E2E8F0;
+    color: var(--navy);
+    border:1px solid #CBD5E1;
+  }
+
+  /* الرؤية والرسالة */
+  .toggle-box{
+    padding:1.5em;
+    width:100%;
+    max-width:500px;
+    cursor:pointer;
+    transition:.25s;
+    text-align:center;
+  }
+
+  .toggle-box h2{
+    color: var(--navy);
+    margin:0;
+    font-size: 1.6em;
+  }
+
+  .toggle-box:hover{
+    background: rgba(56,189,248,0.08);
+    border-color: rgba(56,189,248,0.35);
+  }
+
+  .toggle-content{
+    margin-top:1em;
+    line-height:1.8;
+    color: var(--text);
+  }
+
+  /* بطاقات الأقسام */
+  .tabs-grid{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap: 1.5em;
+  }
+
+  .tab-card{
+    padding: 1.5em;
+    transition: transform .25s, box-shadow .25s;
+    text-align:center;
+    width:220px;
+    text-decoration:none;
+    color: inherit;
+  }
+
+  .tab-card:hover{
+    transform: translateY(-8px);
+    box-shadow: 0 12px 26px rgba(15,27,51,0.14);
+    border-color: rgba(56,189,248,0.35);
+  }
+
+  .tab-card img{ width:60px; margin-bottom:.7em; }
+
+  .tab-card h3{
+    color: var(--navy);
+    margin:.5em 0;
+    font-size: 1.05em;
+  }
+
+  footer{
+    background: var(--navy);
+    color:white;
+    text-align:center;
+    padding: 1.5em;
+    margin-top: 3em;
+  }
 </style>
-""", unsafe_allow_html=True)
-
 
 ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
