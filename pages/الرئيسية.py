@@ -1,5 +1,7 @@
 import streamlit as st
 from ui import render_shell, cards_2col
+import ui
+st.write("UI loaded from:", ui.__file__)
 
 render_shell()
 
