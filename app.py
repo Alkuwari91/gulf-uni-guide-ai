@@ -1,11 +1,14 @@
 import streamlit as st
 from ui import render_shell, cards_2col
 
+# ----------------------------
+# Main Landing Page
+# ----------------------------
 render_shell()
 
 st.write("")
 
-# بطاقات (الرؤية/الرسالة/القيم/لماذا بوصلة؟)
+# بطاقات: الرؤية – الرسالة – القيم – لماذا بوصلة؟
 cards_2col([
     {
         "title": "رؤيتنا",
@@ -28,12 +31,17 @@ cards_2col([
 st.write("")
 st.markdown("---")
 
-# أزرار تنقل (تعليمية/واجهة فقط)
+# ----------------------------
+# Navigation Buttons (UI only)
+# ----------------------------
 c1, c2, c3 = st.columns(3)
+
 with c1:
     st.button("ابدأ البحث", use_container_width=True)
+
 with c2:
     st.button("قارن الجامعات", use_container_width=True)
+
 with c3:
     st.button("تحدث مع رُشد", use_container_width=True)
 
