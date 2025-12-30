@@ -181,9 +181,6 @@ with c:
 
 st.write("")
 
-st.title("Gulf Uni Guide AI")
-st.caption("Data source: universities.csv + programs.csv")
-
 if unis.empty:
     st.error(f"universities.csv not found or empty: {UNIS_PATH}")
     st.stop()
