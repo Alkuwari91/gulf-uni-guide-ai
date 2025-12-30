@@ -166,7 +166,6 @@ st.markdown("""
         <p class="brand-title">بوصلة</p>
         <p class="brand-tag">دليلك الذكي لاختيار الجامعة والبرنامج في دول الخليج</p>
       </div>
-      <div class="brand-icon">🧭</div>
     </div>
   </div>
 </div>
