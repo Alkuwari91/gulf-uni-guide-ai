@@ -8,21 +8,72 @@ from pathlib import Path
 st.set_page_config(page_title="Gulf Uni Guide AI", layout="wide")
 st.markdown("""
 <style>
-/* Fix Streamlit top spacing + prevent header clipping */
-.block-container{
-  padding-top: 2.2rem !important;   /* أهم سطر */
-  padding-bottom: 2rem;
+/* Background */
+.stApp { background: #F5F7FA; }
+.block-container { padding-top: 1.2rem !important; }
+
+/* Hide Streamlit default title/caption */
+h1, .stCaption { display: none !important; }
+
+/* Header wrapper */
+.bawsala-hero {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 20px;
+  padding: 22px 24px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  position: relative;
+  margin-bottom: 18px;
 }
 
-/* Ensure nothing clips at top */
-.stApp, section.main, .main, header{
-  overflow: visible !important;
+/* Top actions */
+.bawsala-actions {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  display: flex;
+  gap: 10px;
 }
 
-/* Hide default title/caption */
-h1, .stCaption{ display:none !important; }
+/* Center text */
+.bawsala-center {
+  text-align: center;
+  padding-top: 18px;
+}
+
+.bawsala-title {
+  margin: 0;
+  font-size: 44px;
+  font-weight: 900;
+  color: #1E3A8A;
+  letter-spacing: .5px;
+}
+
+.bawsala-tagline {
+  margin: 10px 0 0 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #475569;
+}
+
+/* Buttons style */
+.bawsala-actions button{
+  border-radius: 12px !important;
+  padding: 10px 14px !important;
+  font-weight: 800 !important;
+  border: 1px solid #CBD5E1 !important;
+  background: #FFFFFF !important;
+  color: #1E3A8A !important;
+}
+
+.bawsala-actions button[kind="primary"]{
+  background: #38BDF8 !important;
+  color: white !important;
+  border: none !important;
+}
 </style>
 """, unsafe_allow_html=True)
+
 
 
 
