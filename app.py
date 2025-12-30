@@ -8,73 +8,84 @@ from pathlib import Path
 st.set_page_config(page_title="Gulf Uni Guide AI", layout="wide")
 st.markdown("""
 <style>
-/* Background */
-.stApp { background: #F5F7FA; }
-.block-container { padding-top: 1.2rem !important; }
+/* Base */
+.stApp { background:#F5F7FA; }
+.block-container { padding-top: 1rem !important; }
+h1, .stCaption { display:none !important; }
 
-/* Hide Streamlit default title/caption */
-h1, .stCaption { display: none !important; }
-
-/* Header wrapper */
-.bawsala-hero {
-  background: #FFFFFF;
-  border: 1px solid #E5E7EB;
-  border-radius: 20px;
-  padding: 22px 24px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-  position: relative;
-  margin-bottom: 18px;
+/* HERO */
+.bawsala-hero{
+  background:#FFFFFF;
+  border:1px solid #E5E7EB;
+  border-radius:20px;
+  padding:22px 24px;
+  box-shadow:0 6px 18px rgba(0,0,0,.06);
+  position:relative;
+  margin-bottom:18px;
 }
 
-/* Top actions */
-.bawsala-actions {
-  position: absolute;
-  top: 16px;
-  right: 18px;
-  display: flex;
-  gap: 10px;
+/* Top right actions */
+.bawsala-actions{
+  position:absolute;
+  top:16px;
+  right:18px;
+  display:flex;
+  gap:10px;
 }
 
-/* Center text */
-.bawsala-center {
-  text-align: center;
-  padding-top: 18px;
+/* Actions look */
+.bawsala-actions a{
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:42px;
+  padding:0 14px;
+  border-radius:12px;
+  font-weight:800;
+  border:1px solid #CBD5E1;
+  background:#FFFFFF;
+  color:#1E3A8A;
+}
+.bawsala-actions a.primary{
+  background:#38BDF8;
+  color:#fff;
+  border:none;
 }
 
-.bawsala-title {
-  margin: 0;
-  font-size: 44px;
-  font-weight: 900;
-  color: #1E3A8A;
-  letter-spacing: .5px;
+/* Center content */
+.bawsala-center{
+  text-align:center;
+  direction:rtl;
+  padding: 18px 0 6px;
+}
+.bawsala-title{
+  margin:0;
+  font-size:52px;
+  font-weight:900;
+  color:#1E3A8A;
+  line-height:1.05;
+}
+.bawsala-tagline{
+  margin:10px 0 0;
+  font-size:18px;
+  font-weight:700;
+  color:#475569;
 }
 
-.bawsala-tagline {
-  margin: 10px 0 0 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #475569;
-}
-
-/* Buttons style */
-.bawsala-actions button{
-  border-radius: 12px !important;
-  padding: 10px 14px !important;
-  font-weight: 800 !important;
-  border: 1px solid #CBD5E1 !important;
-  background: #FFFFFF !important;
-  color: #1E3A8A !important;
-}
-
-.bawsala-actions button[kind="primary"]{
-  background: #38BDF8 !important;
-  color: white !important;
-  border: none !important;
+/* Small icon optional */
+.bawsala-badge{
+  margin-top:14px;
+  display:inline-flex;
+  width:54px;height:54px;
+  border-radius:18px;
+  align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#38BDF8,#60A5FA);
+  color:#fff;
+  font-size:22px;
 }
 </style>
 """, unsafe_allow_html=True)
-
-
 
 
 ROOT = Path(__file__).resolve().parent
