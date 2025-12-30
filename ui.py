@@ -105,6 +105,12 @@ html, body, [class*="css"] {
     grid-template-columns: 1fr;
   }
 }
+/* Hide sidebar + hamburger immediately */
+[data-testid="stSidebar"] { display: none !important; }
+[data-testid="stSidebarNav"] { display: none !important; }
+button[kind="header"] { display: none !important; } /* hamburger button */
+section[data-testid="stSidebar"] { display: none !important; }
+
 </style>
 """
 
