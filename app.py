@@ -83,8 +83,7 @@ st.markdown("""
     <a href="#" class="btn-signup">إنشاء حساب</a>
   </div>
 
-  <h1>بوصلة</h1>
-  <p>دليلك الذكي لاختيار الجامعة والبرنامج في دول الخليج</p>
+
 </div>
 """, unsafe_allow_html=True)
 
