@@ -1,6 +1,5 @@
 import streamlit as st
 from ui import render_shell, cards_2col
-st.set_page_config(page_title="الرئيسية", layout="wide")
 
 # ----------------------------
 # Main Landing Page
