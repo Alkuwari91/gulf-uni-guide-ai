@@ -1,5 +1,8 @@
 import streamlit as st
 
+# =========================
+# Global CSS
+# =========================
 CUSTOM_CSS = """
 <style>
 :root{
@@ -42,7 +45,7 @@ html, body, [class*="css"] {
   color: rgba(255,255,255,.85);
 }
 
-/* buttons */
+/* Header buttons */
 .header-actions{
   position: absolute;
   top: 20px;
@@ -73,22 +76,22 @@ html, body, [class*="css"] {
 .cards-wrap{
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-  margin-top: 24px;
+  gap: 20px;
+  margin-top: 30px;
 }
 
 .card{
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 18px;
-  padding: 20px 22px;
+  padding: 22px 24px;
   box-shadow: 0 10px 30px rgba(15,27,51,0.06);
 }
 
 .card-title{
-  font-size: 1.4rem;
+  font-size: 1.35rem;
   font-weight: 800;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .card-text{
@@ -98,14 +101,23 @@ html, body, [class*="css"] {
 }
 
 @media (max-width: 900px){
-  .cards-wrap{ grid-template-columns: 1fr; }
+  .cards-wrap{
+    grid-template-columns: 1fr;
+  }
 }
 </style>
 """
 
-def render_shell(title: str = "بوصلة", subtitle: str = "دليلك الذكي لاختيار الجامعة والبرنامج في دول الخليج"):
-    st.set_page_config(page_title="بوصلة", layout="wide")
+# =========================
+# Layout shell (Header)
+# =========================
+def render_shell(
+    title: str = "بوصلة",
+    subtitle: str = "دليلك الذكي لاختيار الجامعة والبرنامج في دول الخليج"
+):
+    st.set_page_config(page_title=title, layout="wide")
     st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
+
     st.markdown(f"""
     <div class="custom-header">
       <div class="header-actions">
@@ -117,9 +129,15 @@ def render_shell(title: str = "بوصلة", subtitle: str = "دليلك الذك
     </div>
     """, unsafe_allow_html=True)
 
+# =========================
+# Cards (2 columns)
+# =========================
 def cards_2col(items):
     """
-    items: list of dicts: [{"title":"...", "text":"..."}, ...]
+    items = [
+      {"title": "عنوان", "text": "نص"},
+      ...
+    ]
     """
     html = '<div class="cards-wrap">'
     for it in items:
@@ -130,4 +148,6 @@ def cards_2col(items):
         </div>
         """
     html += "</div>"
+
+    # السطر الحاسم — بدون هذا تظهر الأكواد كنص
     st.markdown(html, unsafe_allow_html=True)
