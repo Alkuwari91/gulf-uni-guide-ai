@@ -87,6 +87,15 @@ st.markdown("""
   <p>دليلك الذكي لاختيار الجامعة والبرنامج في دول الخليج</p>
 </div>
 """, unsafe_allow_html=True)
+st.markdown("""
+<style>
+/* hide duplicated title under header */
+.stApp > header + div h1,
+.stApp > header + div p {
+    display: none;
+}
+</style>
+""", unsafe_allow_html=True)
 
 
 ROOT = Path(__file__).resolve().parent
