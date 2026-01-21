@@ -127,7 +127,7 @@ elif st.session_state.page == "بحث الجامعات":
         return pd.read_csv(path, encoding="utf-8", engine="python", on_bad_lines="skip")
 
     def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
-    if df is None or df.empty:
+        if df is None or df.empty:
         return pd.DataFrame()
 
     df = df.copy()
@@ -150,7 +150,7 @@ elif st.session_state.page == "بحث الجامعات":
     ]
 
     # تسمية الأعمدة حسب العدد المقروء
-    if len(df.columns) == 12:
+        if len(df.columns) == 12:
         df.columns = cols_12
     elif len(df.columns) == 18:
         df.columns = cols_18
@@ -158,9 +158,9 @@ elif st.session_state.page == "بحث الجامعات":
         pass
 
     # اشتقاق أعمدة الترتيب والاعتماد
-    if "ranking_value" not in df.columns:
+        if "ranking_value" not in df.columns:
         df["ranking_value"] = df.get("extra_1", "")
-    if "accreditation_notes" not in df.columns:
+        if "accreditation_notes" not in df.columns:
         df["accreditation_notes"] = df.get("extra_2", "")
 
     # أعمدة المنح — الافتراضي Unknown
@@ -179,9 +179,9 @@ elif st.session_state.page == "بحث الجامعات":
             .replace({"": "Unknown", "nan": "Unknown"})
         )
 
-    if "sch_notes" not in df.columns:
+        if "sch_notes" not in df.columns:
         df["sch_notes"] = ""
-    if "sch_url" not in df.columns:
+        if "sch_url" not in df.columns:
         df["sch_url"] = ""
 
     needed = [
