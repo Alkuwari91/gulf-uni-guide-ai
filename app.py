@@ -3,11 +3,16 @@ import pandas as pd
 from pathlib import Path
 from ui import render_shell
 
-# --- لازم نخلي السايدبار مقفل من البداية
+# ----------------------------
+# Page config (لازم تكون أول شيء)
+# ----------------------------
 st.set_page_config(page_title="بوصلة", layout="wide", initial_sidebar_state="collapsed")
+
 render_shell()
 
-# --- إخفاء السايدبار نهائياً (حتى المساحة)
+# ----------------------------
+# إخفاء السايدبار نهائياً (حتى المساحة)
+# ----------------------------
 st.markdown(
     """
     <style>
@@ -21,24 +26,7 @@ st.markdown(
 )
 
 # ----------------------------
-# Navigation (بدون سايدبار)
-# ----------------------------
-if "page" not in st.session_state:
-    st.session_state.page = "الرئيسية"
-
-nav = ["الرئيسية", "بحث الجامعات", "المقارنة", "رُشد", "من نحن"]
-c = st.columns(len(nav))
-for i, name in enumerate(nav):
-    if c[i].button(name, use_container_width=True):
-        st.session_state.page = name
-        st.rerun()
-
-st.write("")
-st.markdown("---")
-st.write("")
-
-# ----------------------------
-# Helper: شكل الـ Expander مثل كارد (بدون HTML divs للبطاقات)
+# CSS: Expander كأنه كارد (مثل راسخون)
 # ----------------------------
 st.markdown(
     """
@@ -60,7 +48,7 @@ st.markdown(
       div[data-testid="stExpander"] summary:hover {
         background: rgba(56,189,248,0.10) !important;
       }
-      div[data-testid="stExpander"] .stMarkdown, 
+      div[data-testid="stExpander"] .stMarkdown,
       div[data-testid="stExpander"] .stText {
         padding: 0 18px 18px 18px !important;
         color: #334155 !important;
@@ -73,7 +61,125 @@ st.markdown(
 )
 
 # ----------------------------
-# Page: الرئيسية (كارد مثل راسخون)
+# Helpers / Loaders
+# ----------------------------
+ROOT = Path(__file__).resolve().parent
+DATA_DIR = ROOT / "data"
+UNIS_PATH = DATA_DIR / "universities.csv"
+PROGS_PATH = DATA_DIR / "programs.csv"
+
+
+@st.cache_data(show_spinner=False)
+def load_csv(path: Path) -> pd.DataFrame:
+    if (not path.exists()) or path.stat().st_size == 0:
+        return pd.DataFrame()
+    return pd.read_csv(path, encoding="utf-8", engine="python", on_bad_lines="skip")
+
+
+def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
+    if df is None or df.empty:
+        return pd.DataFrame()
+
+    df = df.copy()
+
+    # الأعمدة الأساسية (12) — ملفك بدون هيدر
+    cols_12 = [
+        "uni_id", "name_ar", "name_en", "country", "city", "type",
+        "website", "admissions_url", "programs_url",
+        "ranking_source", "extra_1", "extra_2"
+    ]
+
+    # بعد إضافة المنح (18)
+    cols_18 = cols_12 + [
+        "sch_local",
+        "sch_gcc",
+        "sch_intl",
+        "sch_children_citizen_mothers",
+        "sch_notes",
+        "sch_url"
+    ]
+
+    if len(df.columns) == 12:
+        df.columns = cols_12
+    elif len(df.columns) == 18:
+        df.columns = cols_18
+    else:
+        # إذا فيه فواصل زايدة في بعض السطور، نخلي الأعمدة مثل ما هي
+        pass
+
+    # ربط extra_1/extra_2 إلى ranking_value / accreditation_notes
+    if "ranking_value" not in df.columns:
+        df["ranking_value"] = df.get("extra_1", "")
+    if "accreditation_notes" not in df.columns:
+        df["accreditation_notes"] = df.get("extra_2", "")
+
+    # أعمدة المنح الافتراضية
+    for c in ["sch_local", "sch_gcc", "sch_intl", "sch_children_citizen_mothers"]:
+        if c not in df.columns:
+            df[c] = "Unknown"
+        df[c] = (
+            df[c]
+            .fillna("Unknown")
+            .astype(str)
+            .replace({"": "Unknown", "nan": "Unknown"})
+        )
+
+    if "sch_notes" not in df.columns:
+        df["sch_notes"] = ""
+    if "sch_url" not in df.columns:
+        df["sch_url"] = ""
+
+    needed = [
+        "uni_id", "name_ar", "name_en", "country", "city", "type",
+        "sch_local", "sch_gcc", "sch_intl", "sch_children_citizen_mothers",
+        "sch_notes", "sch_url",
+        "website", "admissions_url", "programs_url",
+        "ranking_source", "ranking_value", "accreditation_notes"
+    ]
+
+    for c in needed:
+        if c not in df.columns:
+            df[c] = ""
+
+    return df[needed]
+
+
+def normalize_progs(df: pd.DataFrame) -> pd.DataFrame:
+    if df is None or df.empty:
+        return pd.DataFrame()
+
+    df = df.copy()
+    needed = [
+        "program_id", "uni_id", "level", "degree_type", "major_field",
+        "program_name_en", "program_name_ar", "city", "language",
+        "duration_years", "tuition_notes", "admissions_requirements", "url"
+    ]
+    for c in needed:
+        if c not in df.columns:
+            df[c] = ""
+    return df[needed]
+
+
+# ----------------------------
+# Navigation (بدون سايدبار)
+# ----------------------------
+if "page" not in st.session_state:
+    st.session_state.page = "الرئيسية"
+
+nav = ["الرئيسية", "بحث الجامعات", "المقارنة", "رُشد", "من نحن"]
+cols_nav = st.columns(len(nav))
+for i, name in enumerate(nav):
+    if cols_nav[i].button(name, use_container_width=True):
+        st.session_state.page = name
+        st.rerun()
+
+st.write("")
+st.markdown("---")
+st.write("")
+
+
+# ----------------------------
+# Page: الرئيسية
 # ----------------------------
 if st.session_state.page == "الرئيسية":
     col1, col2 = st.columns(2, gap="large")
@@ -109,111 +215,12 @@ if st.session_state.page == "الرئيسية":
         st.session_state.page = "رُشد"
         st.rerun()
 
+
 # ----------------------------
 # Page: بحث الجامعات
 # ----------------------------
 elif st.session_state.page == "بحث الجامعات":
     st.subheader("بحث الجامعات")
-
-    ROOT = Path(__file__).resolve().parent
-    DATA_DIR = ROOT / "data"
-    UNIS_PATH = DATA_DIR / "universities.csv"
-    PROGS_PATH = DATA_DIR / "programs.csv"
-
-    @st.cache_data(show_spinner=False)
-    def load_csv(path: Path) -> pd.DataFrame:
-        if (not path.exists()) or path.stat().st_size == 0:
-            return pd.DataFrame()
-        return pd.read_csv(path, encoding="utf-8", engine="python", on_bad_lines="skip")
-def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
-    if df is None or df.empty:
-        return pd.DataFrame()
-
-    df = df.copy()
-
-    # (12) الأعمدة الأساسية
-    cols_12 = [
-        "uni_id", "name_ar", "name_en", "country", "city", "type",
-        "website", "admissions_url", "programs_url",
-        "ranking_source", "extra_1", "extra_2"
-    ]
-
-    # (18) الأعمدة بعد إضافة المنح
-    cols_18 = cols_12 + [
-        "sch_local",
-        "sch_gcc",
-        "sch_intl",
-        "sch_children_citizen_mothers",
-        "sch_notes",
-        "sch_url"
-    ]
-
-    # تسمية الأعمدة حسب العدد المقروء
-    if len(df.columns) == 12:
-        df.columns = cols_12
-    elif len(df.columns) == 18:
-        df.columns = cols_18
-    else:
-        pass
-
-    # اشتقاق أعمدة الترتيب والاعتماد
-    if "ranking_value" not in df.columns:
-        df["ranking_value"] = df.get("extra_1", "")
-
-    if "accreditation_notes" not in df.columns:
-        df["accreditation_notes"] = df.get("extra_2", "")
-
-    # أعمدة المنح — افتراضي Unknown
-    for c in [
-        "sch_local",
-        "sch_gcc",
-        "sch_intl",
-        "sch_children_citizen_mothers"
-    ]:
-        if c not in df.columns:
-            df[c] = "Unknown"
-
-        df[c] = (
-            df[c]
-            .fillna("Unknown")
-            .astype(str)
-            .replace({"": "Unknown", "nan": "Unknown"})
-        )
-
-    if "sch_notes" not in df.columns:
-        df["sch_notes"] = ""
-
-    if "sch_url" not in df.columns:
-        df["sch_url"] = ""
-
-    # الأعمدة النهائية المعتمدة في التطبيق
-    needed = [
-        "uni_id", "name_ar", "name_en", "country", "city", "type",
-        "sch_local", "sch_gcc", "sch_intl", "sch_children_citizen_mothers",
-        "sch_notes", "sch_url",
-        "website", "admissions_url", "programs_url",
-        "ranking_source", "ranking_value", "accreditation_notes"
-    ]
-
-    for c in needed:
-        if c not in df.columns:
-            df[c] = ""
-
-    return df[needed]
-
-    def normalize_progs(df: pd.DataFrame) -> pd.DataFrame:
-        if df is None or df.empty:
-            return pd.DataFrame()
-        df = df.copy()
-        needed = [
-            "program_id","uni_id","level","degree_type","major_field",
-            "program_name_en","program_name_ar","city","language",
-            "duration_years","tuition_notes","admissions_requirements","url"
-        ]
-        for c in needed:
-            if c not in df.columns:
-                df[c] = ""
-        return df
 
     unis = normalize_unis(load_csv(UNIS_PATH))
     progs = normalize_progs(load_csv(PROGS_PATH))
@@ -224,62 +231,76 @@ def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
     if progs.empty:
         st.warning(f"programs.csv not found or empty: {PROGS_PATH}")
 
-    # ----------------------------
-    # Filters
-    # ----------------------------
     st.write("")
-    col1, col2, col3, col4, col5 = st.columns([1.2, 1, 1, 1.2, 1])
+    col1, col2, col3, col4 = st.columns([1.2, 1, 1, 1.2])
 
-    countries = sorted([c for c in unis["country"].unique() if str(c).strip()])
-    country = col1.selectbox("Country", options=["All"] + countries, index=0)
+    countries = sorted([x for x in unis["country"].unique() if str(x).strip()])
+    country = col1.selectbox("Country", ["All"] + countries, index=0)
 
-    uni_types = sorted([t for t in unis["type"].unique() if str(t).strip()])
-    uni_type = col2.selectbox("University type", options=["All"] + uni_types, index=0)
+    uni_types = sorted([x for x in unis["type"].unique() if str(x).strip()])
+    uni_type = col2.selectbox("University type", ["All"] + uni_types, index=0)
 
     levels = sorted([x for x in progs["level"].unique() if str(x).strip()]) if not progs.empty else []
-    level = col3.selectbox("Level", options=["All"] + levels, index=0)
+    level = col3.selectbox("Level", ["All"] + levels, index=0)
 
-    majors = sorted([m for m in progs["major_field"].unique() if str(m).strip()]) if not progs.empty else []
-    major = col4.selectbox("Major field", options=["All"] + majors, index=0)
+    majors = sorted([x for x in progs["major_field"].unique() if str(x).strip()]) if not progs.empty else []
+    major = col4.selectbox("Major field", ["All"] + majors, index=0)
 
+    st.write("")
+    s1, s2, s3, s4 = st.columns(4)
     sch_opt = ["All", "Yes", "No", "Unknown"]
-    scholarship = col5.selectbox("Scholarships", sch_opt, index=0)
+    sch_local = s1.selectbox("Scholarship (Local)", sch_opt, index=0)
+    sch_gcc = s2.selectbox("Scholarship (GCC)", sch_opt, index=0)
+    sch_intl = s3.selectbox("Scholarship (International)", sch_opt, index=0)
+    sch_mothers = s4.selectbox("Scholarship (Children of citizen mothers)", sch_opt, index=0)
 
-    q = st.text_input("Search (university / program / city)", value="").strip().lower()
+    q = st.text_input("Search (university / city)", value="").strip().lower()
 
-    # ----------------------------
-    # Apply filters on universities
-    # ----------------------------
+    # apply filters
     unis_f = unis.copy()
 
     if country != "All":
         unis_f = unis_f[unis_f["country"] == country]
     if uni_type != "All":
         unis_f = unis_f[unis_f["type"] == uni_type]
-    if scholarship != "All":
-        unis_f = unis_f[unis_f["scholarship_available"] == scholarship]
+    if sch_local != "All":
+        unis_f = unis_f[unis_f["sch_local"] == sch_local]
+    if sch_gcc != "All":
+        unis_f = unis_f[unis_f["sch_gcc"] == sch_gcc]
+    if sch_intl != "All":
+        unis_f = unis_f[unis_f["sch_intl"] == sch_intl]
+    if sch_mothers != "All":
+        unis_f = unis_f[unis_f["sch_children_citizen_mothers"] == sch_mothers]
 
     if q:
         mask_u = (
-            unis_f["name_en"].str.lower().str.contains(q, na=False)
-            | unis_f["name_ar"].str.lower().str.contains(q, na=False)
-            | unis_f["city"].str.lower().str.contains(q, na=False)
+            unis_f["name_en"].astype(str).str.lower().str.contains(q, na=False)
+            | unis_f["name_ar"].astype(str).str.lower().str.contains(q, na=False)
+            | unis_f["city"].astype(str).str.lower().str.contains(q, na=False)
         )
         unis_f = unis_f[mask_u]
 
-    # ----------------------------
-    # Results
-    # ----------------------------
     st.divider()
     st.subheader("Universities")
 
     cols_show = [
-        "uni_id","name_ar","name_en","country","city","type",
-        "scholarship_available",
-        "website","admissions_url","programs_url",
-        "ranking_source","ranking_value","accreditation_notes"
+        "uni_id", "name_ar", "name_en", "country", "city", "type",
+        "sch_local", "sch_gcc", "sch_intl", "sch_children_citizen_mothers",
+        "website", "admissions_url", "programs_url",
+        "ranking_source", "ranking_value"
     ]
-    st.dataframe(unis_f[cols_show], use_container_width=True, hide_index=True)
+
+    st.dataframe(
+        unis_f[cols_show],
+        use_container_width=True,
+        hide_index=True,
+        column_config={
+            "website": st.column_config.LinkColumn("Website", display_text="Click here"),
+            "admissions_url": st.column_config.LinkColumn("Admissions", display_text="Click here"),
+            "programs_url": st.column_config.LinkColumn("Programs", display_text="Click here"),
+        }
+    )
+
 
 # ----------------------------
 # Page: المقارنة
@@ -288,6 +309,7 @@ elif st.session_state.page == "المقارنة":
     st.subheader("المقارنة بين الجامعات")
     st.info("هذه الصفحة نربطها بالاختيار من نتائج البحث لاحقًا.")
 
+
 # ----------------------------
 # Page: رُشد
 # ----------------------------
@@ -295,6 +317,7 @@ elif st.session_state.page == "رُشد":
     st.subheader("رُشد — المعاون الذكي")
     user_q = st.text_area("اكتب احتياجك", placeholder="مثال: أبي بكالوريوس في علوم الحاسب في الإمارات باللغة الإنجليزية")
     st.button("حلّل الطلب")
+
 
 # ----------------------------
 # Page: من نحن (متمركز + محتوى أكثر + تواصل)
