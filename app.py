@@ -110,7 +110,7 @@ if st.session_state.page == "الرئيسية":
         st.rerun()
 
 # ----------------------------
-# Page: بحث الجامعات (مكان الكود حقك)
+# Page: بحث الجامعات
 # ----------------------------
 elif st.session_state.page == "بحث الجامعات":
     st.subheader("بحث الجامعات")
@@ -129,24 +129,51 @@ elif st.session_state.page == "بحث الجامعات":
     def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
         if df is None or df.empty:
             return pd.DataFrame()
+
         df = df.copy()
-        current_cols_12 = [
+
+        # ملفك الحالي غالبًا بدون هيدر (12 أعمدة). نحن ندعمه + ندعم 13 بعد إضافة المنح
+        cols_12 = [
             "uni_id","name_ar","name_en","country","city","type",
             "website","admissions_url","programs_url","ranking_source",
             "extra_1","extra_2"
         ]
-        if len(df.columns) == 12 and not set(["ranking_value","accreditation_notes"]).issubset(set(df.columns)):
-            df.columns = current_cols_12
+        cols_13 = cols_12 + ["scholarship_available"]
+
+        # إذا لا يوجد هيدر واضح وتمت القراءة كأعمدة رقمية/غريبة، نعيد تسمية الأعمدة بناءً على العدد
+        if len(df.columns) == 12:
+            df.columns = cols_12
+        elif len(df.columns) == 13:
+            df.columns = cols_13
+
+        # اشتقاق أعمدة النتائج/الاعتماد من extra_1/extra_2
+        if "ranking_value" not in df.columns:
             df["ranking_value"] = df.get("extra_1", "")
+        if "accreditation_notes" not in df.columns:
             df["accreditation_notes"] = df.get("extra_2", "")
+
+        # عمود المنح: لو غير موجود نخليه Unknown
+        if "scholarship_available" not in df.columns:
+            df["scholarship_available"] = "Unknown"
+
         needed = [
             "uni_id","name_ar","name_en","country","city","type",
             "website","admissions_url","programs_url",
-            "ranking_source","ranking_value","accreditation_notes"
+            "ranking_source","ranking_value","accreditation_notes",
+            "scholarship_available"
         ]
         for c in needed:
             if c not in df.columns:
                 df[c] = ""
+
+        # تنظيف بسيط
+        df["scholarship_available"] = (
+            df["scholarship_available"]
+            .fillna("Unknown")
+            .astype(str)
+            .replace({"": "Unknown", "nan": "Unknown"})
+        )
+
         return df[needed]
 
     def normalize_progs(df: pd.DataFrame) -> pd.DataFrame:
@@ -172,9 +199,12 @@ elif st.session_state.page == "بحث الجامعات":
     if progs.empty:
         st.warning(f"programs.csv not found or empty: {PROGS_PATH}")
 
+    # ----------------------------
     # Filters
+    # ----------------------------
     st.write("")
-    col1, col2, col3, col4 = st.columns([1.2, 1, 1, 1.2])
+    col1, col2, col3, col4, col5 = st.columns([1.2, 1, 1, 1.2, 1])
+
     countries = sorted([c for c in unis["country"].unique() if str(c).strip()])
     country = col1.selectbox("Country", options=["All"] + countries, index=0)
 
@@ -187,14 +217,23 @@ elif st.session_state.page == "بحث الجامعات":
     majors = sorted([m for m in progs["major_field"].unique() if str(m).strip()]) if not progs.empty else []
     major = col4.selectbox("Major field", options=["All"] + majors, index=0)
 
+    sch_opt = ["All", "Yes", "No", "Unknown"]
+    scholarship = col5.selectbox("Scholarships", sch_opt, index=0)
+
     q = st.text_input("Search (university / program / city)", value="").strip().lower()
 
-    # Apply
+    # ----------------------------
+    # Apply filters on universities
+    # ----------------------------
     unis_f = unis.copy()
+
     if country != "All":
         unis_f = unis_f[unis_f["country"] == country]
     if uni_type != "All":
         unis_f = unis_f[unis_f["type"] == uni_type]
+    if scholarship != "All":
+        unis_f = unis_f[unis_f["scholarship_available"] == scholarship]
+
     if q:
         mask_u = (
             unis_f["name_en"].str.lower().str.contains(q, na=False)
@@ -203,10 +242,19 @@ elif st.session_state.page == "بحث الجامعات":
         )
         unis_f = unis_f[mask_u]
 
+    # ----------------------------
     # Results
+    # ----------------------------
     st.divider()
     st.subheader("Universities")
-    st.dataframe(unis_f, use_container_width=True, hide_index=True)
+
+    cols_show = [
+        "uni_id","name_ar","name_en","country","city","type",
+        "scholarship_available",
+        "website","admissions_url","programs_url",
+        "ranking_source","ranking_value","accreditation_notes"
+    ]
+    st.dataframe(unis_f[cols_show], use_container_width=True, hide_index=True)
 
 # ----------------------------
 # Page: المقارنة
@@ -224,8 +272,52 @@ elif st.session_state.page == "رُشد":
     st.button("حلّل الطلب")
 
 # ----------------------------
-# Page: من نحن
+# Page: من نحن (متمركز + محتوى أكثر + تواصل)
 # ----------------------------
 elif st.session_state.page == "من نحن":
-    st.subheader("من نحن")
-    st.write("بوصلة مشروع يهدف إلى تبسيط قرار اختيار الجامعة والبرنامج في دول الخليج عبر بيانات قابلة للمقارنة وتجربة ذكية.")
+    st.markdown("<h2 style='text-align:center; margin-top: 0;'>من نحن</h2>", unsafe_allow_html=True)
+    st.write("")
+
+    left, center, right = st.columns([1, 2.8, 1])
+    with center:
+        st.markdown(
+            """
+            <div style="text-align:center; font-size:1.05rem; line-height:2;">
+              <p><b>بوصلة</b> منصة رقمية ذكية تهدف إلى مساعدة الطلاب وأولياء الأمور في اتخاذ قرار واعٍ ومدروس لاختيار الجامعة والبرنامج الأكاديمي داخل دول الخليج.</p>
+
+              <p>جاءت فكرة بوصلة استجابةً لتحدٍ واقعي يواجه الكثير من الطلبة، وهو <b>تشتّت المعلومات</b> وصعوبة المقارنة بين الجامعات والبرامج وتعدد المصادر غير الموثوقة.</p>
+
+              <p>نعمل في بوصلة على جمع البيانات وتنظيمها ثم تقديمها بطريقة مبسطة وقابلة للمقارنة، مع توظيف أدوات ذكية تساعد المستخدم على فهم الخيارات واتخاذ القرار بثقة.</p>
+
+              <hr style="margin:18px 0; border:none; border-top:1px solid #e5e7eb;">
+
+              <p style="margin-bottom:10px;"><b>ماذا يميز بوصلة؟</b></p>
+              <p>تركيز على السياق الخليجي واحتياجات الطلبة في المنطقة</p>
+              <p>عرض واضح ومقارنات سهلة بين الجامعات والبرامج</p>
+              <p>استخدام مسؤول للذكاء الاصطناعي لدعم القرار لا استبداله</p>
+              <p>الحياد والشفافية واحترام خصوصية المستخدم</p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+    st.write("")
+    st.markdown("---")
+    st.write("")
+
+    st.markdown("<h3 style='text-align:center;'>تواصل معنا</h3>", unsafe_allow_html=True)
+    st.write("")
+
+    left2, center2, right2 = st.columns([1, 2.8, 1])
+    with center2:
+        c1, c2 = st.columns(2)
+        with c1:
+            st.text_input("الاسم", placeholder="اكتب اسمك")
+            st.text_input("البريد الإلكتروني", placeholder="example@email.com")
+        with c2:
+            st.text_area("رسالتك", placeholder="اكتب رسالتك هنا...", height=120)
+
+        if st.button("إرسال", use_container_width=True):
+            st.success("تم الاستلام. شكرًا لتواصلك!")
+
+        st.caption("للتعاون والشراكات: يسعدنا التواصل مع الجهات التعليمية والمبادرات المجتمعية.")
