@@ -61,7 +61,7 @@ st.markdown(
 )
 
 # ----------------------------
-# Helpers / Loaders
+# Helpers / Paths
 # ----------------------------
 ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
@@ -71,9 +71,23 @@ PROGS_PATH = DATA_DIR / "programs.csv"
 
 @st.cache_data(show_spinner=False)
 def load_csv(path: Path) -> pd.DataFrame:
+    """
+    قراءة CSV بشكل مرن:
+    - نجرب قراءة بهيدر طبيعي.
+    - إذا فشل/طلع أعمدة رقمية فقط أو ملف بدون هيدر -> نقرأ header=None.
+    """
     if (not path.exists()) or path.stat().st_size == 0:
         return pd.DataFrame()
-    return pd.read_csv(path, encoding="utf-8", engine="python", on_bad_lines="skip")
+
+    try:
+        df = pd.read_csv(path, encoding="utf-8", engine="python", on_bad_lines="skip")
+        # إذا الأعمدة كلها أرقام (0,1,2...) غالباً انقرأ كأنه بدون هيدر بشكل غلط
+        if all(isinstance(c, int) for c in df.columns):
+            df = pd.read_csv(path, encoding="utf-8", engine="python", on_bad_lines="skip", header=None)
+        return df
+    except Exception:
+        # fallback
+        return pd.read_csv(path, encoding="utf-8", engine="python", on_bad_lines="skip", header=None)
 
 
 def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
@@ -82,7 +96,7 @@ def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
 
     df = df.copy()
 
-    # الأعمدة الأساسية (12) — ملفك بدون هيدر
+    # الأعمدة الأساسية (12)
     cols_12 = [
         "uni_id", "name_ar", "name_en", "country", "city", "type",
         "website", "admissions_url", "programs_url",
@@ -92,13 +106,37 @@ def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
     # بعد إضافة المنح (15) => scholarship + notes + url
     cols_15 = cols_12 + ["scholarship", "sch_notes", "sch_url"]
 
-    if len(df.columns) == 12:
-        df.columns = cols_12
-    elif len(df.columns) == 15:
-        df.columns = cols_15
+    # --- حالة: الملف فيه هيدر أصلاً
+    if "uni_id" in df.columns:
+        # نتأكد من وجود أعمدة المنح لو كانت مضافة
+        if "scholarship" not in df.columns:
+            df["scholarship"] = "Unknown"
+        if "sch_notes" not in df.columns:
+            df["sch_notes"] = ""
+        if "sch_url" not in df.columns:
+            df["sch_url"] = ""
     else:
-        # إذا فيه فواصل زايدة في بعض السطور، نخلي الأعمدة مثل ما هي
-        pass
+        # --- حالة: الملف بدون هيدر (أعمدة رقمية)
+        if len(df.columns) == 12:
+            df.columns = cols_12
+        elif len(df.columns) == 15:
+            df.columns = cols_15
+        else:
+            # لو فيه أعمدة زيادة بسبب فواصل زايدة:
+            # ناخذ أول 15 لو متوفر، وإلا أول 12
+            if len(df.columns) >= 15:
+                df = df.iloc[:, :15]
+                df.columns = cols_15
+            else:
+                df = df.iloc[:, :12]
+                df.columns = cols_12
+            # لو فقدت أعمدة المنح لأن عدد الأعمدة أقل
+            if "scholarship" not in df.columns:
+                df["scholarship"] = "Unknown"
+            if "sch_notes" not in df.columns:
+                df["sch_notes"] = ""
+            if "sch_url" not in df.columns:
+                df["sch_url"] = ""
 
     # ربط extra_1/extra_2 إلى ranking_value / accreditation_notes
     if "ranking_value" not in df.columns:
@@ -109,20 +147,15 @@ def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
     # scholarship عمود واحد:
     # - "No" أو "Unknown"
     # - أو "Local|GCC|International|Children of citizen mothers"
-    if "scholarship" not in df.columns:
-        df["scholarship"] = "Unknown"
-
     df["scholarship"] = (
-        df["scholarship"]
+        df.get("scholarship", "Unknown")
         .fillna("Unknown")
         .astype(str)
         .replace({"": "Unknown", "nan": "Unknown"})
     )
 
-    if "sch_notes" not in df.columns:
-        df["sch_notes"] = ""
-    if "sch_url" not in df.columns:
-        df["sch_url"] = ""
+    df["sch_notes"] = df.get("sch_notes", "").fillna("").astype(str)
+    df["sch_url"] = df.get("sch_url", "").fillna("").astype(str)
 
     needed = [
         "uni_id", "name_ar", "name_en", "country", "city", "type",
@@ -143,15 +176,36 @@ def normalize_progs(df: pd.DataFrame) -> pd.DataFrame:
         return pd.DataFrame()
 
     df = df.copy()
+
     needed = [
         "program_id", "uni_id", "level", "degree_type", "major_field",
         "program_name_en", "program_name_ar", "city", "language",
         "duration_years", "tuition_notes", "admissions_requirements", "url"
     ]
-    for c in needed:
+
+    # إذا الملف فيه هيدر طبيعي (أسماء الأعمدة)
+    if "program_id" in df.columns:
+        for c in needed:
+            if c not in df.columns:
+                df[c] = ""
+        return df[needed]
+
+    # إذا بدون هيدر (أعمدة رقمية) — نحاول نسميها لو العدد كافي
+    if len(df.columns) >= len(needed):
+        df = df.iloc[:, :len(needed)]
+        df.columns = needed
+        return df
+
+    # fallback: رجّع DataFrame فارغ بنفس الأعمدة
+    return pd.DataFrame(columns=needed)
+
+
+def ensure_cols(df: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
+    """يتأكد إن كل الأعمدة المطلوبة موجودة قبل العرض (يمنع KeyError)."""
+    for c in cols:
         if c not in df.columns:
             df[c] = ""
-    return df[needed]
+    return df
 
 
 # ----------------------------
@@ -222,9 +276,14 @@ elif st.session_state.page == "بحث الجامعات":
     if unis.empty:
         st.error(f"universities.csv not found or empty: {UNIS_PATH}")
         st.stop()
+
+    # (اختياري) لو البرامج فاضية ما نوقف البحث
     if progs.empty:
         st.warning(f"programs.csv not found or empty: {PROGS_PATH}")
 
+    # ----------------------------
+    # Filters
+    # ----------------------------
     st.write("")
     col1, col2, col3, col4 = st.columns([1.2, 1, 1, 1.2])
 
@@ -244,7 +303,6 @@ elif st.session_state.page == "بحث الجامعات":
     left_s, right_s = st.columns([1.2, 2.8])
 
     yn = left_s.selectbox("Scholarship availability", ["All", "Yes", "No", "Unknown"], index=0)
-
     sch_tags = ["Local", "GCC", "International", "Children of citizen mothers"]
     selected_tags = right_s.multiselect("Scholarship type", sch_tags, default=[])
 
@@ -260,10 +318,7 @@ elif st.session_state.page == "بحث الجامعات":
     if uni_type != "All":
         unis_f = unis_f[unis_f["type"] == uni_type]
 
-    # scholarship availability derived from scholarship column
-    # - No => No
-    # - Unknown => Unknown
-    # - otherwise => Yes
+    # Scholarship availability derived from scholarship column
     if yn != "All":
         def availability(x: str) -> str:
             x = str(x).strip()
@@ -275,7 +330,7 @@ elif st.session_state.page == "بحث الجامعات":
 
         unis_f = unis_f[unis_f["scholarship"].apply(availability) == yn]
 
-    # Tags filter (inside scholarship like: Local|GCC|International)
+    # Tags filter (inside scholarship)
     if selected_tags:
         def has_tags(x: str) -> bool:
             x = str(x).strip()
@@ -294,6 +349,9 @@ elif st.session_state.page == "بحث الجامعات":
         )
         unis_f = unis_f[mask_u]
 
+    # ----------------------------
+    # Results
+    # ----------------------------
     st.divider()
     st.subheader("Universities")
 
@@ -303,6 +361,8 @@ elif st.session_state.page == "بحث الجامعات":
         "website", "admissions_url", "programs_url",
         "ranking_source", "ranking_value"
     ]
+
+    unis_f = ensure_cols(unis_f, cols_show)
 
     st.dataframe(
         unis_f[cols_show],
@@ -337,7 +397,7 @@ elif st.session_state.page == "رُشد":
 
 
 # ----------------------------
-# Page: من نحن (متمركز + محتوى أكثر + تواصل)
+# Page: من نحن
 # ----------------------------
 elif st.session_state.page == "من نحن":
     st.markdown("<h2 style='text-align:center; margin-top: 0;'>من نحن</h2>", unsafe_allow_html=True)
