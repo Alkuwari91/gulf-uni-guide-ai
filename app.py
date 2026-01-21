@@ -106,7 +106,9 @@ def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
     if "accreditation_notes" not in df.columns:
         df["accreditation_notes"] = df.get("extra_2", "")
 
-    # scholarship عمود واحد (قيم مثل: Local|GCC|International أو No أو Unknown)
+    # scholarship عمود واحد:
+    # - "No" أو "Unknown"
+    # - أو "Local|GCC|International|Children of citizen mothers"
     if "scholarship" not in df.columns:
         df["scholarship"] = "Unknown"
 
@@ -248,7 +250,9 @@ elif st.session_state.page == "بحث الجامعات":
 
     q = st.text_input("Search (university / city)", value="").strip().lower()
 
+    # ----------------------------
     # apply filters
+    # ----------------------------
     unis_f = unis.copy()
 
     if country != "All":
@@ -256,20 +260,25 @@ elif st.session_state.page == "بحث الجامعات":
     if uni_type != "All":
         unis_f = unis_f[unis_f["type"] == uni_type]
 
-    # Availability filter
-    if yn == "No":
-        unis_f = unis_f[unis_f["scholarship"] == "No"]
-    elif yn == "Unknown":
-        unis_f = unis_f[unis_f["scholarship"] == "Unknown"]
-    elif yn == "Yes":
-        unis_f = unis_f[~unis_f["scholarship"].isin(["No", "Unknown", ""])]
+    # scholarship availability derived from scholarship column
+    # - No => No
+    # - Unknown => Unknown
+    # - otherwise => Yes
+    if yn != "All":
+        def availability(x: str) -> str:
+            x = str(x).strip()
+            if x == "No":
+                return "No"
+            if x == "Unknown" or x == "":
+                return "Unknown"
+            return "Yes"
 
-    # Tags filter (داخل scholarship مثل: Local|GCC|International)
+        unis_f = unis_f[unis_f["scholarship"].apply(availability) == yn]
+
+    # Tags filter (inside scholarship like: Local|GCC|International)
     if selected_tags:
         def has_tags(x: str) -> bool:
-            if not isinstance(x, str):
-                return False
-            x = x.strip()
+            x = str(x).strip()
             if x in ["No", "Unknown", ""]:
                 return False
             parts = [p.strip() for p in x.split("|") if p.strip()]
@@ -320,7 +329,10 @@ elif st.session_state.page == "المقارنة":
 # ----------------------------
 elif st.session_state.page == "رُشد":
     st.subheader("رُشد — المعاون الذكي")
-    user_q = st.text_area("اكتب احتياجك", placeholder="مثال: أبي بكالوريوس في علوم الحاسب في الإمارات باللغة الإنجليزية")
+    user_q = st.text_area(
+        "اكتب احتياجك",
+        placeholder="مثال: أبي بكالوريوس في علوم الحاسب في الإمارات باللغة الإنجليزية"
+    )
     st.button("حلّل الطلب")
 
 
