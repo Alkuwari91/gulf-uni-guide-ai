@@ -126,7 +126,7 @@ elif st.session_state.page == "بحث الجامعات":
             return pd.DataFrame()
         return pd.read_csv(path, encoding="utf-8", engine="python", on_bad_lines="skip")
 
-def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
+    def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
     if df is None or df.empty:
         return pd.DataFrame()
 
@@ -200,6 +200,7 @@ def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
             df[c] = ""
 
     return df[needed]
+
 
 
     def normalize_progs(df: pd.DataFrame) -> pd.DataFrame:
