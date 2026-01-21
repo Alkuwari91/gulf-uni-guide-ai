@@ -132,14 +132,14 @@ elif st.session_state.page == "بحث الجامعات":
 
     df = df.copy()
 
-    # الأعمدة الأساسية (12)
+    # (12) الأعمدة الأساسية
     cols_12 = [
         "uni_id","name_ar","name_en","country","city","type",
         "website","admissions_url","programs_url",
         "ranking_source","extra_1","extra_2"
     ]
 
-    # الأعمدة بعد إضافة المنح (18)
+    # (18) الأعمدة بعد إضافة المنح
     cols_18 = cols_12 + [
         "sch_local",
         "sch_gcc",
@@ -155,8 +155,6 @@ elif st.session_state.page == "بحث الجامعات":
     elif len(df.columns) == 18:
         df.columns = cols_18
     else:
-        # في حال وجود فواصل/مسافات زائدة في بعض السطور
-        # لا نكسر الكود — نكمل ونضيف الأعمدة الناقصة
         pass
 
     # اشتقاق أعمدة الترتيب والاعتماد
@@ -165,7 +163,7 @@ elif st.session_state.page == "بحث الجامعات":
     if "accreditation_notes" not in df.columns:
         df["accreditation_notes"] = df.get("extra_2", "")
 
-    # أعمدة المنح — لو غير موجودة نخليها Unknown
+    # أعمدة المنح — الافتراضي Unknown
     for c in [
         "sch_local",
         "sch_gcc",
@@ -186,7 +184,6 @@ elif st.session_state.page == "بحث الجامعات":
     if "sch_url" not in df.columns:
         df["sch_url"] = ""
 
-    # الأعمدة النهائية المعتمدة في التطبيق
     needed = [
         "uni_id","name_ar","name_en","country","city","type",
         "sch_local","sch_gcc","sch_intl","sch_children_citizen_mothers",
@@ -200,8 +197,6 @@ elif st.session_state.page == "بحث الجامعات":
             df[c] = ""
 
     return df[needed]
-
-
 
     def normalize_progs(df: pd.DataFrame) -> pd.DataFrame:
         if df is None or df.empty:
