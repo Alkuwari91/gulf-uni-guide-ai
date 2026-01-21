@@ -89,20 +89,13 @@ def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
         "ranking_source", "extra_1", "extra_2"
     ]
 
-    # بعد إضافة المنح (18)
-    cols_18 = cols_12 + [
-        "sch_local",
-        "sch_gcc",
-        "sch_intl",
-        "sch_children_citizen_mothers",
-        "sch_notes",
-        "sch_url"
-    ]
+    # بعد إضافة المنح (15) => scholarship + notes + url
+    cols_15 = cols_12 + ["scholarship", "sch_notes", "sch_url"]
 
     if len(df.columns) == 12:
         df.columns = cols_12
-    elif len(df.columns) == 18:
-        df.columns = cols_18
+    elif len(df.columns) == 15:
+        df.columns = cols_15
     else:
         # إذا فيه فواصل زايدة في بعض السطور، نخلي الأعمدة مثل ما هي
         pass
@@ -113,16 +106,16 @@ def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
     if "accreditation_notes" not in df.columns:
         df["accreditation_notes"] = df.get("extra_2", "")
 
-    # أعمدة المنح الافتراضية
-    for c in ["sch_local", "sch_gcc", "sch_intl", "sch_children_citizen_mothers"]:
-        if c not in df.columns:
-            df[c] = "Unknown"
-        df[c] = (
-            df[c]
-            .fillna("Unknown")
-            .astype(str)
-            .replace({"": "Unknown", "nan": "Unknown"})
-        )
+    # scholarship عمود واحد (قيم مثل: Local|GCC|International أو No أو Unknown)
+    if "scholarship" not in df.columns:
+        df["scholarship"] = "Unknown"
+
+    df["scholarship"] = (
+        df["scholarship"]
+        .fillna("Unknown")
+        .astype(str)
+        .replace({"": "Unknown", "nan": "Unknown"})
+    )
 
     if "sch_notes" not in df.columns:
         df["sch_notes"] = ""
@@ -131,8 +124,7 @@ def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
 
     needed = [
         "uni_id", "name_ar", "name_en", "country", "city", "type",
-        "sch_local", "sch_gcc", "sch_intl", "sch_children_citizen_mothers",
-        "sch_notes", "sch_url",
+        "scholarship", "sch_notes", "sch_url",
         "website", "admissions_url", "programs_url",
         "ranking_source", "ranking_value", "accreditation_notes"
     ]
@@ -247,12 +239,12 @@ elif st.session_state.page == "بحث الجامعات":
     major = col4.selectbox("Major field", ["All"] + majors, index=0)
 
     st.write("")
-    s1, s2, s3, s4 = st.columns(4)
-    sch_opt = ["All", "Yes", "No", "Unknown"]
-    sch_local = s1.selectbox("Scholarship (Local)", sch_opt, index=0)
-    sch_gcc = s2.selectbox("Scholarship (GCC)", sch_opt, index=0)
-    sch_intl = s3.selectbox("Scholarship (International)", sch_opt, index=0)
-    sch_mothers = s4.selectbox("Scholarship (Children of citizen mothers)", sch_opt, index=0)
+    left_s, right_s = st.columns([1.2, 2.8])
+
+    yn = left_s.selectbox("Scholarship availability", ["All", "Yes", "No", "Unknown"], index=0)
+
+    sch_tags = ["Local", "GCC", "International", "Children of citizen mothers"]
+    selected_tags = right_s.multiselect("Scholarship type", sch_tags, default=[])
 
     q = st.text_input("Search (university / city)", value="").strip().lower()
 
@@ -263,14 +255,27 @@ elif st.session_state.page == "بحث الجامعات":
         unis_f = unis_f[unis_f["country"] == country]
     if uni_type != "All":
         unis_f = unis_f[unis_f["type"] == uni_type]
-    if sch_local != "All":
-        unis_f = unis_f[unis_f["sch_local"] == sch_local]
-    if sch_gcc != "All":
-        unis_f = unis_f[unis_f["sch_gcc"] == sch_gcc]
-    if sch_intl != "All":
-        unis_f = unis_f[unis_f["sch_intl"] == sch_intl]
-    if sch_mothers != "All":
-        unis_f = unis_f[unis_f["sch_children_citizen_mothers"] == sch_mothers]
+
+    # Availability filter
+    if yn == "No":
+        unis_f = unis_f[unis_f["scholarship"] == "No"]
+    elif yn == "Unknown":
+        unis_f = unis_f[unis_f["scholarship"] == "Unknown"]
+    elif yn == "Yes":
+        unis_f = unis_f[~unis_f["scholarship"].isin(["No", "Unknown", ""])]
+
+    # Tags filter (داخل scholarship مثل: Local|GCC|International)
+    if selected_tags:
+        def has_tags(x: str) -> bool:
+            if not isinstance(x, str):
+                return False
+            x = x.strip()
+            if x in ["No", "Unknown", ""]:
+                return False
+            parts = [p.strip() for p in x.split("|") if p.strip()]
+            return all(tag in parts for tag in selected_tags)
+
+        unis_f = unis_f[unis_f["scholarship"].apply(has_tags)]
 
     if q:
         mask_u = (
@@ -285,7 +290,7 @@ elif st.session_state.page == "بحث الجامعات":
 
     cols_show = [
         "uni_id", "name_ar", "name_en", "country", "city", "type",
-        "sch_local", "sch_gcc", "sch_intl", "sch_children_citizen_mothers",
+        "scholarship",
         "website", "admissions_url", "programs_url",
         "ranking_source", "ranking_value"
     ]
