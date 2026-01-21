@@ -125,7 +125,6 @@ elif st.session_state.page == "بحث الجامعات":
         if (not path.exists()) or path.stat().st_size == 0:
             return pd.DataFrame()
         return pd.read_csv(path, encoding="utf-8", engine="python", on_bad_lines="skip")
-
 def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
     if df is None or df.empty:
         return pd.DataFrame()
@@ -134,9 +133,9 @@ def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
 
     # (12) الأعمدة الأساسية
     cols_12 = [
-        "uni_id","name_ar","name_en","country","city","type",
-        "website","admissions_url","programs_url",
-        "ranking_source","extra_1","extra_2"
+        "uni_id", "name_ar", "name_en", "country", "city", "type",
+        "website", "admissions_url", "programs_url",
+        "ranking_source", "extra_1", "extra_2"
     ]
 
     # (18) الأعمدة بعد إضافة المنح
@@ -158,20 +157,22 @@ def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
         pass
 
     # اشتقاق أعمدة الترتيب والاعتماد
-        if "ranking_value" not in df.columns:
+    if "ranking_value" not in df.columns:
         df["ranking_value"] = df.get("extra_1", "")
-        if "accreditation_notes" not in df.columns:
+
+    if "accreditation_notes" not in df.columns:
         df["accreditation_notes"] = df.get("extra_2", "")
 
-    # أعمدة المنح — الافتراضي Unknown
+    # أعمدة المنح — افتراضي Unknown
     for c in [
         "sch_local",
         "sch_gcc",
         "sch_intl",
         "sch_children_citizen_mothers"
     ]:
-    if c not in df.columns:
+        if c not in df.columns:
             df[c] = "Unknown"
+
         df[c] = (
             df[c]
             .fillna("Unknown")
@@ -181,22 +182,24 @@ def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
 
     if "sch_notes" not in df.columns:
         df["sch_notes"] = ""
+
     if "sch_url" not in df.columns:
         df["sch_url"] = ""
 
+    # الأعمدة النهائية المعتمدة في التطبيق
     needed = [
-        "uni_id","name_ar","name_en","country","city","type",
-        "sch_local","sch_gcc","sch_intl","sch_children_citizen_mothers",
-        "sch_notes","sch_url",
-        "website","admissions_url","programs_url",
-        "ranking_source","ranking_value","accreditation_notes"
+        "uni_id", "name_ar", "name_en", "country", "city", "type",
+        "sch_local", "sch_gcc", "sch_intl", "sch_children_citizen_mothers",
+        "sch_notes", "sch_url",
+        "website", "admissions_url", "programs_url",
+        "ranking_source", "ranking_value", "accreditation_notes"
     ]
 
     for c in needed:
-    if c not in df.columns:
+        if c not in df.columns:
             df[c] = ""
 
-        return df[needed]
+    return df[needed]
 
     def normalize_progs(df: pd.DataFrame) -> pd.DataFrame:
         if df is None or df.empty:
