@@ -90,72 +90,76 @@ def load_csv(path: Path) -> pd.DataFrame:
         return pd.read_csv(path, encoding="utf-8", engine="python", on_bad_lines="skip", header=None)
 
 
+@st.cache_data(show_spinner=False)
+def load_unis_csv(path: Path) -> pd.DataFrame:
+    if (not path.exists()) or path.stat().st_size == 0:
+        return pd.DataFrame()
+
+    # نقرأ أول سطر عشان نعرف: فيه هيدر ولا لا
+    first_line = path.read_text(encoding="utf-8", errors="ignore").splitlines()[0].strip().lower()
+
+    has_header = first_line.startswith("uni_id")  # يعني عندك هيدر فعلي
+
+    if has_header:
+        df = pd.read_csv(path, encoding="utf-8", engine="python", on_bad_lines="skip")
+    else:
+        df = pd.read_csv(path, encoding="utf-8", engine="python", on_bad_lines="skip", header=None)
+
+    return df
+
+
 def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
     if df is None or df.empty:
         return pd.DataFrame()
 
     df = df.copy()
 
-    # الأعمدة الأساسية (12)
     cols_12 = [
         "uni_id", "name_ar", "name_en", "country", "city", "type",
         "website", "admissions_url", "programs_url",
         "ranking_source", "extra_1", "extra_2"
     ]
 
-    # بعد إضافة المنح (15) => scholarship + notes + url
     cols_15 = cols_12 + ["scholarship", "sch_notes", "sch_url"]
 
-    # --- حالة: الملف فيه هيدر أصلاً
-    if "uni_id" in df.columns:
-        # نتأكد من وجود أعمدة المنح لو كانت مضافة
-        if "scholarship" not in df.columns:
-            df["scholarship"] = "Unknown"
-        if "sch_notes" not in df.columns:
-            df["sch_notes"] = ""
-        if "sch_url" not in df.columns:
-            df["sch_url"] = ""
-    else:
-        # --- حالة: الملف بدون هيدر (أعمدة رقمية)
+    # ✅ لو الملف انقرأ بدون هيدر (header=None) بيكون أعمدة مرقمة 0..14
+    if list(df.columns) == list(range(len(df.columns))):
         if len(df.columns) == 12:
             df.columns = cols_12
         elif len(df.columns) == 15:
             df.columns = cols_15
-        else:
-            # لو فيه أعمدة زيادة بسبب فواصل زايدة:
-            # ناخذ أول 15 لو متوفر، وإلا أول 12
-            if len(df.columns) >= 15:
-                df = df.iloc[:, :15]
-                df.columns = cols_15
-            else:
-                df = df.iloc[:, :12]
-                df.columns = cols_12
-            # لو فقدت أعمدة المنح لأن عدد الأعمدة أقل
-            if "scholarship" not in df.columns:
-                df["scholarship"] = "Unknown"
-            if "sch_notes" not in df.columns:
-                df["sch_notes"] = ""
-            if "sch_url" not in df.columns:
-                df["sch_url"] = ""
 
-    # ربط extra_1/extra_2 إلى ranking_value / accreditation_notes
+    # ✅ لو الملف انقرأ بهيدر لكن أول صف كان هيدر بالغلط داخل البيانات
+    # (يصير لما يكون الملف بدون هيدر بس pandas اعتبر أول سطر هيدر)
+    # نتحقق: إذا أول قيمة في uni_id هي "uni_id" نحذف السطر
+    if "uni_id" in df.columns:
+        first_val = str(df.iloc[0]["uni_id"]).strip().lower()
+        if first_val == "uni_id":
+            df = df.iloc[1:].copy()
+
+    # ربط extra_1/extra_2
     if "ranking_value" not in df.columns:
         df["ranking_value"] = df.get("extra_1", "")
     if "accreditation_notes" not in df.columns:
         df["accreditation_notes"] = df.get("extra_2", "")
 
-    # scholarship عمود واحد:
-    # - "No" أو "Unknown"
-    # - أو "Local|GCC|International|Children of citizen mothers"
+    # scholarship (عمود واحد)
+    if "scholarship" not in df.columns:
+        df["scholarship"] = "Unknown"
+
     df["scholarship"] = (
-        df.get("scholarship", "Unknown")
+        df["scholarship"]
         .fillna("Unknown")
         .astype(str)
+        .str.replace("  ", " ")
+        .str.strip()
         .replace({"": "Unknown", "nan": "Unknown"})
     )
 
-    df["sch_notes"] = df.get("sch_notes", "").fillna("").astype(str)
-    df["sch_url"] = df.get("sch_url", "").fillna("").astype(str)
+    if "sch_notes" not in df.columns:
+        df["sch_notes"] = ""
+    if "sch_url" not in df.columns:
+        df["sch_url"] = ""
 
     needed = [
         "uni_id", "name_ar", "name_en", "country", "city", "type",
@@ -270,7 +274,7 @@ if st.session_state.page == "الرئيسية":
 elif st.session_state.page == "بحث الجامعات":
     st.subheader("بحث الجامعات")
 
-    unis = normalize_unis(load_csv(UNIS_PATH))
+    unis = normalize_unis(load_unis_csv(UNIS_PATH))
     progs = normalize_progs(load_csv(PROGS_PATH))
 
     if unis.empty:
