@@ -126,55 +126,81 @@ elif st.session_state.page == "بحث الجامعات":
             return pd.DataFrame()
         return pd.read_csv(path, encoding="utf-8", engine="python", on_bad_lines="skip")
 
-    def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
-        if df is None or df.empty:
-            return pd.DataFrame()
+def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
+    if df is None or df.empty:
+        return pd.DataFrame()
 
-        df = df.copy()
+    df = df.copy()
 
-        # ملفك الحالي غالبًا بدون هيدر (12 أعمدة). نحن ندعمه + ندعم 13 بعد إضافة المنح
-        cols_12 = [
-            "uni_id","name_ar","name_en","country","city","type",
-            "website","admissions_url","programs_url","ranking_source",
-            "extra_1","extra_2"
-        ]
-        cols_13 = cols_12 + ["scholarship_available"]
+    # الأعمدة الأساسية (12)
+    cols_12 = [
+        "uni_id","name_ar","name_en","country","city","type",
+        "website","admissions_url","programs_url",
+        "ranking_source","extra_1","extra_2"
+    ]
 
-        # إذا لا يوجد هيدر واضح وتمت القراءة كأعمدة رقمية/غريبة، نعيد تسمية الأعمدة بناءً على العدد
-        if len(df.columns) == 12:
-            df.columns = cols_12
-        elif len(df.columns) == 13:
-            df.columns = cols_13
+    # الأعمدة بعد إضافة المنح (18)
+    cols_18 = cols_12 + [
+        "sch_local",
+        "sch_gcc",
+        "sch_intl",
+        "sch_children_citizen_mothers",
+        "sch_notes",
+        "sch_url"
+    ]
 
-        # اشتقاق أعمدة النتائج/الاعتماد من extra_1/extra_2
-        if "ranking_value" not in df.columns:
-            df["ranking_value"] = df.get("extra_1", "")
-        if "accreditation_notes" not in df.columns:
-            df["accreditation_notes"] = df.get("extra_2", "")
+    # تسمية الأعمدة حسب العدد المقروء
+    if len(df.columns) == 12:
+        df.columns = cols_12
+    elif len(df.columns) == 18:
+        df.columns = cols_18
+    else:
+        # في حال وجود فواصل/مسافات زائدة في بعض السطور
+        # لا نكسر الكود — نكمل ونضيف الأعمدة الناقصة
+        pass
 
-        # عمود المنح: لو غير موجود نخليه Unknown
-        if "scholarship_available" not in df.columns:
-            df["scholarship_available"] = "Unknown"
+    # اشتقاق أعمدة الترتيب والاعتماد
+    if "ranking_value" not in df.columns:
+        df["ranking_value"] = df.get("extra_1", "")
+    if "accreditation_notes" not in df.columns:
+        df["accreditation_notes"] = df.get("extra_2", "")
 
-        needed = [
-            "uni_id","name_ar","name_en","country","city","type",
-            "website","admissions_url","programs_url",
-            "ranking_source","ranking_value","accreditation_notes",
-            "scholarship_available"
-        ]
-        for c in needed:
-            if c not in df.columns:
-                df[c] = ""
-
-        # تنظيف بسيط
-        df["scholarship_available"] = (
-            df["scholarship_available"]
+    # أعمدة المنح — لو غير موجودة نخليها Unknown
+    for c in [
+        "sch_local",
+        "sch_gcc",
+        "sch_intl",
+        "sch_children_citizen_mothers"
+    ]:
+        if c not in df.columns:
+            df[c] = "Unknown"
+        df[c] = (
+            df[c]
             .fillna("Unknown")
             .astype(str)
             .replace({"": "Unknown", "nan": "Unknown"})
         )
 
-        return df[needed]
+    if "sch_notes" not in df.columns:
+        df["sch_notes"] = ""
+    if "sch_url" not in df.columns:
+        df["sch_url"] = ""
+
+    # الأعمدة النهائية المعتمدة في التطبيق
+    needed = [
+        "uni_id","name_ar","name_en","country","city","type",
+        "sch_local","sch_gcc","sch_intl","sch_children_citizen_mothers",
+        "sch_notes","sch_url",
+        "website","admissions_url","programs_url",
+        "ranking_source","ranking_value","accreditation_notes"
+    ]
+
+    for c in needed:
+        if c not in df.columns:
+            df[c] = ""
+
+    return df[needed]
+
 
     def normalize_progs(df: pd.DataFrame) -> pd.DataFrame:
         if df is None or df.empty:
