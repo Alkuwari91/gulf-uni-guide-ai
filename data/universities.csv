@@ -1,5 +1,5 @@
 uni_id,name_ar,name_en,country,city,type,website,admissions_url,programs_url,ranking_source,ranking_value,accreditation_notes,scholarship,sch_notes,sch_url
-qa_qu,جامعة قطر,Qatar University,Qatar,Doha,Public,https://www.qu.edu.qa,https://www.qu.edu.qa/admissions,https://www.qu.edu.qa/programs,QS,,,Unknown,,
+uni_id,name_ar,name_en,country,city,type,website,admissions_url,programs_url,ranking_source,ranking_value,accreditation_notes,scholarship,sch_notes,sch_url
 qa_udst,جامعة الدوحة للعلوم والتكنولوجيا,University of Doha for Science and Technology,Qatar,Doha,Public,https://www.udst.edu.qa,https://www.udst.edu.qa/admissions,https://www.udst.edu.qa/academics,,,Unknown,,
 qa_hbku,جامعة حمد بن خليفة,Hamad Bin Khalifa University,Qatar,Doha,Private,https://www.hbku.edu.qa,https://www.hbku.edu.qa/en/admissions,https://www.hbku.edu.qa/en/academics,,,Unknown,,
 qa_dohainst,معهد الدوحة للدراسات العليا,Doha Institute for Graduate Studies,Qatar,Doha,Public,https://www.dohainstitute.edu.qa,https://www.dohainstitute.edu.qa/en/Admissions,https://www.dohainstitute.edu.qa/en/Academics,,,Unknown,,
