@@ -1,11 +1,3 @@
-import streamlit as st
-from ui import render_shell
-
-render_shell()
-
-st.write("")
-st.subheader("المقارنة بين الجامعات")
-
 elif st.session_state.page == "المقارنة":
     st.subheader("المقارنة بين الجامعات")
 
