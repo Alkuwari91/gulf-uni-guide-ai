@@ -490,7 +490,7 @@ elif st.session_state.page == "المقارنة":
 
     st.write("")
     st.markdown("---")
-    st.markdown("### مقارنة سريعة (بطاقات)")
+    st.markdown("### مقارنة سريعة ")
 
     cols = st.columns(len(selected_ids))
     for i, uni_id in enumerate(selected_ids):
