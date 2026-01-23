@@ -270,7 +270,7 @@ def ensure_cols(df: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
 if "page" not in st.session_state:
     st.session_state.page = "الرئيسية"
 
-nav = ["الرئيسية", "بحث الجامعات", "المقارنة", "رُشد", "من نحن"]
+nav = ["من نحن", "رُشد", "المقارنة", "بحث الجامعات", "الرئيسية"]
 cols_nav = st.columns(len(nav))
 for i, name in enumerate(nav):
     # نخلي أول عنصر يطلع أقصى اليمين
