@@ -26,11 +26,12 @@ st.markdown(
 )
 
 # ----------------------------
-# CSS: Expander كأنه كارد (مثل راسخون)
+# CSS: Expander كأنه كارد (مثل راسخون) + RTL + توسيط العناوين + تصغير المنسدلات
 # ----------------------------
 st.markdown(
     """
     <style>
+      /* ============ Expander Card ============ */
       div[data-testid="stExpander"] {
         border: 0 !important;
         border-radius: 16px !important;
@@ -54,6 +55,43 @@ st.markdown(
         color: #334155 !important;
         line-height: 1.9 !important;
         font-size: 1.05rem !important;
+      }
+
+      /* ============ RTL Global ============ */
+      html, body, [class*="stApp"]{
+        direction: rtl !important;
+        text-align: right !important;
+      }
+      input, textarea, [role="textbox"]{
+        direction: rtl !important;
+        text-align: right !important;
+      }
+      div[data-baseweb="select"] *{
+        direction: rtl !important;
+        text-align: right !important;
+      }
+      label{
+        direction: rtl !important;
+        text-align: right !important;
+      }
+
+      /* ============ Center titles ============ */
+      .page-title{
+        text-align: center !important;
+        font-weight: 900;
+        margin: 10px 0 18px 0;
+      }
+
+      /* ============ Smaller dropdowns ============ */
+      div[data-baseweb="select"] > div{
+        min-height: 38px !important;
+      }
+      div[data-baseweb="select"] > div > div{
+        padding-top: 2px !important;
+        padding-bottom: 2px !important;
+      }
+      div[data-baseweb="select"] span{
+        font-size: 0.95rem !important;
       }
     </style>
     """,
@@ -202,12 +240,15 @@ def normalize_progs(df: pd.DataFrame) -> pd.DataFrame:
 
     # fallback: رجّع DataFrame فارغ بنفس الأعمدة
     return pd.DataFrame(columns=needed)
+
+
 def make_uni_label(row: pd.Series) -> str:
     ar = str(row.get("name_ar", "")).strip()
     en = str(row.get("name_en", "")).strip()
     city = str(row.get("city", "")).strip()
     country = str(row.get("country", "")).strip()
     return f"{ar} — {en} ({city}, {country})"
+
 
 def get_uni_by_id(unis: pd.DataFrame, uni_id: str) -> pd.DataFrame:
     if unis.empty or not uni_id:
@@ -224,7 +265,7 @@ def ensure_cols(df: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
 
 
 # ----------------------------
-# Navigation (بدون سايدبار)
+# Navigation (بدون سايدبار) — RTL: الأزرار من اليمين لليسار
 # ----------------------------
 if "page" not in st.session_state:
     st.session_state.page = "الرئيسية"
@@ -232,14 +273,15 @@ if "page" not in st.session_state:
 nav = ["الرئيسية", "بحث الجامعات", "المقارنة", "رُشد", "من نحن"]
 cols_nav = st.columns(len(nav))
 for i, name in enumerate(nav):
-    if cols_nav[i].button(name, use_container_width=True):
+    # نخلي أول عنصر يطلع أقصى اليمين
+    col = cols_nav[-(i + 1)]
+    if col.button(name, use_container_width=True):
         st.session_state.page = name
         st.rerun()
 
 st.write("")
 st.markdown("---")
 st.write("")
-
 
 
 # ----------------------------
@@ -284,7 +326,7 @@ if st.session_state.page == "الرئيسية":
 # Page: بحث الجامعات
 # ----------------------------
 elif st.session_state.page == "بحث الجامعات":
-    st.subheader("بحث الجامعات")
+    st.markdown('<h1 class="page-title">بحث الجامعات</h1>', unsafe_allow_html=True)
 
     unis = normalize_unis(load_unis_csv(UNIS_PATH))
     progs = normalize_progs(load_csv(PROGS_PATH))
@@ -298,31 +340,33 @@ elif st.session_state.page == "بحث الجامعات":
         st.warning(f"programs.csv not found or empty: {PROGS_PATH}")
 
     # ----------------------------
-    # Filters
+    # Filters (RTL columns order)
     # ----------------------------
     st.write("")
-    col1, col2, col3, col4 = st.columns([1.2, 1, 1, 1.2])
+    # ترتيب الأعمدة يمشي RTL: نخلي أول فلتر (الدولة) في أقصى اليمين
+    c4, c3, c2, c1 = st.columns([1.2, 1, 1, 1.2])
 
     countries = sorted([x for x in unis["country"].unique() if str(x).strip()])
-    country = col1.selectbox("Country", ["All"] + countries, index=0)
+    country = c4.selectbox("الدولة", ["All"] + countries, index=0)
 
     uni_types = sorted([x for x in unis["type"].unique() if str(x).strip()])
-    uni_type = col2.selectbox("University type", ["All"] + uni_types, index=0)
+    uni_type = c3.selectbox("نوع الجامعة", ["All"] + uni_types, index=0)
 
     levels = sorted([x for x in progs["level"].unique() if str(x).strip()]) if not progs.empty else []
-    level = col3.selectbox("Level", ["All"] + levels, index=0)
+    level = c2.selectbox("المرحلة", ["All"] + levels, index=0)
 
     majors = sorted([x for x in progs["major_field"].unique() if str(x).strip()]) if not progs.empty else []
-    major = col4.selectbox("Major field", ["All"] + majors, index=0)
+    major = c1.selectbox("التخصص", ["All"] + majors, index=0)
 
     st.write("")
-    left_s, right_s = st.columns([1.2, 2.8])
+    # صف المنح RTL: نخلي (توفر المنحة) يمين و(نوع المنحة) يسار
+    right_s, left_s = st.columns([2.8, 1.2])
 
-    yn = left_s.selectbox("Scholarship availability", ["All", "Yes", "No", "Unknown"], index=0)
+    yn = left_s.selectbox("توفر المنح", ["All", "Yes", "No", "Unknown"], index=0)
     sch_tags = ["Local", "GCC", "International", "Children of citizen mothers"]
-    selected_tags = right_s.multiselect("Scholarship type", sch_tags, default=[])
+    selected_tags = right_s.multiselect("نوع المنحة", sch_tags, default=[])
 
-    q = st.text_input("Search (university / city)", value="").strip().lower()
+    q = st.text_input("بحث (الجامعة / المدينة)", value="").strip().lower()
 
     # ----------------------------
     # apply filters
@@ -369,7 +413,7 @@ elif st.session_state.page == "بحث الجامعات":
     # Results
     # ----------------------------
     st.divider()
-    st.subheader("Universities")
+    st.markdown('<h2 class="page-title" style="font-size:1.6rem;">الجامعات</h2>', unsafe_allow_html=True)
 
     cols_show = [
         "uni_id", "name_ar", "name_en", "country", "city", "type",
@@ -396,7 +440,7 @@ elif st.session_state.page == "بحث الجامعات":
 # Page: المقارنة
 # ----------------------------
 elif st.session_state.page == "المقارنة":
-    st.subheader("المقارنة بين الجامعات")
+    st.markdown('<h1 class="page-title">المقارنة بين الجامعات</h1>', unsafe_allow_html=True)
 
     unis = normalize_unis(load_csv(UNIS_PATH))
     if unis.empty:
@@ -476,7 +520,8 @@ elif st.session_state.page == "المقارنة":
 # Page: رُشد
 # ----------------------------
 elif st.session_state.page == "رُشد":
-    st.subheader("رُشد — المعاون الذكي")
+    st.markdown('<h1 class="page-title">رُشد — المعاون الذكي</h1>', unsafe_allow_html=True)
+
     user_q = st.text_area(
         "اكتب احتياجك",
         placeholder="مثال: أبي بكالوريوس في علوم الحاسب في الإمارات باللغة الإنجليزية"
@@ -488,7 +533,7 @@ elif st.session_state.page == "رُشد":
 # Page: من نحن
 # ----------------------------
 elif st.session_state.page == "من نحن":
-    st.markdown("<h2 style='text-align:center; margin-top: 0;'>من نحن</h2>", unsafe_allow_html=True)
+    st.markdown('<h1 class="page-title">من نحن</h1>', unsafe_allow_html=True)
     st.write("")
 
     left, center, right = st.columns([1, 2.8, 1])
