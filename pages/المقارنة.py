@@ -1,14 +1,13 @@
 elif st.session_state.page == "المقارنة":
     st.subheader("المقارنة بين الجامعات")
 
-    # تحميل بيانات الجامعات هنا (باستخدام دالتك load_csv)
+    # تحميل بيانات الجامعات
     unis = normalize_unis(load_csv(UNIS_PATH))
-
     if unis.empty:
         st.error(f"universities.csv not found or empty: {UNIS_PATH}")
         st.stop()
 
-    # تجهيز label مرتب للعرض
+    # نص مرتب للاختيار
     unis = unis.copy()
     unis["label"] = unis.apply(
         lambda r: f"{str(r['name_ar']).strip()} — {str(r['name_en']).strip()} ({str(r['city']).strip()}, {str(r['country']).strip()})",
@@ -29,7 +28,7 @@ elif st.session_state.page == "المقارنة":
 
     comp = unis[unis["uni_id"].isin(selected_ids)].copy()
 
-    # تأمين الأعمدة لو ناقص شي
+    # أعمدة المقارنة
     cols_compare = [
         "uni_id","name_ar","name_en","country","city","type",
         "scholarship","ranking_source","ranking_value","accreditation_notes",
