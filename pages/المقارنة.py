@@ -1,28 +1,25 @@
 elif st.session_state.page == "المقارنة":
     st.subheader("المقارنة بين الجامعات")
 
-    # تحميل نفس بيانات الجامعات هنا
-    unis = normalize_unis(load_unis_csv(UNIS_PATH))
+    # تحميل بيانات الجامعات هنا (باستخدام دالتك load_csv)
+    unis = normalize_unis(load_csv(UNIS_PATH))
 
     if unis.empty:
-        st.error("ملف الجامعات فاضي أو ما انقرأ بشكل صحيح.")
+        st.error(f"universities.csv not found or empty: {UNIS_PATH}")
         st.stop()
 
-    st.write("اختاري 2 إلى 4 جامعات للمقارنة:")
-
-    # قائمة اختيار مرتبة
-    unis_sorted = unis.copy()
-    unis_sorted["label"] = unis_sorted.apply(make_uni_label, axis=1)
-    unis_sorted = unis_sorted.sort_values(["country", "city", "name_en"], na_position="last")
-
-    options = unis_sorted[["uni_id", "label"]].to_dict("records")
+    # تجهيز label مرتب للعرض
+    unis = unis.copy()
+    unis["label"] = unis.apply(
+        lambda r: f"{str(r['name_ar']).strip()} — {str(r['name_en']).strip()} ({str(r['city']).strip()}, {str(r['country']).strip()})",
+        axis=1
+    )
+    unis = unis.sort_values(["country", "city", "name_en"], na_position="last")
 
     selected_ids = st.multiselect(
-        "اختيار الجامعات",
-        options=[o["uni_id"] for o in options],
-        format_func=lambda x: unis_sorted.loc[unis_sorted["uni_id"] == x, "label"].values[0]
-        if (unis_sorted["uni_id"] == x).any() else x,
-        default=[],
+        "اختاري 2 إلى 4 جامعات للمقارنة",
+        options=unis["uni_id"].tolist(),
+        format_func=lambda x: unis.loc[unis["uni_id"] == x, "label"].values[0],
         max_selections=4
     )
 
@@ -30,26 +27,21 @@ elif st.session_state.page == "المقارنة":
         st.info("لازم تختارين جامعتين على الأقل عشان تظهر المقارنة.")
         st.stop()
 
-    comp = unis_sorted[unis_sorted["uni_id"].isin(selected_ids)].copy()
+    comp = unis[unis["uni_id"].isin(selected_ids)].copy()
 
-    # ترتيب أعمدة المقارنة
+    # تأمين الأعمدة لو ناقص شي
     cols_compare = [
-        "name_ar", "name_en", "country", "city", "type",
-        "scholarship",
-        "ranking_source", "ranking_value",
-        "accreditation_notes",
-        "website", "admissions_url", "programs_url"
+        "uni_id","name_ar","name_en","country","city","type",
+        "scholarship","ranking_source","ranking_value","accreditation_notes",
+        "website","admissions_url","programs_url"
     ]
     for c in cols_compare:
         if c not in comp.columns:
             comp[c] = ""
 
-    # عرض مقارنة بشكل جدول نظيف
-    st.write("")
     st.markdown("### جدول المقارنة")
-
     st.dataframe(
-        comp[["uni_id"] + cols_compare],
+        comp[cols_compare],
         use_container_width=True,
         hide_index=True,
         column_config={
@@ -63,7 +55,6 @@ elif st.session_state.page == "المقارنة":
     st.markdown("---")
     st.markdown("### مقارنة سريعة (بطاقات)")
 
-    # بطاقات مقارنة (كل جامعة كارد)
     cols = st.columns(len(selected_ids))
     for i, uni_id in enumerate(selected_ids):
         row = comp[comp["uni_id"] == uni_id].iloc[0]
@@ -72,9 +63,11 @@ elif st.session_state.page == "المقارنة":
                 st.write(f"**الموقع:** {row['city']} — {row['country']}")
                 st.write(f"**النوع:** {row['type']}")
                 st.write(f"**المنح:** {row['scholarship']}")
-                st.write(f"**الترتيب:** {row['ranking_source']} {row['ranking_value']}".strip())
-                if str(row.get("accreditation_notes", "")).strip():
-                    st.write(f"**ملاحظات:** {row['accreditation_notes']}")
+                st.write(f"**الترتيب:** {str(row['ranking_source']).strip()} {str(row['ranking_value']).strip()}".strip())
+
+                notes = str(row.get("accreditation_notes", "")).strip()
+                if notes:
+                    st.write(f"**ملاحظات:** {notes}")
 
                 st.write("")
                 c1, c2, c3 = st.columns(3)
