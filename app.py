@@ -239,7 +239,7 @@ for i, name in enumerate(nav):
 st.write("")
 st.markdown("---")
 st.write("")
-st.caption(f"DEBUG: الصفحة الحالية = {st.session_state.page}")
+
 
 
 # ----------------------------
