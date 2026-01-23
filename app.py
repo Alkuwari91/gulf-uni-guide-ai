@@ -202,6 +202,17 @@ def normalize_progs(df: pd.DataFrame) -> pd.DataFrame:
 
     # fallback: رجّع DataFrame فارغ بنفس الأعمدة
     return pd.DataFrame(columns=needed)
+def make_uni_label(row: pd.Series) -> str:
+    ar = str(row.get("name_ar", "")).strip()
+    en = str(row.get("name_en", "")).strip()
+    city = str(row.get("city", "")).strip()
+    country = str(row.get("country", "")).strip()
+    return f"{ar} — {en} ({city}, {country})"
+
+def get_uni_by_id(unis: pd.DataFrame, uni_id: str) -> pd.DataFrame:
+    if unis.empty or not uni_id:
+        return pd.DataFrame()
+    return unis[unis["uni_id"].astype(str) == str(uni_id)].copy()
 
 
 def ensure_cols(df: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
