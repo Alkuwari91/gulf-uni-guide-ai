@@ -411,14 +411,14 @@ elif st.session_state.page == "المقارنة":
     unis = unis.sort_values(["country", "city", "name_en"], na_position="last")
 
     selected_ids = st.multiselect(
-        "اختاري 2 إلى 4 جامعات للمقارنة",
+        "اختار 2 إلى 4 جامعات للمقارنة",
         options=unis["uni_id"].tolist(),
         format_func=lambda x: unis.loc[unis["uni_id"] == x, "label"].values[0],
         max_selections=4
     )
 
     if len(selected_ids) < 2:
-        st.info("لازم تختارين جامعتين على الأقل عشان تظهر المقارنة.")
+        st.info("يرجى اختيار جامعتين على الأقل لتظهر المقارنة.")
         st.stop()
 
     comp = unis[unis["uni_id"].isin(selected_ids)].copy()
