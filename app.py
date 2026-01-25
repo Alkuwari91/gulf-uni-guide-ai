@@ -532,13 +532,11 @@ elif st.session_state.page == "المقارنة":
 # ----------------------------
 # Page: رُشد (Student Advisor - الجزء الأول)
 # ----------------------------
-elif st.session_state.page == "رُشد":
-    st.subheader("رُشد — المرشد الطلابي (قبل القبول)")
-    st.caption("حلّل فرص القبول واقترح أفضل الجامعات بناءً على بياناتك + متطلبات متوقعة + مراكز اختبار قريبة.")
+elif st.session_state.page == "رُشــد":
+    st.markdown('<h1 class="page-title">المرشد الطلابي</h1>', unsafe_allow_html=True)
 
-    # --- تأكد أن البيانات موجودة (نستعمل نفس loaders/normalize الموجودة فوق)
-    unis = normalize_unis(load_csv(UNIS_PATH))
-    progs = normalize_progs(load_csv(PROGS_PATH))
+    # ✅ استخدم نفس قراءة/تطبيع الجامعات بشكل موحّد
+    unis = normalize_unis(load_unis_csv(UNIS_PATH))
 
     if unis.empty:
         st.error(f"universities.csv not found or empty: {UNIS_PATH}")
