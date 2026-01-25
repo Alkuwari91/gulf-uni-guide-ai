@@ -553,10 +553,11 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-    # ----------------------------
-    # مساعدات: أعمدة متطلبات القبول (اختيارية - لو مو موجودة ما ينكسر)
-    # ----------------------------
-    def ensure_program_requirements(df: pd.DataFrame) -> pd.DataFrame:
+
+# ----------------------------
+# مساعدات: أعمدة متطلبات القبول (اختيارية - لو مو موجودة ما ينكسر)
+# ----------------------------
+def ensure_program_requirements(df: pd.DataFrame) -> pd.DataFrame:
     if df is None or df.empty:
         return pd.DataFrame(columns=df.columns if df is not None else [])
 
