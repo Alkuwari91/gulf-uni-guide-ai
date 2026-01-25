@@ -218,28 +218,17 @@ def normalize_progs(df: pd.DataFrame) -> pd.DataFrame:
         return pd.DataFrame()
 
     df = df.copy()
-
     needed = [
         "program_id", "uni_id", "level", "degree_type", "major_field",
         "program_name_en", "program_name_ar", "city", "language",
-        "duration_years", "tuition_notes", "admissions_requirements", "url"
+        "duration_years", "tuition_notes", "admissions_requirements", "url",
+        "english_test", "english_score", "math_test", "math_score",
+        "admission_tests", "admission_notes",
     ]
-
-    # إذا الملف فيه هيدر طبيعي (أسماء الأعمدة)
-    if "program_id" in df.columns:
-        for c in needed:
-            if c not in df.columns:
-                df[c] = ""
-        return df[needed]
-
-    # إذا بدون هيدر (أعمدة رقمية) — نحاول نسميها لو العدد كافي
-    if len(df.columns) >= len(needed):
-        df = df.iloc[:, :len(needed)]
-        df.columns = needed
-        return df
-
-    # fallback: رجّع DataFrame فارغ بنفس الأعمدة
-    return pd.DataFrame(columns=needed)
+    for c in needed:
+        if c not in df.columns:
+            df[c] = ""
+    return df[needed]
 
 
 def make_uni_label(row: pd.Series) -> str:
