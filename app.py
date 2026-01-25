@@ -529,7 +529,15 @@ elif st.session_state.page == "المقارنة":
 # Page: رُشد
 # ----------------------------
 elif st.session_state.page == "رُشد":
+    # تحميل البيانات هنا (عشان ما يصير NameError)
+    unis = normalize_unis(load_csv(UNIS_PATH))
+    progs = normalize_progs(load_csv(PROGS_PATH))
 
+    if unis.empty:
+        st.error("ملف الجامعات universities.csv فاضي أو غير موجود.")
+        st.stop()
+
+    # عنوان + وصف (RTL + بالنص)
     st.markdown(
         """
         <div dir="rtl" style="text-align:center; margin-top:0;">
@@ -544,8 +552,7 @@ elif st.session_state.page == "رُشد":
             max-width:720px;
             margin: 0 auto;
           ">
-            حلّل فرص القبول واقترح أفضل الجامعات بناءً على بياناتك،
-            مع توضيح المتطلبات المتوقعة ومراكز الاختبار القريبة منك.
+            حلّل فرص القبول واقترح أفضل الجامعات بناءً على بياناتك + متطلبات متوقعة + مراكز اختبار قريبة.
           </p>
         </div>
         """,
@@ -558,28 +565,13 @@ elif st.session_state.page == "رُشد":
     def ensure_program_requirements(df: pd.DataFrame) -> pd.DataFrame:
         if df is None or df.empty:
             return pd.DataFrame(columns=df.columns if df is not None else [])
-
         df = df.copy()
-
         for c in ["english_test", "english_score", "math_requirement", "admission_notes"]:
             if c not in df.columns:
                 df[c] = ""
-
         return df
 
-    # مهم: تأكدي ان unis و progs جاهزين من فوق (load + normalize)
     progs = ensure_program_requirements(progs)
-
-    # ----------------------------
-    # ترجمة حالة القبول
-    # ----------------------------
-    def ar_status(x: str) -> str:
-        m = {
-            "Suitable": "مناسب",
-            "Conditional": "مشروط",
-            "Unknown": "غير معروف"
-        }
-        return m.get(str(x), str(x))
 
     # ----------------------------
     # قاعدة بيانات بسيطة لمراكز الاختبارات (نبدأ بها ونكبرها لاحقًا)
@@ -589,9 +581,6 @@ elif st.session_state.page == "رُشد":
             "IELTS": [
                 {"name": "British Council (Doha)", "url": ""},
                 {"name": "IDP Education (Doha)", "url": ""},
-            ],
-            "Placement": [
-                {"name": "University Assessment Center", "url": ""},
             ],
         },
         ("Bahrain", "Manama"): {
@@ -622,7 +611,14 @@ elif st.session_state.page == "رُشد":
     }
 
     # ----------------------------
-    # نموذج ملف الطالب (Student Snapshot)
+    # ترجمة حالة القبول
+    # ----------------------------
+    def ar_status(x: str) -> str:
+        m = {"Suitable": "مناسب", "Conditional": "مشروط", "Unknown": "غير واضح"}
+        return m.get(x, "غير واضح")
+
+    # ----------------------------
+    # نموذج ملف الطالب
     # ----------------------------
     with st.expander("ملف الطالب", expanded=True):
         c1, c2, c3 = st.columns(3)
@@ -634,34 +630,23 @@ elif st.session_state.page == "رُشد":
             cities = sorted([x for x in unis.loc[unis["country"] == pref_country, "city"].unique() if str(x).strip()])
         else:
             cities = sorted([x for x in unis["city"].unique() if str(x).strip()])
-
         pref_city = c2.selectbox("المدينة (اختياري)", ["All"] + cities, index=0)
 
-        level_options = []
-        if not progs.empty and "level" in progs.columns:
-            level_options = sorted([x for x in progs["level"].unique() if str(x).strip()])
-
+        level_options = sorted([x for x in progs["level"].unique() if str(x).strip()]) if (not progs.empty and "level" in progs.columns) else []
         study_level = c3.selectbox("المستوى الدراسي المطلوب", ["All"] + level_options, index=0)
 
         d1, d2, d3 = st.columns(3)
 
-        major_field_options = []
-        if not progs.empty and "major_field" in progs.columns:
-            major_field_options = sorted([x for x in progs["major_field"].unique() if str(x).strip()])
-
+        major_field_options = sorted([x for x in progs["major_field"].unique() if str(x).strip()]) if (not progs.empty and "major_field" in progs.columns) else []
         major_field = d1.selectbox("مجال التخصص", ["All"] + major_field_options, index=0)
 
-        language_options = []
-        if not progs.empty and "language" in progs.columns:
-            language_options = sorted([x for x in progs["language"].unique() if str(x).strip()])
-
+        language_options = sorted([x for x in progs["language"].unique() if str(x).strip()]) if (not progs.empty and "language" in progs.columns) else []
         prog_lang = d2.selectbox("لغة الدراسة", ["All"] + language_options, index=0)
 
         scholarship_need = d3.selectbox("المنح مهمة؟", ["All", "Yes", "No"], index=0)
 
         st.write("")
         e1, e2, e3 = st.columns(3)
-
         hs_avg = e1.number_input("معدل/نسبة تقريبية (اختياري)", min_value=0.0, max_value=100.0, value=0.0, step=0.5)
         ielts = e2.number_input("IELTS (اختياري)", min_value=0.0, max_value=9.0, value=0.0, step=0.5)
         math_avg = e3.number_input("رياضيات (اختياري)", min_value=0.0, max_value=100.0, value=0.0, step=0.5)
@@ -675,14 +660,11 @@ elif st.session_state.page == "رُشد":
         if not isinstance(s, str):
             return False
         s = s.strip()
-        if s in ["", "No", "Unknown"]:
-            return False
-        return True
+        return s not in ["", "No", "Unknown"]
 
     def match_programs_for_uni(uni_id: str) -> pd.DataFrame:
         if progs.empty or "uni_id" not in progs.columns:
             return pd.DataFrame()
-
         df = progs[progs["uni_id"] == uni_id].copy()
 
         if study_level != "All" and "level" in df.columns:
@@ -694,36 +676,26 @@ elif st.session_state.page == "رُشد":
 
         return df
 
-    def admission_label(required_ielts: float, user_ielts: float) -> str:
-        if required_ielts <= 0:
-            return "Unknown"
-        if user_ielts <= 0:
-            return "Conditional"
-        if user_ielts >= required_ielts:
-            return "Suitable"
-        return "Conditional"
-
     def safe_float(x) -> float:
         try:
             return float(str(x).strip())
         except Exception:
             return 0.0
 
+    def admission_label(required_ielts: float, user_ielts: float) -> str:
+        if required_ielts <= 0:
+            return "Unknown"
+        if user_ielts <= 0:
+            return "Conditional"
+        return "Suitable" if user_ielts >= required_ielts else "Conditional"
+
     def estimate_req_from_programs(df_prog: pd.DataFrame) -> dict:
-        req = {
-            "english_test": "",
-            "english_score": "",
-            "math_requirement": "",
-            "admission_notes": "",
-        }
+        req = {"english_test": "", "english_score": "", "math_requirement": "", "admission_notes": ""}
         if df_prog is None or df_prog.empty:
             return req
-
         for k in req.keys():
-            series = df_prog.get(k, pd.Series([], dtype=str))
-            vals = [v for v in series.astype(str).tolist() if str(v).strip()]
+            vals = [v for v in df_prog.get(k, "").astype(str).tolist() if str(v).strip()]
             req[k] = vals[0].strip() if vals else ""
-
         return req
 
     def score_uni(row: pd.Series) -> dict:
@@ -753,17 +725,13 @@ elif st.session_state.page == "رُشد":
 
         if hs_avg > 0:
             score += 5
-            reasons.append("تم إدخال معدل تقريبي (يُستخدم للتوجيه)")
+            reasons.append("تم إدخال معدل تقريبي (للتوجيه)")
         if math_avg > 0:
             score += 5
-            reasons.append("تم إدخال مستوى الرياضيات (يُستخدم للتوجيه)")
+            reasons.append("تم إدخال مستوى الرياضيات (للتوجيه)")
 
         req = estimate_req_from_programs(df_prog)
-
-        req_ielts = 0.0
-        if str(req.get("english_test", "")).upper().find("IELTS") >= 0:
-            req_ielts = safe_float(req.get("english_score", ""))
-
+        req_ielts = safe_float(req.get("english_score", "")) if "IELTS" in str(req.get("english_test", "")).upper() else 0.0
         status = admission_label(req_ielts, ielts)
 
         return {"score": score, "reasons": reasons, "req": req, "status": status}
@@ -772,14 +740,13 @@ elif st.session_state.page == "رُشد":
 
     if run:
         unis_f = unis.copy()
-
         if pref_country != "All":
             unis_f = unis_f[unis_f["country"] == pref_country]
         if pref_city != "All":
             unis_f = unis_f[unis_f["city"] == pref_city]
 
         if unis_f.empty:
-            st.warning("ما لقيت جامعات حسب اختياراتك الحالية. جرّبي توسعين الدولة/المدينة أو الفلاتر.")
+            st.warning("ما لقيت جامعات حسب اختياراتك الحالية. جرّبي توسعين الدولة/المدينة.")
             st.stop()
 
         results = []
@@ -787,11 +754,11 @@ elif st.session_state.page == "رُشد":
             meta = score_uni(r)
             results.append({
                 "uni_id": r["uni_id"],
-                "name_ar": r["name_ar"],
-                "name_en": r["name_en"],
-                "country": r["country"],
-                "city": r["city"],
-                "type": r["type"],
+                "name_ar": r.get("name_ar", ""),
+                "name_en": r.get("name_en", ""),
+                "country": r.get("country", ""),
+                "city": r.get("city", ""),
+                "type": r.get("type", ""),
                 "scholarship": r.get("scholarship", "Unknown"),
                 "score": meta["score"],
                 "status": meta["status"],
@@ -805,14 +772,14 @@ elif st.session_state.page == "رُشد":
                 "req_notes": meta["req"].get("admission_notes", ""),
             })
 
-        out = pd.DataFrame(results).sort_values(["score", "status"], ascending=[False, True])
+        out = pd.DataFrame(results).sort_values(["score"], ascending=[False])
 
         st.divider()
         st.subheader("أفضل الخيارات المقترحة")
-        top = out.head(3).copy()
 
+        top = out.head(3).copy()
         for _, row in top.iterrows():
-            with st.expander(f"{row['name_ar']} — {row['country']} / {row['city']}  |  التقييم: {row['score']}", expanded=True):
+            with st.expander(f"{row['name_ar']} — {row['country']} / {row['city']} | التقييم: {row['score']}", expanded=True):
                 cA, cB = st.columns([2, 1])
 
                 with cA:
@@ -855,14 +822,11 @@ elif st.session_state.page == "رُشد":
 
         st.write("")
         st.subheader("أماكن اختبارات قريبة منك")
-        key = (
-            pref_country if pref_country != "All" else "",
-            pref_city if pref_city != "All" else ""
-        )
+        key = (pref_country if pref_country != "All" else "", pref_city if pref_city != "All" else "")
         centers = TEST_CENTERS.get(key, {})
 
         if not centers:
-            st.info("حالياً ما عندي مراكز محفوظة لهذي المدينة. تقدرين تضيفينها في test_centers.csv لاحقًا وسأربطها فوراً.")
+            st.info("حالياً ما عندي مراكز محفوظة لهذي المدينة. لاحقًا نضيف test_centers.csv ونربطها مباشرة.")
         else:
             for test_type, items in centers.items():
                 with st.expander(test_type, expanded=False):
