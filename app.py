@@ -530,16 +530,343 @@ elif st.session_state.page == "المقارنة":
 
 
 # ----------------------------
-# Page: رُشد
+# Page: رُشد (Student Advisor - الجزء الأول)
 # ----------------------------
 elif st.session_state.page == "رُشد":
-    st.markdown('<h1 class="page-title">رُشد — المعاون الذكي</h1>', unsafe_allow_html=True)
+    st.subheader("رُشد — المرشد الطلابي (قبل القبول)")
+    st.caption("حلّل فرص القبول واقترح أفضل الجامعات بناءً على بياناتك + متطلبات متوقعة + مراكز اختبار قريبة.")
 
-    user_q = st.text_area(
-        "اكتب احتياجك",
-        placeholder="مثال: أبي بكالوريوس في علوم الحاسب في الإمارات باللغة الإنجليزية"
-    )
-    st.button("حلّل الطلب")
+    # --- تأكد أن البيانات موجودة (نستعمل نفس loaders/normalize الموجودة فوق)
+    unis = normalize_unis(load_csv(UNIS_PATH))
+    progs = normalize_progs(load_csv(PROGS_PATH))
+
+    if unis.empty:
+        st.error(f"universities.csv not found or empty: {UNIS_PATH}")
+        st.stop()
+
+    # ----------------------------
+    # مساعدات: أعمدة متطلبات القبول (اختيارية - لو مو موجودة ما ينكسر)
+    # ----------------------------
+    def ensure_program_requirements(df: pd.DataFrame) -> pd.DataFrame:
+        if df is None or df.empty:
+            return pd.DataFrame(columns=df.columns if df is not None else [])
+        df = df.copy()
+        for c in ["english_test", "english_score", "math_requirement", "admission_notes"]:
+            if c not in df.columns:
+                df[c] = ""
+        return df
+
+    progs = ensure_program_requirements(progs)
+
+    # ----------------------------
+    # قاعدة بيانات بسيطة لمراكز الاختبارات (نبدأ بها ونكبرها لاحقًا)
+    # ----------------------------
+    TEST_CENTERS = {
+        ("Qatar", "Doha"): {
+            "IELTS": [
+                {"name": "British Council (Doha)", "url": ""},
+                {"name": "IDP Education (Doha)", "url": ""},
+            ],
+            "Placement": [
+                {"name": "University Assessment Center", "url": ""},
+            ],
+        },
+        ("Bahrain", "Manama"): {
+            "IELTS": [
+                {"name": "IELTS test center (Bahrain)", "url": ""},
+            ]
+        },
+        ("Oman", "Muscat"): {
+            "IELTS": [
+                {"name": "IELTS test center (Muscat)", "url": ""},
+            ]
+        },
+        ("Saudi Arabia", "Riyadh"): {
+            "IELTS": [
+                {"name": "IELTS test center (Riyadh)", "url": ""},
+            ]
+        },
+        ("UAE", "Abu Dhabi"): {
+            "IELTS": [
+                {"name": "IELTS test center (Abu Dhabi)", "url": ""},
+            ]
+        },
+        ("Kuwait", "Kuwait City"): {
+            "IELTS": [
+                {"name": "IELTS test center (Kuwait)", "url": ""},
+            ]
+        },
+    }
+
+    # ----------------------------
+    # نموذج ملف الطالب (Student Snapshot)
+    # ----------------------------
+    with st.expander("ملف الطالب", expanded=True):
+        c1, c2, c3 = st.columns(3)
+        countries = sorted([x for x in unis["country"].unique() if str(x).strip()])
+        pref_country = c1.selectbox("الدولة المفضلة", ["All"] + countries, index=0)
+
+        # المدن تتغير حسب الدولة (لو All نخلي كل المدن)
+        if pref_country != "All":
+            cities = sorted([x for x in unis.loc[unis["country"] == pref_country, "city"].unique() if str(x).strip()])
+        else:
+            cities = sorted([x for x in unis["city"].unique() if str(x).strip()])
+
+        pref_city = c2.selectbox("المدينة (اختياري)", ["All"] + cities, index=0)
+
+        level_options = []
+        if not progs.empty and "level" in progs.columns:
+            level_options = sorted([x for x in progs["level"].unique() if str(x).strip()])
+        study_level = c3.selectbox("المستوى الدراسي المطلوب", ["All"] + level_options, index=0)
+
+        d1, d2, d3 = st.columns(3)
+        major_field_options = []
+        if not progs.empty and "major_field" in progs.columns:
+            major_field_options = sorted([x for x in progs["major_field"].unique() if str(x).strip()])
+        major_field = d1.selectbox("مجال التخصص", ["All"] + major_field_options, index=0)
+
+        language_options = []
+        if not progs.empty and "language" in progs.columns:
+            language_options = sorted([x for x in progs["language"].unique() if str(x).strip()])
+        prog_lang = d2.selectbox("لغة الدراسة", ["All"] + language_options, index=0)
+
+        scholarship_need = d3.selectbox("المنح مهمة؟", ["All", "Yes", "No"], index=0)
+
+        st.write("")
+        e1, e2, e3 = st.columns(3)
+        hs_avg = e1.number_input("معدل/نسبة تقريبية (اختياري)", min_value=0.0, max_value=100.0, value=0.0, step=0.5)
+        ielts = e2.number_input("IELTS (اختياري)", min_value=0.0, max_value=9.0, value=0.0, step=0.5)
+        math_avg = e3.number_input("رياضيات (اختياري)", min_value=0.0, max_value=100.0, value=0.0, step=0.5)
+
+        q_free = st.text_input("ملاحظة/تفضيل (اختياري)", placeholder="مثال: أبي جامعة قوية في التقنية + منح")
+
+    # ----------------------------
+    # منطق التصفية + التقييم
+    # ----------------------------
+    def uni_has_scholarship(s: str) -> bool:
+        if not isinstance(s, str):
+            return False
+        s = s.strip()
+        if s in ["", "No", "Unknown"]:
+            return False
+        return True
+
+    def match_programs_for_uni(uni_id: str) -> pd.DataFrame:
+        if progs.empty or "uni_id" not in progs.columns:
+            return pd.DataFrame()
+        df = progs[progs["uni_id"] == uni_id].copy()
+
+        if study_level != "All" and "level" in df.columns:
+            df = df[df["level"] == study_level]
+        if major_field != "All" and "major_field" in df.columns:
+            df = df[df["major_field"] == major_field]
+        if prog_lang != "All" and "language" in df.columns:
+            df = df[df["language"] == prog_lang]
+
+        return df
+
+    def admission_label(required_ielts: float, user_ielts: float) -> str:
+        # لو ما عندنا متطلب أو ما عند المستخدم درجة
+        if required_ielts <= 0:
+            return "Unknown"
+        if user_ielts <= 0:
+            return "Conditional"  # يحتاج يثبت اللغة/يختبر
+        if user_ielts >= required_ielts:
+            return "Suitable"
+        return "Conditional"
+
+    def safe_float(x) -> float:
+        try:
+            return float(str(x).strip())
+        except Exception:
+            return 0.0
+
+    def estimate_req_from_programs(df_prog: pd.DataFrame) -> dict:
+        """
+        يرجع متطلبات تقديرية من بيانات البرامج إن وجدت.
+        لو مافي -> Unknown
+        """
+        req = {
+            "english_test": "",
+            "english_score": "",
+            "math_requirement": "",
+            "admission_notes": "",
+        }
+        if df_prog is None or df_prog.empty:
+            return req
+
+        # ناخذ أول قيمة غير فاضية
+        for k in req.keys():
+            vals = [v for v in df_prog.get(k, "").astype(str).tolist() if str(v).strip()]
+            req[k] = vals[0].strip() if vals else ""
+
+        return req
+
+    def score_uni(row: pd.Series) -> dict:
+        """
+        سكورنق بسيط واحترافي:
+        - مطابقة البرامج (أهم شيء)
+        - المنح (إذا مطلوبة)
+        - القرب (الدولة/المدينة)
+        """
+        score = 0
+        reasons = []
+
+        # 1) مطابقة البرامج
+        df_prog = match_programs_for_uni(row["uni_id"])
+        if not df_prog.empty:
+            score += 40
+            reasons.append("يوجد برامج مطابقة لخياراتك")
+        else:
+            reasons.append("لا توجد برامج مطابقة (جرّبي توسيع الفلاتر)")
+
+        # 2) الدولة/المدينة
+        if pref_country != "All" and row["country"] == pref_country:
+            score += 15
+            reasons.append("ضمن الدولة المفضلة")
+        if pref_city != "All" and row["city"] == pref_city:
+            score += 10
+            reasons.append("ضمن المدينة المفضلة")
+
+        # 3) المنح
+        if scholarship_need == "Yes":
+            if uni_has_scholarship(str(row.get("scholarship", "Unknown"))):
+                score += 20
+                reasons.append("تظهر كجامعة لديها منح (حسب البيانات)")
+            else:
+                score += 0
+                reasons.append("المنح غير متاحة/غير واضحة (حسب البيانات)")
+
+        # 4) دعم بسيط للمعدل/الرياضيات (بدون ما نفترض أرقام جامدة)
+        if hs_avg > 0:
+            score += 5
+            reasons.append("تم إدخال معدل تقريبي (يُستخدم للتوجيه)")
+        if math_avg > 0:
+            score += 5
+            reasons.append("تم إدخال مستوى الرياضيات (يُستخدم للتوجيه)")
+
+        # متطلبات تقديرية من البرامج
+        req = estimate_req_from_programs(match_programs_for_uni(row["uni_id"]))
+        req_ielts = safe_float(req.get("english_score", "")) if str(req.get("english_test", "")).upper().find("IELTS") >= 0 else 0.0
+        status = admission_label(req_ielts, ielts)
+
+        return {
+            "score": score,
+            "reasons": reasons,
+            "req": req,
+            "status": status,
+        }
+
+    run = st.button("حلّل فرص قبولي", use_container_width=True)
+
+    if run:
+        # فلترة أولية حسب الدولة/المدينة (لتسريع)
+        unis_f = unis.copy()
+        if pref_country != "All":
+            unis_f = unis_f[unis_f["country"] == pref_country]
+        if pref_city != "All":
+            unis_f = unis_f[unis_f["city"] == pref_city]
+
+        if scholarship_need == "Yes":
+            # نخليها ما تمنع نهائياً، بس تقلل النتائج لو تبين
+            pass
+
+        if unis_f.empty:
+            st.warning("ما لقيت جامعات حسب اختياراتك الحالية. جرّبي توسعين الدولة/المدينة أو الفلاتر.")
+            st.stop()
+
+        # نحسب السكور
+        results = []
+        for _, r in unis_f.iterrows():
+            meta = score_uni(r)
+            results.append({
+                "uni_id": r["uni_id"],
+                "name_ar": r["name_ar"],
+                "name_en": r["name_en"],
+                "country": r["country"],
+                "city": r["city"],
+                "type": r["type"],
+                "scholarship": r.get("scholarship", "Unknown"),
+                "score": meta["score"],
+                "status": meta["status"],
+                "reasons": " • ".join(meta["reasons"][:3]),
+                "website": r.get("website", ""),
+                "admissions_url": r.get("admissions_url", ""),
+                "programs_url": r.get("programs_url", ""),
+                "req_english_test": meta["req"].get("english_test", ""),
+                "req_english_score": meta["req"].get("english_score", ""),
+                "req_math": meta["req"].get("math_requirement", ""),
+                "req_notes": meta["req"].get("admission_notes", ""),
+            })
+
+        out = pd.DataFrame(results).sort_values(["score", "status"], ascending=[False, True])
+
+        st.divider()
+        st.subheader("أفضل الخيارات المقترحة")
+        top = out.head(3).copy()
+
+        # عرض بطاقات قصيرة لكل جامعة
+        for _, row in top.iterrows():
+            with st.expander(f"{row['name_ar']} — {row['country']} / {row['city']}  |  Score: {row['score']}", expanded=True):
+                cA, cB = st.columns([2, 1])
+
+                with cA:
+                    st.write(f"**تقييم القبول:** {row['status']}")
+                    st.write(f"**المنح (حسب البيانات):** {row['scholarship']}")
+                    st.write(f"**لماذا هذا خيار جيد؟** {row['reasons'] if row['reasons'] else '—'}")
+
+                    st.write("")
+                    st.markdown("**متطلبات القبول المتوقعة (إن توفرت بياناتها في programs.csv):**")
+                    et = row["req_english_test"] if str(row["req_english_test"]).strip() else "Unknown"
+                    es = row["req_english_score"] if str(row["req_english_score"]).strip() else "Unknown"
+                    mr = row["req_math"] if str(row["req_math"]).strip() else "Unknown"
+                    st.write(f"- اللغة الإنجليزية: {et} / الدرجة: {es}")
+                    st.write(f"- الرياضيات: {mr}")
+                    if str(row["req_notes"]).strip():
+                        st.write(f"- ملاحظات: {row['req_notes']}")
+
+                with cB:
+                    st.markdown("**روابط رسمية**")
+                    if str(row["website"]).strip():
+                        st.link_button("Website", row["website"], use_container_width=True)
+                    if str(row["admissions_url"]).strip():
+                        st.link_button("Admissions", row["admissions_url"], use_container_width=True)
+                    if str(row["programs_url"]).strip():
+                        st.link_button("Programs", row["programs_url"], use_container_width=True)
+
+        # جدول مختصر (اختياري)
+        st.write("")
+        st.subheader("نتائج إضافية (جدول)")
+        cols_show = ["name_ar", "country", "city", "type", "scholarship", "status", "score", "website", "admissions_url", "programs_url"]
+        st.dataframe(
+            out[cols_show].head(30),
+            use_container_width=True,
+            hide_index=True,
+            column_config={
+                "website": st.column_config.LinkColumn("Website", display_text="Click here"),
+                "admissions_url": st.column_config.LinkColumn("Admissions", display_text="Click here"),
+                "programs_url": st.column_config.LinkColumn("Programs", display_text="Click here"),
+            }
+        )
+
+        # مراكز اختبارات قريبة
+        st.write("")
+        st.subheader("أماكن اختبارات قريبة منك")
+        key = (pref_country if pref_country != "All" else "", pref_city if pref_city != "All" else "")
+        centers = TEST_CENTERS.get(key, {})
+
+        if not centers:
+            st.info("حالياً ما عندي مراكز محفوظة لهذي المدينة. تقدرين تضيفينها في test_centers.csv لاحقًا وسأربطها فوراً.")
+        else:
+            for test_type, items in centers.items():
+                with st.expander(test_type, expanded=False):
+                    for it in items:
+                        name = it.get("name", "")
+                        url = it.get("url", "")
+                        if url:
+                            st.link_button(name, url)
+                        else:
+                            st.write(f"- {name}")
 
 
 # ----------------------------
