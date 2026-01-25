@@ -557,15 +557,19 @@ st.markdown(
     # مساعدات: أعمدة متطلبات القبول (اختيارية - لو مو موجودة ما ينكسر)
     # ----------------------------
     def ensure_program_requirements(df: pd.DataFrame) -> pd.DataFrame:
-        if df is None or df.empty:
-            return pd.DataFrame(columns=df.columns if df is not None else [])
-        df = df.copy()
-        for c in ["english_test", "english_score", "math_requirement", "admission_notes"]:
-            if c not in df.columns:
-                df[c] = ""
-        return df
+    if df is None or df.empty:
+        return pd.DataFrame(columns=df.columns if df is not None else [])
 
-    progs = ensure_program_requirements(progs)
+    df = df.copy()
+
+    for c in ["english_test", "english_score", "math_requirement", "admission_notes"]:
+        if c not in df.columns:
+            df[c] = ""
+
+    return df
+
+
+progs = ensure_program_requirements(progs)
 
     # ----------------------------
     # قاعدة بيانات بسيطة لمراكز الاختبارات (نبدأ بها ونكبرها لاحقًا)
