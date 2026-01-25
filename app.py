@@ -807,11 +807,11 @@ elif st.session_state.page == "رُشد":
 
         # عرض بطاقات قصيرة لكل جامعة
         for _, row in top.iterrows():
-            with st.expander(f"{row['name_ar']} — {row['country']} / {row['city']}  |  Score: {row['score']}", expanded=True):
+            with st.expander(f"{row['name_ar']} — {row['country']} / {row['city']}  |  التقييم: {row['score']}", expanded=True):
                 cA, cB = st.columns([2, 1])
 
                 with cA:
-                    st.write(f"**تقييم القبول:** {row['status']}")
+                    st.write(f"**تقييم القبول:** {ar_status(row['status'])}")
                     st.write(f"**المنح (حسب البيانات):** {row['scholarship']}")
                     st.write(f"**لماذا هذا خيار جيد؟** {row['reasons'] if row['reasons'] else '—'}")
 
