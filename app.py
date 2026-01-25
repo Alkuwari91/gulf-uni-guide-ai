@@ -532,15 +532,19 @@ elif st.session_state.page == "المقارنة":
 # ----------------------------
 # Page: رُشد (Student Advisor - الجزء الأول)
 # ----------------------------
-elif st.session_state.page == "رُشــد":
-    st.markdown('<h1 class="page-title">المرشد الطلابي</h1>', unsafe_allow_html=True)
+st.markdown(
+    """
+    <h2 style="text-align:center; margin-top:0;">
+      رُشد — المرشد الطلابي (قبل القبول)
+    </h2>
 
-    # ✅ استخدم نفس قراءة/تطبيع الجامعات بشكل موحّد
-    unis = normalize_unis(load_unis_csv(UNIS_PATH))
-
-    if unis.empty:
-        st.error(f"universities.csv not found or empty: {UNIS_PATH}")
-        st.stop()
+    <p style="text-align:center; font-size:1.05rem; line-height:1.9; color:#475569;">
+      حلّل فرص القبول واقترح أفضل الجامعات بناءً على بياناتك،
+      مع توضيح المتطلبات المتوقعة ومراكز الاختبار القريبة منك.
+    </p>
+    """,
+    unsafe_allow_html=True
+)
 
     # ----------------------------
     # مساعدات: أعمدة متطلبات القبول (اختيارية - لو مو موجودة ما ينكسر)
