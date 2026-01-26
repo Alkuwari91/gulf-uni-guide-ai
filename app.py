@@ -13,90 +13,88 @@ render_shell()
 # ----------------------------
 # إخفاء السايدبار نهائياً (حتى المساحة)
 # ----------------------------
-st.markdown(
-    """
-    <style>
-      [data-testid="stSidebar"] {display: none !important;}
-      [data-testid="stSidebarNav"] {display: none !important;}
-      button[kind="header"] {display: none !important;} /* زر الهامبرغر */
-      section[data-testid="stSidebar"] {display:none !important;}
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+st.markdown("""
+<style>
+/* ============ RTL Global (Safe) ============ */
+html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"]{
+  direction: rtl !important;
+  text-align: right !important;
+  font-family: "Cairo", sans-serif !important;
+}
 
-# ----------------------------
-# CSS: Expander كأنه كارد (مثل راسخون) + RTL + توسيط العناوين + تصغير المنسدلات
-# ----------------------------
-st.markdown(
-    """
-    <style>
-      /* ============ Expander Card ============ */
-      div[data-testid="stExpander"] {
-        border: 0 !important;
-        border-radius: 16px !important;
-        box-shadow: 0 10px 30px rgba(15,27,51,0.06) !important;
-        overflow: hidden !important;
-        background: white !important;
-        margin-bottom: 16px !important;
-      }
-      div[data-testid="stExpander"] summary {
-        padding: 18px 18px !important;
-        font-size: 1.25rem !important;
-        font-weight: 800 !important;
-        cursor: pointer !important;
-      }
-      div[data-testid="stExpander"] summary:hover {
-        background: rgba(56,189,248,0.10) !important;
-      }
-      div[data-testid="stExpander"] .stMarkdown,
-      div[data-testid="stExpander"] .stText {
-        padding: 0 18px 18px 18px !important;
-        color: #334155 !important;
-        line-height: 1.9 !important;
-        font-size: 1.05rem !important;
-      }
+/* ============ Expander = Card (Premium) ============ */
+div[data-testid="stExpander"]{
+  border: 1px solid rgba(15,27,51,0.08) !important;
+  border-radius: 16px !important;
+  background: #fff !important;
+  box-shadow: 0 10px 30px rgba(15,27,51,0.06) !important;
+  overflow: hidden !important;
+  margin-bottom: 16px !important;
+}
 
-      /* ============ RTL Global ============ */
-      html, body, [class*="stApp"]{
-        direction: rtl !important;
-        text-align: right !important;
-      }
-      input, textarea, [role="textbox"]{
-        direction: rtl !important;
-        text-align: right !important;
-      }
-      div[data-baseweb="select"] *{
-        direction: rtl !important;
-        text-align: right !important;
-      }
-      label{
-        direction: rtl !important;
-        text-align: right !important;
-      }
+/* Header */
+div[data-testid="stExpander"] details > summary{
+  padding: 16px 18px !important;
+  cursor: pointer !important;
+  direction: rtl !important;
+  text-align: right !important;
+  list-style: none !important;
+}
 
-      /* ============ Center titles ============ */
-      .page-title{
-        text-align: center !important;
-        font-weight: 900;
-        margin: 10px 0 18px 0;
-      }
+/* Remove default marker (Chrome) */
+div[data-testid="stExpander"] details > summary::-webkit-details-marker{
+  display: none !important;
+}
 
-      /* ============ Smaller dropdowns ============ */
-      div[data-baseweb="select"] > div{
-        min-height: 38px !important;
-      }
-      div[data-baseweb="select"] > div > div{
-        padding-top: 2px !important;
-        padding-bottom: 2px !important;
-      }
-      div[data-baseweb="select"] span{
-        font-size: 0.95rem !important;
-      }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+/* Title inside header (Streamlit puts it in p) */
+div[data-testid="stExpander"] details > summary p{
+  margin: 0 !important;
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  color: #8A1538 !important;
+}
+
+/* Hover */
+div[data-testid="stExpander"] details > summary:hover{
+  background: rgba(138,21,56,0.06) !important;
+}
+
+/* Body wrapper */
+div[data-testid="stExpander"] details > div{
+  padding: 0 18px 18px 18px !important;
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* Body text */
+div[data-testid="stExpander"] .stMarkdown p,
+div[data-testid="stExpander"] .stMarkdown li{
+  color: #334155 !important;
+  line-height: 1.9 !important;
+  font-size: 15px !important;
+  margin: 0 !important;
+}
+
+/* Move chevron to LEFT (RTL feel) */
+div[data-testid="stExpander"] details > summary svg{
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
+
+/* ============ Center titles (optional) ============ */
+.page-title{
+  text-align: center !important;
+  font-weight: 900 !important;
+  margin: 10px 0 18px 0 !important;
+}
+
+/* ============ Smaller dropdowns (keep yours) ============ */
+div[data-baseweb="select"] > div{ min-height: 38px !important; }
+div[data-baseweb="select"] > div > div{ padding-top: 2px !important; padding-bottom: 2px !important; }
+div[data-baseweb="select"] span{ font-size: 0.95rem !important; }
+</style>
+""", unsafe_allow_html=True)
+
 
 # ----------------------------
 # Helpers / Paths
