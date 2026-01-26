@@ -449,26 +449,18 @@ elif st.session_state.page == "بحث الجامعات":
 elif st.session_state.page == "المقارنة":
     st.markdown('<h1 class="page-title">المقارنة بين الجامعات</h1>', unsafe_allow_html=True)
 
-    # ✅ استخدم نفس قراءة/تطبيع الجامعات بشكل موحّد
     unis = normalize_unis(load_unis_csv(UNIS_PATH))
-
     if unis.empty:
         st.error(f"universities.csv not found or empty: {UNIS_PATH}")
         st.stop()
 
-    # ✅ نظّف uni_id وخله نص دائماً عشان ما يضيع/يتكرر
     unis = unis.copy()
     unis["uni_id"] = unis["uni_id"].astype(str).str.strip()
     unis = unis[unis["uni_id"].ne("") & unis["uni_id"].ne("nan")]
-
-    # ✅ جهّز label بشكل آمن + خريطة للعرض (أسرع وما فيها errors)
-    unis["label"] = unis.apply(make_uni_label, axis=1)
-    label_map = dict(zip(unis["uni_id"].tolist(), unis["label"].tolist()))
-
-    # ✅ أحياناً يصير تكرار في uni_id داخل الملف — نخليها فريدة
     unis = unis.drop_duplicates(subset=["uni_id"], keep="first")
 
-    # ترتيب
+    unis["label"] = unis.apply(make_uni_label, axis=1)
+    label_map = dict(zip(unis["uni_id"].tolist(), unis["label"].tolist()))
     unis = unis.sort_values(["country", "city", "name_en"], na_position="last")
 
     selected_ids = st.multiselect(
@@ -514,14 +506,14 @@ elif st.session_state.page == "المقارنة":
         row = comp[comp["uni_id"] == str(uni_id)].iloc[0]
         with cols[i]:
             with st.expander(f"{row['name_ar']} — {row['name_en']}", expanded=True):
-                st.write(f"**الموقع:** {row['city']} — {row['country']}")
-                st.write(f"**النوع:** {row['type']}")
-                st.write(f"**المنح:** {row.get('scholarship','')}")
-                st.write(f"**الترتيب:** {str(row.get('ranking_source','')).strip()} {str(row.get('ranking_value','')).strip()}".strip())
+                st.markdown(f"**الموقع:** {row['city']} — {row['country']}")
+                st.markdown(f"**النوع:** {row['type']}")
+                st.markdown(f"**المنح:** {row.get('scholarship','')}")
+                st.markdown(f"**الترتيب:** {str(row.get('ranking_source','')).strip()} {str(row.get('ranking_value','')).strip()}".strip())
 
                 notes = str(row.get("accreditation_notes", "")).strip()
                 if notes:
-                    st.write(f"**ملاحظات:** {notes}")
+                    st.markdown(f"**ملاحظات:** {notes}")
 
                 st.write("")
                 c1, c2, c3 = st.columns(3)
@@ -531,6 +523,8 @@ elif st.session_state.page == "المقارنة":
                     c2.link_button("Admissions", str(row["admissions_url"]))
                 if str(row.get("programs_url", "")).strip():
                     c3.link_button("Programs", str(row["programs_url"]))
+
+
 # ----------------------------
 # Page: رُشد
 # ----------------------------
