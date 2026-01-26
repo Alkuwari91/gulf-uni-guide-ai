@@ -7,94 +7,126 @@ from ui import render_shell
 # Page config (لازم تكون أول شيء)
 # ----------------------------
 st.set_page_config(page_title="بوصلة", layout="wide", initial_sidebar_state="collapsed")
-
 render_shell()
 
 # ----------------------------
 # إخفاء السايدبار نهائياً (حتى المساحة)
 # ----------------------------
-st.markdown("""
-<style>
-/* ============ RTL Global (Safe) ============ */
-html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"]{
-  direction: rtl !important;
-  text-align: right !important;
-  font-family: "Cairo", sans-serif !important;
-}
+st.markdown(
+    """
+    <style>
+      [data-testid="stSidebar"] {display: none !important;}
+      [data-testid="stSidebarNav"] {display: none !important;}
+      button[kind="header"] {display: none !important;} /* زر الهامبرغر */
+      section[data-testid="stSidebar"] {display:none !important;}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
-/* ============ Expander = Card (Premium) ============ */
-div[data-testid="stExpander"]{
-  border: 1px solid rgba(15,27,51,0.08) !important;
-  border-radius: 16px !important;
-  background: #fff !important;
-  box-shadow: 0 10px 30px rgba(15,27,51,0.06) !important;
-  overflow: hidden !important;
-  margin-bottom: 16px !important;
-}
+# ----------------------------
+# CSS: RTL + Expander Cards + Buttons/Inputs RTL + Titles center + Smaller dropdowns
+# ----------------------------
+st.markdown(
+    """
+    <style>
+      /* ============ RTL Global (Safe) ============ */
+      html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"]{
+        direction: rtl !important;
+        text-align: right !important;
+        font-family: "Cairo", sans-serif !important;
+      }
+      input, textarea, [role="textbox"]{
+        direction: rtl !important;
+        text-align: right !important;
+      }
+      div[data-baseweb="select"] *{
+        direction: rtl !important;
+        text-align: right !important;
+      }
+      label{
+        direction: rtl !important;
+        text-align: right !important;
+      }
 
-/* Header */
-div[data-testid="stExpander"] details > summary{
-  padding: 16px 18px !important;
-  cursor: pointer !important;
-  direction: rtl !important;
-  text-align: right !important;
-  list-style: none !important;
-}
+      /* ============ Expander = Card (Premium) ============ */
+      div[data-testid="stExpander"]{
+        border: 1px solid rgba(15,27,51,0.08) !important;
+        border-radius: 16px !important;
+        background: #fff !important;
+        box-shadow: 0 10px 30px rgba(15,27,51,0.06) !important;
+        overflow: hidden !important;
+        margin-bottom: 16px !important;
+      }
 
-/* Remove default marker (Chrome) */
-div[data-testid="stExpander"] details > summary::-webkit-details-marker{
-  display: none !important;
-}
+      /* Header */
+      div[data-testid="stExpander"] details > summary{
+        padding: 16px 18px !important;
+        cursor: pointer !important;
+        direction: rtl !important;
+        text-align: right !important;
+        list-style: none !important;
+      }
 
-/* Title inside header (Streamlit puts it in p) */
-div[data-testid="stExpander"] details > summary p{
-  margin: 0 !important;
-  font-size: 18px !important;
-  font-weight: 800 !important;
-  color: #8A1538 !important;
-}
+      /* Remove default marker (Chrome) */
+      div[data-testid="stExpander"] details > summary::-webkit-details-marker{
+        display: none !important;
+      }
 
-/* Hover */
-div[data-testid="stExpander"] details > summary:hover{
-  background: rgba(138,21,56,0.06) !important;
-}
+      /* Title inside header */
+      div[data-testid="stExpander"] details > summary p{
+        margin: 0 !important;
+        font-size: 18px !important;
+        font-weight: 800 !important;
+        color: #8A1538 !important;
+      }
 
-/* Body wrapper */
-div[data-testid="stExpander"] details > div{
-  padding: 0 18px 18px 18px !important;
-  direction: rtl !important;
-  text-align: right !important;
-}
+      /* Hover */
+      div[data-testid="stExpander"] details > summary:hover{
+        background: rgba(138,21,56,0.06) !important;
+      }
 
-/* Body text */
-div[data-testid="stExpander"] .stMarkdown p,
-div[data-testid="stExpander"] .stMarkdown li{
-  color: #334155 !important;
-  line-height: 1.9 !important;
-  font-size: 15px !important;
-  margin: 0 !important;
-}
+      /* Move chevron to LEFT for RTL feel */
+      div[data-testid="stExpander"] details > summary svg{
+        margin-left: 0 !important;
+        margin-right: auto !important;
+      }
 
-/* Move chevron to LEFT (RTL feel) */
-div[data-testid="stExpander"] details > summary svg{
-  margin-left: 0 !important;
-  margin-right: auto !important;
-}
+      /* Body */
+      div[data-testid="stExpander"] details > div{
+        padding: 0 18px 18px 18px !important;
+        direction: rtl !important;
+        text-align: right !important;
+      }
+      div[data-testid="stExpander"] .stMarkdown p,
+      div[data-testid="stExpander"] .stMarkdown li{
+        color: #334155 !important;
+        line-height: 1.9 !important;
+        font-size: 15px !important;
+        margin: 0 !important;
+      }
 
-/* ============ Center titles (optional) ============ */
-.page-title{
-  text-align: center !important;
-  font-weight: 900 !important;
-  margin: 10px 0 18px 0 !important;
-}
+      /* ============ Center titles ============ */
+      .page-title{
+        text-align: center !important;
+        font-weight: 900 !important;
+        margin: 10px 0 18px 0 !important;
+      }
 
-/* ============ Smaller dropdowns (keep yours) ============ */
-div[data-baseweb="select"] > div{ min-height: 38px !important; }
-div[data-baseweb="select"] > div > div{ padding-top: 2px !important; padding-bottom: 2px !important; }
-div[data-baseweb="select"] span{ font-size: 0.95rem !important; }
-</style>
-""", unsafe_allow_html=True)
+      /* ============ Smaller dropdowns ============ */
+      div[data-baseweb="select"] > div{ min-height: 38px !important; }
+      div[data-baseweb="select"] > div > div{ padding-top: 2px !important; padding-bottom: 2px !important; }
+      div[data-baseweb="select"] span{ font-size: 0.95rem !important; }
 
+      /* ============ Nav buttons spacing ============ */
+      .stButton>button{
+        border-radius: 12px !important;
+        font-weight: 700 !important;
+      }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 # ----------------------------
 # Helpers / Paths
@@ -117,12 +149,10 @@ def load_csv(path: Path) -> pd.DataFrame:
 
     try:
         df = pd.read_csv(path, encoding="utf-8", engine="python", on_bad_lines="skip")
-        # إذا الأعمدة كلها أرقام (0,1,2...) غالباً انقرأ كأنه بدون هيدر بشكل غلط
         if all(isinstance(c, int) for c in df.columns):
             df = pd.read_csv(path, encoding="utf-8", engine="python", on_bad_lines="skip", header=None)
         return df
     except Exception:
-        # fallback
         return pd.read_csv(path, encoding="utf-8", engine="python", on_bad_lines="skip", header=None)
 
 
@@ -131,10 +161,8 @@ def load_unis_csv(path: Path) -> pd.DataFrame:
     if (not path.exists()) or path.stat().st_size == 0:
         return pd.DataFrame()
 
-    # نقرأ أول سطر عشان نعرف: فيه هيدر ولا لا
     first_line = path.read_text(encoding="utf-8", errors="ignore").splitlines()[0].strip().lower()
-
-    has_header = first_line.startswith("uni_id")  # يعني عندك هيدر فعلي
+    has_header = first_line.startswith("uni_id")
 
     if has_header:
         df = pd.read_csv(path, encoding="utf-8", engine="python", on_bad_lines="skip")
@@ -155,31 +183,24 @@ def normalize_unis(df: pd.DataFrame) -> pd.DataFrame:
         "website", "admissions_url", "programs_url",
         "ranking_source", "extra_1", "extra_2"
     ]
-
     cols_15 = cols_12 + ["scholarship", "sch_notes", "sch_url"]
 
-    # ✅ لو الملف انقرأ بدون هيدر (header=None) بيكون أعمدة مرقمة 0..14
     if list(df.columns) == list(range(len(df.columns))):
         if len(df.columns) == 12:
             df.columns = cols_12
         elif len(df.columns) == 15:
             df.columns = cols_15
 
-    # ✅ لو الملف انقرأ بهيدر لكن أول صف كان هيدر بالغلط داخل البيانات
-    # (يصير لما يكون الملف بدون هيدر بس pandas اعتبر أول سطر هيدر)
-    # نتحقق: إذا أول قيمة في uni_id هي "uni_id" نحذف السطر
     if "uni_id" in df.columns:
         first_val = str(df.iloc[0]["uni_id"]).strip().lower()
         if first_val == "uni_id":
             df = df.iloc[1:].copy()
 
-    # ربط extra_1/extra_2
     if "ranking_value" not in df.columns:
         df["ranking_value"] = df.get("extra_1", "")
     if "accreditation_notes" not in df.columns:
         df["accreditation_notes"] = df.get("extra_2", "")
 
-    # scholarship (عمود واحد)
     if "scholarship" not in df.columns:
         df["scholarship"] = "Unknown"
 
@@ -237,14 +258,7 @@ def make_uni_label(row: pd.Series) -> str:
     return f"{ar} — {en} ({city}, {country})"
 
 
-def get_uni_by_id(unis: pd.DataFrame, uni_id: str) -> pd.DataFrame:
-    if unis.empty or not uni_id:
-        return pd.DataFrame()
-    return unis[unis["uni_id"].astype(str) == str(uni_id)].copy()
-
-
 def ensure_cols(df: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
-    """يتأكد إن كل الأعمدة المطلوبة موجودة قبل العرض (يمنع KeyError)."""
     for c in cols:
         if c not in df.columns:
             df[c] = ""
@@ -260,8 +274,7 @@ if "page" not in st.session_state:
 nav = ["من نحن", "رُشد", "المقارنة", "بحث الجامعات", "الرئيسية"]
 cols_nav = st.columns(len(nav))
 for i, name in enumerate(nav):
-    # نخلي أول عنصر يطلع أقصى اليمين
-    col = cols_nav[-(i + 1)]
+    col = cols_nav[-(i + 1)]  # أول عنصر أقصى اليمين
     if col.button(name, use_container_width=True):
         st.session_state.page = name
         st.rerun()
@@ -279,24 +292,31 @@ if st.session_state.page == "الرئيسية":
 
     with col1:
         with st.expander("رؤيتنا", expanded=True):
-            st.write("نسعى في بوصلة إلى إعادة تعريف تجربة اختيار التعليم في الخليج، عبر منصة ذكية توجّه الشباب نحو تخصصاتهم وجامعاتهم المناسبة، وتحوّل القرار التعليمي من حيرة فردية إلى مسار واضح مدروس..")
+            st.markdown("نسعى في بوصلة إلى إعادة تعريف تجربة اختيار التعليم في الخليج، عبر منصة ذكية توجّه الشباب نحو تخصصاتهم وجامعاتهم المناسبة، وتحوّل القرار التعليمي من حيرة فردية إلى مسار واضح مدروس.")
 
     with col2:
         with st.expander("رسالتنا", expanded=False):
-            st.write("تلتزم بوصلة بتمكين الطلبة وأولياء الأمور من اتخاذ قرارات تعليمية دقيقة من خلال منصة ذكية تعتمد على الذكاء الاصطناعي والبيانات الموثوقة، لتقديم توجيه واضح ومخصص يربط بين قدرات الطالب، خيارات التعليم، ومتطلبات سوق العمل.")
+            st.markdown("تلتزم بوصلة بتمكين الطلبة وأولياء الأمور من اتخاذ قرارات تعليمية دقيقة من خلال منصة ذكية تعتمد على الذكاء الاصطناعي والبيانات الموثوقة، لتقديم توجيه واضح ومخصص يربط بين قدرات الطالب، خيارات التعليم، ومتطلبات سوق العمل.")
 
     col3, col4 = st.columns(2, gap="large")
 
     with col3:
         with st.expander("قيمنا", expanded=False):
-            st.write("نُمكّن الطلبة من فهم قدراتهم وميولهم قبل اختيار تخصصهم، ليكونوا شركاء حقيقيين في رسم مستقبلهم.")
+            st.markdown("""
+- **الوضوح:** تبسيط القرار التعليمي بلغة سهلة  
+- **العدالة:** عرض الخيارات دون تحيّز  
+- **التمكين:** فهم الذات قبل اختيار التخصص  
+- **الابتكار:** توظيف الذكاء الاصطناعي لخدمة التعليم  
+- **الموثوقية:** بيانات دقيقة ومحدّثة  
+            """)
 
     with col4:
         with st.expander("لماذا بوصلة؟", expanded=False):
-            st.write("لأن قرار اختيار الجامعة والتخصص لم يعد قرارًا بسيطًا، بل قرارًا مصيريًا يواجه فيه الطلبة تعدد الخيارات، غياب التوجيه، وضغط التوقعات، ما يؤدي إلى الحيرة، التشتت، وأحيانًا قرارات غير مناسبة.")
+            st.markdown("لأن قرار اختيار الجامعة والتخصص لم يعد قرارًا بسيطًا، بل قرارًا مصيريًا يواجه فيه الطلبة تعدد الخيارات، وغياب التوجيه، وضغط التوقعات؛ ما يؤدي إلى الحيرة والتشتت وأحيانًا قرارات غير مناسبة.")
 
     st.write("")
     st.markdown("---")
+
     b1, b2, b3 = st.columns(3)
     if b1.button("ابدأ البحث", use_container_width=True):
         st.session_state.page = "بحث الجامعات"
@@ -307,7 +327,6 @@ if st.session_state.page == "الرئيسية":
     if b3.button("تحدث مع رُشد", use_container_width=True):
         st.session_state.page = "رُشد"
         st.rerun()
-
 
 # ----------------------------
 # Page: بحث الجامعات
