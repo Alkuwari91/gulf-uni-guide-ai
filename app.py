@@ -138,12 +138,9 @@ div[data-testid="stExpander"] .stMarkdown p,
 div[data-testid="stExpander"] .stMarkdown li{
   text-align: center !important;
 }
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+* { font-family: 'Tajawal', sans-serif !important; }
 
-html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"],
-* {
-  font-family: 'Cairo', sans-serif !important;
-}
     </style>
     """,
     unsafe_allow_html=True,
