@@ -123,6 +123,20 @@ st.markdown(
         border-radius: 12px !important;
         font-weight: 700 !important;
       }
+      /* ===== Center the cards visually ===== */
+div[data-testid="stExpander"]{
+  width: 100% !important;   /* داخل العمود الأوسط */
+}
+
+/* ===== Center text INSIDE the card ===== */
+div[data-testid="stExpander"] details > div{
+  text-align: center !important;
+}
+
+div[data-testid="stExpander"] .stMarkdown p,
+div[data-testid="stExpander"] .stMarkdown li{
+  text-align: center !important;
+}
     </style>
     """,
     unsafe_allow_html=True,
@@ -283,24 +297,20 @@ st.write("")
 st.markdown("---")
 st.write("")
 
-
 # ----------------------------
-# Page: الرئيسية
+# Page: الرئيسية (كروت تحت بعض في المنتصف)
 # ----------------------------
 if st.session_state.page == "الرئيسية":
-    col1, col2 = st.columns(2, gap="large")
+    # عمود وسط عريض + هوامش يمين/يسار
+    left, center, right = st.columns([1, 2.4, 1])
 
-    with col1:
+    with center:
         with st.expander("رؤيتنا", expanded=True):
             st.markdown("نسعى في بوصلة إلى إعادة تعريف تجربة اختيار التعليم في الخليج، عبر منصة ذكية توجّه الشباب نحو تخصصاتهم وجامعاتهم المناسبة، وتحوّل القرار التعليمي من حيرة فردية إلى مسار واضح مدروس.")
 
-    with col2:
         with st.expander("رسالتنا", expanded=False):
             st.markdown("تلتزم بوصلة بتمكين الطلبة وأولياء الأمور من اتخاذ قرارات تعليمية دقيقة من خلال منصة ذكية تعتمد على الذكاء الاصطناعي والبيانات الموثوقة، لتقديم توجيه واضح ومخصص يربط بين قدرات الطالب، خيارات التعليم، ومتطلبات سوق العمل.")
 
-    col3, col4 = st.columns(2, gap="large")
-
-    with col3:
         with st.expander("قيمنا", expanded=False):
             st.markdown("""
 - **الوضوح:** تبسيط القرار التعليمي بلغة سهلة  
@@ -310,23 +320,23 @@ if st.session_state.page == "الرئيسية":
 - **الموثوقية:** بيانات دقيقة ومحدّثة  
             """)
 
-    with col4:
         with st.expander("لماذا بوصلة؟", expanded=False):
             st.markdown("لأن قرار اختيار الجامعة والتخصص لم يعد قرارًا بسيطًا، بل قرارًا مصيريًا يواجه فيه الطلبة تعدد الخيارات، وغياب التوجيه، وضغط التوقعات؛ ما يؤدي إلى الحيرة والتشتت وأحيانًا قرارات غير مناسبة.")
 
-    st.write("")
-    st.markdown("---")
+        st.write("")
+        st.markdown("---")
 
-    b1, b2, b3 = st.columns(3)
-    if b1.button("ابدأ البحث", use_container_width=True):
-        st.session_state.page = "بحث الجامعات"
-        st.rerun()
-    if b2.button("قارن الجامعات", use_container_width=True):
-        st.session_state.page = "المقارنة"
-        st.rerun()
-    if b3.button("تحدث مع رُشد", use_container_width=True):
-        st.session_state.page = "رُشد"
-        st.rerun()
+        b1, b2, b3 = st.columns(3)
+        if b1.button("ابدأ البحث", use_container_width=True):
+            st.session_state.page = "بحث الجامعات"
+            st.rerun()
+        if b2.button("قارن الجامعات", use_container_width=True):
+            st.session_state.page = "المقارنة"
+            st.rerun()
+        if b3.button("تحدث مع رُشد", use_container_width=True):
+            st.session_state.page = "رُشد"
+            st.rerun()
+
 
 # ----------------------------
 # Page: بحث الجامعات
