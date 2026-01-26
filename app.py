@@ -140,6 +140,19 @@ div[data-testid="stExpander"] .stMarkdown li{
 }
 @import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700&display=swap');
 * { font-family: 'Noto Kufi Arabic', sans-serif !important; }
+
+/* إخفاء أي نص تقني مثل keyboard_ar / keyboard_ai */
+label:has(+ input),
+label:has(+ textarea),
+label:has(+ div[data-baseweb]) {
+  display: none !important;
+}
+
+/* إخفاء أي span أو p فيها كلمة keyboard_ */
+span:contains("keyboard_"),
+p:contains("keyboard_") {
+  display: none !important;
+}
     </style>
     """,
     unsafe_allow_html=True,
