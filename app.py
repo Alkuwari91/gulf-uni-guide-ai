@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 from pathlib import Path
 from ui import render_shell
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap');
+* { font-family: 'IBM Plex Sans Arabic', sans-serif !important; }
 
 # ----------------------------
 # Page config (لازم تكون أول شيء)
