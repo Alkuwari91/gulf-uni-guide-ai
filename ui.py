@@ -113,7 +113,7 @@ html, body, [class*="css"] {
 # =========================
 def render_shell(
     title: str = "بوصلة",
-    subtitle: str = "دليلك الذكي لاختيار الجامعة والبرنامج في دول الخليج"
+    subtitle: str = "بوصلة… من الحيرة إلى القرار"
 ):
     st.set_page_config(page_title=title, layout="wide")
     st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
