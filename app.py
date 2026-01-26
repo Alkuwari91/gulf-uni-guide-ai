@@ -529,29 +529,19 @@ elif st.session_state.page == "المقارنة":
 # Page: رُشد
 # ----------------------------
 elif st.session_state.page == "رُشد":
-    # تحميل البيانات هنا (عشان ما يصير NameError)
-    unis = normalize_unis(load_csv(UNIS_PATH))
+    # ✅ إصلاح مهم: قراءة الجامعات لازم تكون load_unis_csv
+    unis = normalize_unis(load_unis_csv(UNIS_PATH))
     progs = normalize_progs(load_csv(PROGS_PATH))
 
     if unis.empty:
         st.error("ملف الجامعات universities.csv فاضي أو غير موجود.")
         st.stop()
 
-    # عنوان + وصف (RTL + بالنص)
     st.markdown(
         """
         <div dir="rtl" style="text-align:center; margin-top:0;">
-          <h2 style="margin-top:0;">
-            رُشد — المرشد الطلابي (قبل القبول)
-          </h2>
-
-          <p style="
-            font-size:1.05rem;
-            line-height:1.9;
-            color:#475569;
-            max-width:720px;
-            margin: 0 auto;
-          ">
+          <h2 style="margin-top:0;">رُشد — المرشد الطلابي (قبل القبول)</h2>
+          <p style="font-size:1.05rem; line-height:1.9; color:#475569; max-width:720px; margin: 0 auto;">
             حلّل فرص القبول واقترح أفضل الجامعات بناءً على بياناتك + متطلبات متوقعة + مراكز اختبار قريبة.
           </p>
         </div>
@@ -559,12 +549,10 @@ elif st.session_state.page == "رُشد":
         unsafe_allow_html=True
     )
 
-    # ----------------------------
-    # مساعدات: أعمدة متطلبات القبول (اختيارية - لو مو موجودة ما ينكسر)
-    # ----------------------------
+    # أعمدة اختيارية لتفادي NameError / KeyError
     def ensure_program_requirements(df: pd.DataFrame) -> pd.DataFrame:
         if df is None or df.empty:
-            return pd.DataFrame(columns=df.columns if df is not None else [])
+            return df if df is not None else pd.DataFrame()
         df = df.copy()
         for c in ["english_test", "english_score", "math_requirement", "admission_notes"]:
             if c not in df.columns:
@@ -573,53 +561,19 @@ elif st.session_state.page == "رُشد":
 
     progs = ensure_program_requirements(progs)
 
-    # ----------------------------
-    # قاعدة بيانات بسيطة لمراكز الاختبارات (نبدأ بها ونكبرها لاحقًا)
-    # ----------------------------
     TEST_CENTERS = {
-        ("Qatar", "Doha"): {
-            "IELTS": [
-                {"name": "British Council (Doha)", "url": ""},
-                {"name": "IDP Education (Doha)", "url": ""},
-            ],
-        },
-        ("Bahrain", "Manama"): {
-            "IELTS": [
-                {"name": "IELTS test center (Bahrain)", "url": ""},
-            ]
-        },
-        ("Oman", "Muscat"): {
-            "IELTS": [
-                {"name": "IELTS test center (Muscat)", "url": ""},
-            ]
-        },
-        ("Saudi Arabia", "Riyadh"): {
-            "IELTS": [
-                {"name": "IELTS test center (Riyadh)", "url": ""},
-            ]
-        },
-        ("UAE", "Abu Dhabi"): {
-            "IELTS": [
-                {"name": "IELTS test center (Abu Dhabi)", "url": ""},
-            ]
-        },
-        ("Kuwait", "Kuwait City"): {
-            "IELTS": [
-                {"name": "IELTS test center (Kuwait)", "url": ""},
-            ]
-        },
+        ("Qatar", "Doha"): {"IELTS": [{"name": "British Council (Doha)", "url": ""}, {"name": "IDP Education (Doha)", "url": ""}]},
+        ("Bahrain", "Manama"): {"IELTS": [{"name": "IELTS test center (Bahrain)", "url": ""}]},
+        ("Oman", "Muscat"): {"IELTS": [{"name": "IELTS test center (Muscat)", "url": ""}]},
+        ("Saudi Arabia", "Riyadh"): {"IELTS": [{"name": "IELTS test center (Riyadh)", "url": ""}]},
+        ("UAE", "Abu Dhabi"): {"IELTS": [{"name": "IELTS test center (Abu Dhabi)", "url": ""}]},
+        ("Kuwait", "Kuwait City"): {"IELTS": [{"name": "IELTS test center (Kuwait)", "url": ""}]},
     }
 
-    # ----------------------------
-    # ترجمة حالة القبول
-    # ----------------------------
     def ar_status(x: str) -> str:
         m = {"Suitable": "مناسب", "Conditional": "مشروط", "Unknown": "غير واضح"}
         return m.get(x, "غير واضح")
 
-    # ----------------------------
-    # نموذج ملف الطالب
-    # ----------------------------
     with st.expander("ملف الطالب", expanded=True):
         c1, c2, c3 = st.columns(3)
 
@@ -636,7 +590,6 @@ elif st.session_state.page == "رُشد":
         study_level = c3.selectbox("المستوى الدراسي المطلوب", ["All"] + level_options, index=0)
 
         d1, d2, d3 = st.columns(3)
-
         major_field_options = sorted([x for x in progs["major_field"].unique() if str(x).strip()]) if (not progs.empty and "major_field" in progs.columns) else []
         major_field = d1.selectbox("مجال التخصص", ["All"] + major_field_options, index=0)
 
@@ -653,9 +606,6 @@ elif st.session_state.page == "رُشد":
 
         q_free = st.text_input("ملاحظة/تفضيل (اختياري)", placeholder="مثال: أبي جامعة قوية في التقنية + منح")
 
-    # ----------------------------
-    # منطق التصفية + التقييم
-    # ----------------------------
     def uni_has_scholarship(s: str) -> bool:
         if not isinstance(s, str):
             return False
@@ -783,19 +733,20 @@ elif st.session_state.page == "رُشد":
                 cA, cB = st.columns([2, 1])
 
                 with cA:
-                    st.write(f"**تقييم القبول:** {ar_status(row['status'])}")
-                    st.write(f"**المنح (حسب البيانات):** {row['scholarship']}")
-                    st.write(f"**لماذا هذا خيار جيد؟** {row['reasons'] if row['reasons'] else '—'}")
+                    st.markdown(f"**تقييم القبول:** {ar_status(row['status'])}")
+                    st.markdown(f"**المنح (حسب البيانات):** {row['scholarship']}")
+                    st.markdown(f"**لماذا هذا خيار جيد؟** {row['reasons'] if row['reasons'] else '—'}")
 
                     st.write("")
                     st.markdown("**متطلبات القبول المتوقعة (إن توفرت بياناتها في programs.csv):**")
                     et = row["req_english_test"] if str(row["req_english_test"]).strip() else "Unknown"
                     es = row["req_english_score"] if str(row["req_english_score"]).strip() else "Unknown"
                     mr = row["req_math"] if str(row["req_math"]).strip() else "Unknown"
-                    st.write(f"- اللغة الإنجليزية: {et} / الدرجة: {es}")
-                    st.write(f"- الرياضيات: {mr}")
+
+                    st.markdown(f"- اللغة الإنجليزية: {et} / الدرجة: {es}")
+                    st.markdown(f"- الرياضيات: {mr}")
                     if str(row["req_notes"]).strip():
-                        st.write(f"- ملاحظات: {row['req_notes']}")
+                        st.markdown(f"- ملاحظات: {row['req_notes']}")
 
                 with cB:
                     st.markdown("**روابط رسمية**")
@@ -836,7 +787,8 @@ elif st.session_state.page == "رُشد":
                         if url:
                             st.link_button(name, url)
                         else:
-                            st.write(f"- {name}")
+                            st.markdown(f"- {name}")
+
 
 # ----------------------------
 # Page: من نحن
@@ -849,7 +801,7 @@ elif st.session_state.page == "من نحن":
     with center:
         st.markdown(
             """
-            <div style="text-align:center; font-size:1.05rem; line-height:2;">
+            <div dir="rtl" style="text-align:center; font-size:1.05rem; line-height:2;">
               <p><b>بوصلة</b> منصة رقمية ذكية تهدف إلى مساعدة الطلاب وأولياء الأمور في اتخاذ قرار واعٍ ومدروس لاختيار الجامعة والبرنامج الأكاديمي داخل دول الخليج.</p>
 
               <p>جاءت فكرة بوصلة استجابةً لتحدٍ واقعي يواجه الكثير من الطلبة، وهو <b>تشتّت المعلومات</b> وصعوبة المقارنة بين الجامعات والبرامج وتعدد المصادر غير الموثوقة.</p>
