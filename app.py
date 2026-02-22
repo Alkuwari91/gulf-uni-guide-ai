@@ -3,7 +3,6 @@ import pandas as pd
 from pathlib import Path
 from ui import render_shell
 
-
 # ----------------------------
 # Page config (لازم تكون أول شيء)
 # ----------------------------
